@@ -8,18 +8,16 @@
 import UIKit
 
 
-public protocol ImageConfigParsing: InitializableFromDictionary, AnyObject {
+public protocol ImageConfigParsing {
   
-  typealias ImageConfigEntry = (ImageConfig & InitializableFromDictionary).Type;
+  typealias ParsableImageConfig = ImageConfig & InitializableFromDictionary;
+  
+  typealias ImageConfigEntry = ParsableImageConfig.Type;
   typealias ImageConfigMap = [String: ImageConfigEntry];
   
   static var configTypeItems: [ImageConfigEntry] { get set };
   
   static var configTypeMapCache: ImageConfigMap { get set };
-  
-  var imageConfig: any ImageConfig { get set };
-  
-  init(imageConfig: any ImageConfig);
 };
 
 // MARK: - ImageConfigParsing+PrivateHelpers
@@ -39,10 +37,10 @@ fileprivate extension ImageConfigParsing {
 };
 
 // MARK: - ImageConfigParsing+PublicHelpers
-// -----------------------------------------
+// ----------------------------------------
 
 public extension ImageConfigParsing {
-  
+
   static var configTypeMap: ImageConfigMap {
     if !Self.didSetConfigTypeMapCache {
       Self.setConfigTypeMapCache();
@@ -50,47 +48,11 @@ public extension ImageConfigParsing {
     
     return Self.configTypeMapCache;
   };
-  
-  var imageType: String {
-    type(of: self.imageConfig).imageType;
-  };
-  
-  var isImageLoading: Bool {
-    self.imageConfig.isImageLoaded;
-  };
-  
-  var cachedImage: UIImage? {
-    self.imageConfig.cachedImage;
-  };
-  
-  func makeImage() throws -> UIImage {
-    return try self.imageConfig.makeImage();
-  };
-  
-  func preloadImageIfNeeded(completion: ((_ sender: Self) -> Void)? = nil) {
-    guard !self.imageConfig.isImageLoaded else { return };
+
+  static func parseImageConfig(
+    fromDict dict: Dictionary<String, Any>
+  ) throws -> ParsableImageConfig {
     
-    self.imageConfig.isImageLoading = true;
-    
-    DispatchQueue.global(qos: .background).async {
-      let image = try? self.imageConfig.makeImage();
-      self.imageConfig.cachedImage = image;
-      self.imageConfig.isImageLoading = false;
-      
-      guard let completion = completion else { return };
-      DispatchQueue.main.async {
-        completion(self);
-      }
-    };
-  };
-};
-
-// MARK: - ImageConfigParsing+InitializableFromDictionary
-// ------------------------------------------------------
-
-public extension ImageConfigParsing {
-
-  init(fromDict dict: Dictionary<String, Any>) throws {
     let imageType: String = try dict.getValueFromDictionary(forKey: "imageType");
     
     let imageConfigType = Self.configTypeMap[imageType];
@@ -101,6 +63,6 @@ public extension ImageConfigParsing {
     };
     
     let imageConfig = try imageConfigType.init(fromDict: dict);
-    self.init(imageConfig: imageConfig);
+    return imageConfig;
   };
 };
