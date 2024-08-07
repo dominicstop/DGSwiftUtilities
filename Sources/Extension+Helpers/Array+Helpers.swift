@@ -57,6 +57,20 @@ public extension Array {
     return (match.offset, match.element);
   };
   
+  func indexedLast(
+    where predicate: (_ index: Index, _ value: Element) -> Bool
+  ) -> IndexElementPair? {
+    let match = self.enumerated().reversed().first {
+      predicate($0.offset, $0.element);
+    };
+    
+    guard let match = match else {
+      return nil;
+    };
+    
+    return (match.offset, match.element);
+  };
+  
   mutating func unwrapThenAppend(_ element: Element?) {
     guard let element = element else { return };
     self.append(element);
