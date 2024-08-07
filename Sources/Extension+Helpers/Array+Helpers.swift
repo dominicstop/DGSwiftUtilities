@@ -75,4 +75,18 @@ public extension Array {
     guard let element = element else { return };
     self.append(element);
   };
+  
+  func prefixCopy(count: Int) -> Self {
+    let countAdj = count.clamped(min: 0, max: self.count);
+    let slice = self.prefix(countAdj);
+    
+    return .init(slice);
+  };
+  
+  func suffixCopy(count: Int) -> Self {
+    let countAdj = count.clamped(min: 0, max: self.count);
+    let slice = self.suffix(countAdj);
+    
+    return .init(slice);
+  };
 };
