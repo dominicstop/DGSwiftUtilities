@@ -64,8 +64,8 @@ public extension ImageConfigLoader {
   };
   
   func loadImageIfNeeded(
-    completion: CompletionHandler? = nil,
-    dispatchQos dispatchQosOverride: DispatchQoS.QoSClass? = nil
+    dispatchQos dispatchQosOverride: DispatchQoS.QoSClass? = nil,
+    completion: CompletionHandler? = nil
     // useSharedQueue: Bool = false
   ) {
     guard !self.imageConfig.isImageLoaded else { return };
