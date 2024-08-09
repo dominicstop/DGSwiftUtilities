@@ -224,13 +224,20 @@ fileprivate struct Helpers {
   
   static func updateLogValueDisplay(
     inCardController cardVC: CardViewController,
+    forItemID targetItemID: String? = nil,
     transformItems: (_ oldItems: [CardLabelValueDisplayItemConfig]) -> [CardLabelValueDisplayItemConfig]
-  ){
+  ) {
     var cardContentItems = cardVC.cardConfig?.content ?? [];
     var labelValueDisplayItems: [CardLabelValueDisplayItemConfig] = [];
     
     let match = cardContentItems.indexedLast {
-      guard case let .labelValueDisplay(itemsOld) = $1 else {
+      guard case let .labelValueDisplay(id, itemsOld) = $1 else {
+        return false;
+      };
+      
+      if let targetItemID = targetItemID,
+         targetItemID != id
+      {
         return false;
       };
       
@@ -250,11 +257,15 @@ fileprivate struct Helpers {
   
   static func appendToLogValueDisplay(
     inCardController cardVC: CardViewController,
+    forItemID targetItemID: String? = nil,
     withItems itemsNew: [CardLabelValueDisplayItemConfig],
     maxItems: Int = 6
   ){
   
-    Self.updateLogValueDisplay(inCardController: cardVC) {
+    Self.updateLogValueDisplay(
+      inCardController: cardVC,
+      forItemID: targetItemID
+    ) {
       let items = $0 + itemsNew;
       return items.suffixCopy(count: maxItems);
     };

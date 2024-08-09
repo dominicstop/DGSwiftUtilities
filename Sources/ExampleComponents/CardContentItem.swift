@@ -7,36 +7,77 @@
 
 import UIKit
 
+
 public enum CardContentItem {
 
   case filledButton(
+    id: String? = nil,
     title: [AttributedStringConfig],
     subtitle: [AttributedStringConfig]? = nil,
     controlEvent: UIControl.Event = .primaryActionTriggered,
     handler: ((_ context: CardConfig, _ button: UIButton) -> Void)?
   );
   
-  case label([AttributedStringConfig]);
-  case multiLineLabel([AttributedStringConfig]);
+  case label(
+    id: String?,
+    items: [AttributedStringConfig]
+  );
+  
+  case multiLineLabel(
+    id: String?,
+    items: [AttributedStringConfig]
+  );
   
   case labelValueDisplay(
+    id: String? = nil,
     items: [CardLabelValueDisplayItemConfig]
   );
   
-  case spacer(space: CGFloat);
+  case spacer(
+    id: String? = nil,
+    space: CGFloat
+  );
   
-  case view(UIView);
+  case view(
+    id: String? = nil,
+    _ view: UIView
+  );
+  
+  // MARK: Computed Properties
+  // -------------------------
+  
+  public var id: String? {
+    switch self {
+      case let .filledButton(id, _, _, _, _):
+        return id;
+        
+      case let .label(id, _):
+        return id;
+        
+      case let .multiLineLabel(id, _):
+        return id;
+        
+      case let .labelValueDisplay(id, _):
+        return id;
+        
+      case let .spacer(id, _):
+        return id;
+        
+      case let .view(id, _):
+        return id;
+    };
+  };
   
   // MARK: Functions
   // ---------------
   
-  func makeContent(
+  public func makeContent(
     cardConfig: CardConfig,
     themeColorConfig: ColorThemeConfig
   ) -> UIView {
   
     switch self {
-      case let .filledButton(title, subtitle, controlEvent, handler):
+      case let .filledButton(_, title, subtitle, controlEvent, handler):
         let button = UIButton(type: .system);
         
         var attributedStringConfigs: [AttributedStringConfig] = [];
@@ -105,7 +146,7 @@ public enum CardContentItem {
         
         return button;
         
-      case let .label(configs):
+      case let .label(_, configs):
         let label = UILabel();
         
         label.font = nil;
@@ -114,7 +155,7 @@ public enum CardContentItem {
         
         return label;
         
-      case let .multiLineLabel(configs):
+      case let .multiLineLabel(_, configs):
         let label = UILabel();
         
         label.font = nil;
@@ -125,7 +166,7 @@ public enum CardContentItem {
         label.attributedText = configs.makeAttributedString();
         return label;
         
-      case let .labelValueDisplay(items):
+      case let .labelValueDisplay(_, items):
         let config = CardLabelValueDisplayConfig(
           items: items,
           deriveColorThemeConfigFrom: cardConfig.colorThemeConfig
@@ -133,14 +174,28 @@ public enum CardContentItem {
         
         return config.createView();
         
-      case let .spacer(space):
+      case let .spacer(_, space):
         return UIView(frame: .init(
           origin: .zero,
           size: .init(width: 0, height: space)
         ));
         
-      case let .view(customView):
+      case let .view(_, customView):
         return customView;
     };
+  };
+};
+
+// MARK: - CardContentItem+StaticAlias
+// -----------------------------------
+
+public extension CardContentItem {
+  
+  static func label(_ items: [AttributedStringConfig]) -> Self {
+    .label(id: nil, items: items);
+  };
+  
+  static func multiLineLabel(_ items: [AttributedStringConfig]) -> Self {
+    .multiLineLabel(id: nil, items: items);
   };
 };
