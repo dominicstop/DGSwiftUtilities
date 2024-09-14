@@ -19,7 +19,7 @@ public enum VerticalAlignmentPosition: String {
   // MARK: - Computed Properties
   // ---------------------------
   
-  var shouldSetHeight: Bool {
+  public var shouldSetHeight: Bool {
     switch self {
       case .targetTop, .targetBottom, .targetCenter:
         return true;
@@ -27,6 +27,11 @@ public enum VerticalAlignmentPosition: String {
       default:
         return false;
     };
+  };
+  
+  public var isStretching: Bool {
+       self == .stretch
+    || self == .stretchTarget;
   };
   
   // MARK: - Functions

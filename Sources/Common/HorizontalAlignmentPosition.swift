@@ -19,7 +19,7 @@ public enum HorizontalAlignmentPosition: String {
   // MARK: - Computed Properties
   // ---------------------------
   
-  var shouldSetWidth: Bool {
+  public var shouldSetWidth: Bool {
     switch self {
       case .targetLeading, .targetTrailing, .targetCenter:
         return true;
@@ -27,6 +27,11 @@ public enum HorizontalAlignmentPosition: String {
       default:
         return false;
     };
+  };
+  
+  public var isStretching: Bool {
+       self == .stretch
+    || self == .stretchTarget;
   };
   
   // MARK: - Functions
