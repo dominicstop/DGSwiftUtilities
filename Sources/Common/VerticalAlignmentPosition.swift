@@ -112,13 +112,13 @@ public enum VerticalAlignmentPosition: String {
             equalToConstant: enclosingView.bounds.width - marginVertical
           ),
         ] : [
-         view.leadingAnchor.constraint(
-           equalTo: enclosingView.leadingAnchor,
+         view.topAnchor.constraint(
+           equalTo: enclosingView.topAnchor,
            constant: marginTop
          ),
 
-         view.trailingAnchor.constraint(
-           equalTo: enclosingView.trailingAnchor,
+         view.bottomAnchor.constraint(
+           equalTo: enclosingView.bottomAnchor,
            constant: marginBottom
          ),
       ];
