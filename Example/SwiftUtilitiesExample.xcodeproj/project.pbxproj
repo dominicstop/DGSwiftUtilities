@@ -12,12 +12,13 @@
 		8807B40C2B1732560025F159 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8807B40B2B1732560025F159 /* Assets.xcassets */; };
 		8807B40F2B1732560025F159 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8807B40D2B1732560025F159 /* LaunchScreen.storyboard */; };
 		8807B4192B1733700025F159 /* DGSwiftUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = 8807B4182B1733700025F159 /* DGSwiftUtilities */; };
-		88D6B5A42C3DCF2B005E900B /* RouteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D6B59F2C3DCF2B005E900B /* RouteListViewController.swift */; };
-		88D6B5A52C3DCF2B005E900B /* Test01ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D6B5A02C3DCF2B005E900B /* Test01ViewController.swift */; };
+		889E4B382CE515030015788F /* InterpolationTest01ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E6BEF32C474C7C00BAAE1F /* InterpolationTest01ViewController.swift */; };
+		889E4B392CE515030015788F /* RouteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D6B59F2C3DCF2B005E900B /* RouteListViewController.swift */; };
+		889E4B3A2CE515030015788F /* Test01ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D6B5A02C3DCF2B005E900B /* Test01ViewController.swift */; };
+		889E4B3B2CE515030015788F /* Test02ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889E4B362CE514C10015788F /* Test02ViewController.swift */; };
+		889E4B3C2CE517AA0015788F /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E6BEF52C47780200BAAE1F /* LogViewController.swift */; };
 		88D6B5A62C3DCF2B005E900B /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D6B5A22C3DCF2B005E900B /* Route.swift */; };
 		88D6B5A72C3DCF2B005E900B /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D6B5A32C3DCF2B005E900B /* RouteManager.swift */; };
-		88E6BEF42C474C7C00BAAE1F /* InterpolationTest01ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E6BEF32C474C7C00BAAE1F /* InterpolationTest01ViewController.swift */; };
-		88E6BEF62C47780200BAAE1F /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E6BEF52C47780200BAAE1F /* LogViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		8807B40E2B1732560025F159 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8807B4102B1732560025F159 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8807B4162B1733580025F159 /* DGSwiftUtilities */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = DGSwiftUtilities; path = ..; sourceTree = "<group>"; };
+		889E4B362CE514C10015788F /* Test02ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Test02ViewController.swift; sourceTree = "<group>"; };
 		88D6B59F2C3DCF2B005E900B /* RouteListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteListViewController.swift; sourceTree = "<group>"; };
 		88D6B5A02C3DCF2B005E900B /* Test01ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Test01ViewController.swift; sourceTree = "<group>"; };
 		88D6B5A22C3DCF2B005E900B /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 				88E6BEF32C474C7C00BAAE1F /* InterpolationTest01ViewController.swift */,
 				88D6B59F2C3DCF2B005E900B /* RouteListViewController.swift */,
 				88D6B5A02C3DCF2B005E900B /* Test01ViewController.swift */,
+				889E4B362CE514C10015788F /* Test02ViewController.swift */,
 			);
 			path = Routes;
 			sourceTree = SOURCE_ROOT;
@@ -180,11 +183,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				889E4B3C2CE517AA0015788F /* LogViewController.swift in Sources */,
+				889E4B382CE515030015788F /* InterpolationTest01ViewController.swift in Sources */,
+				889E4B392CE515030015788F /* RouteListViewController.swift in Sources */,
+				889E4B3A2CE515030015788F /* Test01ViewController.swift in Sources */,
+				889E4B3B2CE515030015788F /* Test02ViewController.swift in Sources */,
 				8807B4032B1732540025F159 /* AppDelegate.swift in Sources */,
-				88D6B5A52C3DCF2B005E900B /* Test01ViewController.swift in Sources */,
-				88D6B5A42C3DCF2B005E900B /* RouteListViewController.swift in Sources */,
-				88E6BEF62C47780200BAAE1F /* LogViewController.swift in Sources */,
-				88E6BEF42C474C7C00BAAE1F /* InterpolationTest01ViewController.swift in Sources */,
 				88D6B5A72C3DCF2B005E900B /* RouteManager.swift in Sources */,
 				88D6B5A62C3DCF2B005E900B /* Route.swift in Sources */,
 				8807B4052B1732540025F159 /* SceneDelegate.swift in Sources */,
