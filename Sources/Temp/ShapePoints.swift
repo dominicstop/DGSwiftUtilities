@@ -11,7 +11,11 @@ import UIKit
 public enum ShapePoints {
   case regularPolygon(numberOfSides: Int);
   
-  public func createPoints(forFrame enclosingFrame: CGRect) -> [CGPoint] {
+  public func createPoints(
+    forFrame enclosingFrame: CGRect,
+    shouldScaleToFitTargetRect: Bool = true,
+    shouldPreserveAspectRatioWhenScaling: Bool = false
+  ) -> [CGPoint] {
     var points: [CGPoint] = [];
     
     switch self {
@@ -32,8 +36,14 @@ public enum ShapePoints {
         };
     };
     
-    let pointsScaledToFit =
-      points.scalePointsToFit(targetRect: enclosingFrame);
+    if !shouldScaleToFitTargetRect {
+      return points;
+    };
+    
+    let pointsScaledToFit = points.scalePointsToFit(
+      targetRect: enclosingFrame,
+      shouldPreserveAspectRatio: shouldPreserveAspectRatioWhenScaling
+    );
     
     return pointsScaledToFit;
   };
