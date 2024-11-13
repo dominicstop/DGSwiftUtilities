@@ -17,6 +17,10 @@ public extension CGRect {
       || self.size.height.isNaN
     );
   };
+  
+  var nilIfEmpty: Self? {
+    self.isEmpty ? nil : self;
+  };
 
   mutating func setPoint(
     minX: CGFloat? = nil,
