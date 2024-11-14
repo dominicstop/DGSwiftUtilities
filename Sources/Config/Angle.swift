@@ -77,6 +77,17 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable, EnumCaseString
         return "degrees";
     };
   };
+  
+  public var normalized: Self {
+    var normalizedDegrees =
+      self.degrees.truncatingRemainder(dividingBy: 360);
+        
+    if normalizedDegrees < 0 {
+      normalizedDegrees += 360;
+    };
+    
+    return .degrees(normalizedDegrees);
+  };
 };
 
 // MARK: - Angle+StaticAlias
