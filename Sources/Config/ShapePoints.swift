@@ -108,4 +108,39 @@ public extension ShapePoints {
     let angleInRadians = atan2(point.y - center.y, point.x - center.x);
     return .radians(angleInRadians);
   };
+  
+  static func getMidPointAlongsideArc(
+    forLeadingPoint leadingPoint: CGPoint,
+    trailingPoint: CGPoint,
+    withCenter center: CGPoint,
+    radius: CGFloat
+  ) -> CGPoint {
+  
+    let leadingAngle = Self.getAngleAlongCircle(
+      forPoint: leadingPoint,
+      withCenter: center,
+      radius: radius
+    );
+    
+    let trailingAngle = Self.getAngleAlongCircle(
+      forPoint: trailingPoint,
+      withCenter: center,
+      radius: radius
+    );
+  
+    let midAngle = leadingAngle.computeMidAngle(otherAngle: trailingAngle);
+    
+    /// adj. midpoint angle so it's within range `[-π, π]` (i.e. to account
+    /// for wrapping).
+    ///
+    /// E.g. 180...90 deg, mid = 0 deg, not 225 deg
+    ///
+    let midAngleAdj = midAngle.normalized;
+    
+    return Self.getPointAlongCirclePath(
+      forAngle: midAngleAdj,
+      withCenter: center,
+      radius: radius
+    );
+  };
 };
