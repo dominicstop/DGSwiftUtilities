@@ -77,3 +77,26 @@ public enum ShapePoints {
   };
 };
 
+
+// MARK: - ShapePoints+StaticHelpers
+// ---------------------------------
+
+public extension ShapePoints {
+
+  static func getPointAlongCirclePath(
+    forAngle angle: Angle<CGFloat>,
+    withCenter center: CGPoint,
+    radius: CGFloat
+  ) -> CGPoint {
+    
+    // convert degrees to radians
+    let angleRadians = angle.radians;
+    
+    // compute the x and y coordinates using the polar coordinate formula
+    let x = center.x + radius * sin(angleRadians);
+    let y = center.y + radius * cos(angleRadians);
+    
+    return .init(x: x, y: y);
+  };
+  
+};
