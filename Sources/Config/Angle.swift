@@ -88,6 +88,12 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable, EnumCaseString
     
     return .degrees(normalizedDegrees);
   };
+  
+  public func computeMidAngle(otherAngle: Self) -> Self {
+    let (angle1, angle2) = Self.normalizeToDegrees(self, otherAngle);
+    let angleMid = (angle1.rawValue + angle2.rawValue) / 2;
+    return .degrees(angleMid);
+  };
 };
 
 // MARK: - Angle+StaticAlias
