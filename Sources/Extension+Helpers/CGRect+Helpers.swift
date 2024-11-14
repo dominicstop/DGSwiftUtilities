@@ -21,6 +21,13 @@ public extension CGRect {
   var nilIfEmpty: Self? {
     self.isEmpty ? nil : self;
   };
+  
+  var centerPoint: CGPoint {
+    .init(
+      x: self.midX,
+      y: self.minY
+    );
+  };
 
   mutating func setPoint(
     minX: CGFloat? = nil,
