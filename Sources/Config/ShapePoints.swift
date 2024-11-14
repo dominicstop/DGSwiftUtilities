@@ -99,4 +99,13 @@ public extension ShapePoints {
     return .init(x: x, y: y);
   };
   
+  /// calculate angle of point with respect to the center
+  static func getAngleAlongCircle(
+    forPoint point: CGPoint,
+    withCenter center: CGPoint,
+    radius: CGFloat
+  ) -> Angle<CGFloat> {
+    let angleInRadians = atan2(point.y - center.y, point.x - center.x);
+    return .radians(angleInRadians);
+  };
 };
