@@ -76,17 +76,16 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
       self.degrees.truncatingRemainder(dividingBy: 360);
           
     let adj: T = {
-      switch normalizedDegrees {
-        case let angle where angle > 180:
-          return -360;
-          
-        case let angle where angle < -180:
-          return 360.0;
-          
-        default:
-          return 0;
+      // written this way to prevent comparison via equatable
+      if normalizedDegrees.isLess(than: 0) {
+        return 360;
       };
-    
+      
+      if T(360).isLess(than: normalizedDegrees) {
+        return -360;
+      };
+      
+      return 0;
     }();
         
     let normalizedDegreesAdj = normalizedDegrees + adj;
