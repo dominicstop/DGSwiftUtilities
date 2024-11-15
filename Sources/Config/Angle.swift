@@ -8,7 +8,7 @@
 import Foundation
 
 
-public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable, EnumCaseStringRepresentable {
+public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
   
   case radians(T);
   case degrees(T);
@@ -68,7 +68,6 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable, EnumCaseString
     }
   };
   
-  public var caseString: String {
   public var normalized: Self {
     let normalizedDegrees =
       self.degrees.truncatingRemainder(dividingBy: 360);
@@ -90,31 +89,6 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable, EnumCaseString
     let normalizedDegreesAdj = normalizedDegrees + adj;
     return .degrees(normalizedDegreesAdj);
   };
-    switch self {
-      case .radians:
-        return "radians";
-        
-      case .degrees:
-        return "degrees";
-    };
-  };
-  
-  public var normalized: Self {
-    var normalizedDegrees =
-      self.degrees.truncatingRemainder(dividingBy: 360);
-        
-    if normalizedDegrees < 0 {
-      normalizedDegrees += 360;
-    };
-    
-    return .degrees(normalizedDegrees);
-  };
-  
-  public func computeMidAngle(otherAngle: Self) -> Self {
-    let (angle1, angle2) = Self.normalizeToDegrees(self, otherAngle);
-    let angleMid = (angle1.rawValue + angle2.rawValue) / 2;
-    return .degrees(angleMid);
-  };
 };
 
 // MARK: - Angle+StaticAlias
@@ -124,6 +98,22 @@ public extension Angle {
 
   static var zero: Self {
     .degrees(0);
+  };
+};
+
+// MARK: - Angle+EnumCaseStringRepresentable
+// -----------------------------------------
+
+extension Angle: EnumCaseStringRepresentable {
+
+  public var caseString: String {
+    switch self {
+      case .radians:
+        return "radians";
+        
+      case .degrees:
+        return "degrees";
+    };
   };
 };
 
