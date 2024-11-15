@@ -17,6 +17,19 @@ public extension CGPoint {
     return sqrt(xSquared + ySquared);
   };
   
+  /// convert to unit vector
+  /// * converts the vector to have a length/magnitude of 1, while preserving
+  ///   the original direction
+  ///
+  var vectorNormalized: Self {
+    let length = self.vectorMagnitude;
+    
+    let unitVectorX = self.x / length;
+    let unitVectorY = self.y / length;
+    
+    return .init(x: unitVectorX, y: unitVectorY);
+  };
+
   func getDistance(
     fromOtherPoint otherPoint: Self,
     isDeltaAbsolute: Bool = false
