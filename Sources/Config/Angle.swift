@@ -89,6 +89,16 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
     let normalizedDegreesAdj = normalizedDegrees + adj;
     return .degrees(normalizedDegreesAdj);
   };
+  
+  public func wrap(otherValue: T) -> Self {
+    switch self {
+      case .radians:
+        return .radians(otherValue);
+        
+      case .degrees:
+        return .degrees(otherValue);
+    };
+  };
 };
 
 // MARK: - Angle+StaticAlias
