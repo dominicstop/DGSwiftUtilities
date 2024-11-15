@@ -42,11 +42,62 @@ struct PolygonConfig {
 
 class Test02ViewController: UIViewController {
 
+  static func testForComputeMidAngle(){
+    let angles: [(
+      leadingAngle: Angle<CGFloat>,
+      trailingAngle: Angle<CGFloat>
+    )] = [
+      (.degrees(0), .degrees(90)),
+      (.degrees(90), .degrees(180)),
+      (.degrees(180), .degrees(270)),
+      (.degrees(270), .degrees(360)),
+      
+      (.degrees(90), .degrees(270)), // 0
+      (.degrees(360 + 90), .degrees(360 + 270)), // 0
+      (.degrees(45), .degrees(360 - 45)),
+      (.degrees(360 + 45), .degrees(360 + 360 - 45)),
+      
+      (.degrees(0), .degrees(45)),
+      (.degrees(45), .degrees(90)),
+      (.degrees(90), .degrees(135)),
+      (.degrees(135), .degrees(180)),
+      (.degrees(180), .degrees(225)),
+      (.degrees(225), .degrees(270)),
+      (.degrees(270), .degrees(315)),
+      (.degrees(315), .degrees(360)),
+      
+      (.degrees(360 + 0), .degrees(360 + 45)),
+      (.degrees(360 + 45), .degrees(360 + 90)),
+      (.degrees(360 + 90), .degrees(360 + 135)),
+      (.degrees(360 + 135), .degrees(360 + 180)),
+      (.degrees(360 + 180), .degrees(360 + 225)),
+      (.degrees(360 + 225), .degrees(360 + 270)),
+      (.degrees(360 + 270), .degrees(360 + 315)),
+      (.degrees(360 + 315), .degrees(360 + 360)),
+    ];
+    
+    for (index, (leadingAngle, trailingAngle)) in angles.enumerated() {
+      let midAngle = leadingAngle.computeMidAngle(
+        otherAngle: trailingAngle,
+        isClockwise: false
+      );
+      
+      print(
+        "\(#function) - angle: \(index) of \(angles.count - 1)",
+        "\n - leadingAngle:", leadingAngle.degrees,
+        "\n - midAngle:", midAngle.degrees,
+        "\n - trailingAngle:", trailingAngle.degrees,
+        "\n"
+      );
+    };
+  };
+
   override func loadView() {
     let view = UIView();
     view.backgroundColor = .white;
     
     self.view = view;
+    Self.testForComputeMidAngle();
   };
   
   override func viewDidLoad() {
