@@ -148,7 +148,28 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
     
     return .degrees(angleMid)
   };
+  
+  public func getPointAlongCircle(
+    withRadius radius: CGFloat,
+    usingCenter center: CGPoint,
+    shouldFlip: Bool = true
+  ) -> CGPoint {
     
+    // convert degrees to radians
+    let angleRadians = CGFloat(self.radians);
+    
+    let xRatio = shouldFlip
+      ? sin(angleRadians)
+      : cos(angleRadians);
+      
+    let yRatio = shouldFlip
+      ? cos(angleRadians)
+      : sin(angleRadians);
+    
+    let x = radius * xRatio;
+    let y = radius * yRatio;
+    
+    return CGPoint(x: x, y: y);
   };
 };
 
