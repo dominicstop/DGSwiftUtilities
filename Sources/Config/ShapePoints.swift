@@ -20,20 +20,14 @@ public enum ShapePoints {
     
     switch self {
       case let .regularPolygon(numberOfSides):
-        let centerX = enclosingFrame.midX;
-        let centreY = enclosingFrame.midY;
-        
         let radius = enclosingFrame.width / 2;
-        let angle = 2 * (.pi / CGFloat(numberOfSides));
+        let angleIncrement = 360 / CGFloat(numberOfSides);
         
-        for index in 0 ..< numberOfSides {
-          let currentPoint = CGFloat(index);
-          
-          let x = centerX + radius * sin(currentPoint * angle);
-          let y = centreY + radius * cos(currentPoint * angle);
-          
-          points.append(.init(x: x, y: y));
-        };
+        points = Self.createPointsForRegularPolygon(
+          center: enclosingFrame.centerPoint,
+          radius: radius,
+          numberOfSides: numberOfSides
+        );
     };
     
     if !shouldScaleToFitTargetRect {
@@ -76,3 +70,26 @@ public enum ShapePoints {
     return shapeLayer;
   };
 };
+
+
+// MARK: - ShapePoints+StaticHelpers
+// ---------------------------------
+
+public extension ShapePoints {
+  static func createPointsForRegularPolygon(
+    center: CGPoint,
+    radius: CGFloat,
+    numberOfSides: Int
+  ) -> [CGPoint] {
+    
+    let angleIncrement = 360 / CGFloat(numberOfSides);
+    
+    return (0 ..< numberOfSides).map {
+      let angle: Angle<CGFloat> = .degrees(CGFloat($0) * angleIncrement);
+      
+      return angle.getPointAlongCircle(
+        withRadius: radius,
+        usingCenter: center
+      );
+    };
+  };
