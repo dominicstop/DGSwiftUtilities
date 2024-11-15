@@ -13,6 +13,9 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
   case radians(T);
   case degrees(T);
   
+  // MARK: - Computed Properties
+  // ---------------------------
+  
   public var radians: T {
     guard !self.rawValue.isZero else {
       return 0;
@@ -89,6 +92,9 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
     let normalizedDegreesAdj = normalizedDegrees + adj;
     return .degrees(normalizedDegreesAdj);
   };
+  
+  // MARK: - Functions
+  // -----------------
   
   public func wrap(otherValue: T) -> Self {
     switch self {
