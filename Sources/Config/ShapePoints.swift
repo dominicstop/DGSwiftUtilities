@@ -11,6 +11,12 @@ import UIKit
 public enum ShapePoints {
   case regularPolygon(numberOfSides: Int);
   
+  case regularStarPolygon(
+    numberOfSpikes: Int,
+    innerRadius: CGFloat? = nil,
+    spikeRadius: CGFloat
+  );
+  
   public func createPoints(
     forFrame enclosingFrame: CGRect,
     shouldScaleToFitTargetRect: Bool = true,
@@ -27,6 +33,14 @@ public enum ShapePoints {
           center: enclosingFrame.centerPoint,
           radius: radius,
           numberOfSides: numberOfSides
+        );
+        
+      case let .regularStarPolygon(numberOfSpikes, innerRadius, outerRadius):
+        points = Self.createPointsForStar(
+          center: enclosingFrame.centerPoint,
+          outerRadius: outerRadius,
+          innerRadius: innerRadius,
+          numberOfPoints: numberOfSpikes
         );
     };
     
@@ -93,3 +107,40 @@ public extension ShapePoints {
       );
     };
   };
+  
+  
+  static func createPointsForStar(
+    center: CGPoint,
+    outerRadius: CGFloat,
+    innerRadius: CGFloat? = nil,
+    numberOfPoints: Int
+  ) -> [CGPoint] {
+          
+    let innerRadius = innerRadius ?? outerRadius / 2.5;
+    
+    let angleIncrement = 360 / CGFloat(numberOfPoints);
+    let angleIncrementHalf = angleIncrement / 2;
+    
+    return (0 ..< numberOfPoints).reduce(into: []) {
+      let index = CGFloat($1);
+    
+      let innerAngle: Angle<CGFloat> = .degrees(index * angleIncrement);
+      
+      let innerPoint = innerAngle.getPointAlongCircle(
+        withRadius: innerRadius,
+        usingCenter: center
+      );
+      
+      $0.append(innerPoint);
+      
+      let outerAngle: Angle<CGFloat> = .degrees(innerAngle.degrees + angleIncrementHalf);
+      
+      let outerPoint = outerAngle.getPointAlongCircle(
+        withRadius: outerRadius,
+        usingCenter: center
+      );
+      
+      $0.append(outerPoint);
+    };
+  };
+};
