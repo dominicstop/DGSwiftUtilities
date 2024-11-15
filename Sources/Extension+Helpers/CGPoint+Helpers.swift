@@ -61,6 +61,16 @@ public extension CGPoint {
     return .radians(angleInRadians).normalized;
   };
   
+  func getMidpoint(betweenOtherPoint otherPoint: Self) -> Self {
+    let deltaX = self.x + otherPoint.x;
+    let midX = deltaX / 2;
+    
+    let deltaY = self.y + otherPoint.y;
+    let midY = deltaY / 2;
+    
+    return .init(x: midX, y: midY)
+  };
+  
   func getMidPointAlongsideArc(
     withRadius radius: CGFloat? = nil,
     forOtherPoint trailingPoint: Self,
