@@ -10,6 +10,13 @@ import Foundation
 
 public extension CGPoint {
 
+  var vectorMagnitude: CGFloat {
+    let xSquared = self.x * self.x;
+    let ySquared = self.y * self.y;
+    
+    return sqrt(xSquared + ySquared);
+  };
+  
   func getDistance(
     fromOtherPoint otherPoint: Self,
     isDeltaAbsolute: Bool = false
