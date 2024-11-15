@@ -107,25 +107,48 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
   
   public func computeMidAngle(
     otherAngle: Self,
-    shouldNormalize: Bool = true
+    isClockwise: Bool = true
   ) -> Self {
-    let angles = Self.normalizeToDegrees(self, otherAngle);
+    let angleLeading = self.normalized.degrees;
+    let angleTrailing = otherAngle.normalized.degrees;
     
-    // normalize angles to the range [-π, π]
-    let angleLeading = shouldNormalize
-      ? angles.a.normalized
-      : angles.a;
+    let delta = angleLeading - angleTrailing;
+    
+    let needsAdj = isClockwise
+      ? delta < 0
+      : delta > 0;
+    
+    // amount to shift ccw direction
+    let adj: T = {
+      if needsAdj {
+        return 0;
+      };
       
-    let angleTrailing = shouldNormalize
-      ? angles.b.normalized
-      : angles.b;
-
-    // calculate the raw midpoint
-    let midAngleRaw = (angleLeading.rawValue + angleTrailing.rawValue) / 2;
-    let midAngle: Self = .degrees(midAngleRaw);
+      return abs(delta) / 2;
+    }();
     
-    let midAngleAdj = shouldNormalize ? midAngle.normalized : midAngle;
-    return midAngleAdj;
+    let angleMid: T = {
+      if adj == 0 {
+        return (angleLeading + angleTrailing) / 2;
+      };
+      
+      // adjust by shifting counter clockwise
+      let angleLeadingShifted: Self = .degrees(angleLeading + adj);
+      let angleTrailingShifted: Self = .degrees(angleTrailing + adj);
+      
+      // normalized to 0...360
+      let angleLeading = angleLeadingShifted.normalized.degrees;
+      let angleTrailing = angleTrailingShifted.normalized.degrees;
+      
+      let angleMidShifted = (angleLeading + angleTrailing) / 2;
+      
+      // undo shifting
+      return angleMidShifted - adj;
+    }();
+    
+    return .degrees(angleMid)
+  };
+    
   };
 };
 
