@@ -99,6 +99,29 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
         return .degrees(otherValue);
     };
   };
+  
+  public func computeMidAngle(
+    otherAngle: Self,
+    shouldNormalize: Bool = true
+  ) -> Self {
+    let angles = Self.normalizeToDegrees(self, otherAngle);
+    
+    // normalize angles to the range [-π, π]
+    let angleLeading = shouldNormalize
+      ? angles.a.normalized
+      : angles.a;
+      
+    let angleTrailing = shouldNormalize
+      ? angles.b.normalized
+      : angles.b;
+
+    // calculate the raw midpoint
+    let midAngleRaw = (angleLeading.rawValue + angleTrailing.rawValue) / 2;
+    let midAngle: Self = .degrees(midAngleRaw);
+    
+    let midAngleAdj = shouldNormalize ? midAngle.normalized : midAngle;
+    return midAngleAdj;
+  };
 };
 
 // MARK: - Angle+StaticAlias
