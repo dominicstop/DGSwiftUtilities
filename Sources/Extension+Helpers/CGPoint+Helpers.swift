@@ -41,4 +41,25 @@ public extension CGPoint {
     return .radians(angleInRadians).normalized;
   };
   
+  func getMidPointAlongsideArc(
+    withRadius radius: CGFloat? = nil,
+    forOtherPoint trailingPoint: Self,
+    usingCenter center: Self
+  ) -> Self {
+  
+    let radius = radius ?? self.getDistance(
+      fromOtherPoint: center,
+      isDeltaAbsolute: true
+    );
+    
+    let leadingAngle = self.getAngleAlongCircle(withCenter: center);
+    let trailingAngle = trailingPoint.getAngleAlongCircle(withCenter: center);
+
+    let midAngle = leadingAngle.computeMidAngle(otherAngle: trailingAngle);
+    
+    return midAngle.getPointAlongCircle(
+      withRadius: radius,
+      usingCenter: center
+    );
+  };
 };
