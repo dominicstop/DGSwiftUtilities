@@ -25,7 +25,7 @@ public extension CGRect {
   var centerPoint: CGPoint {
     .init(
       x: self.midX,
-      y: self.minY
+      y: self.midY
     );
   };
 
