@@ -72,4 +72,35 @@ public extension CGRect {
     
     self.origin = CGPoint(x: newX, y: newY);
   };
+  
+  func scale(
+    widthBy widthScaleFactor: CGFloat,
+    heightBy heightScaleFactor: CGFloat
+  ) -> Self {
+    let center = self.centerPoint;
+    
+    let newWidth = self.width * widthScaleFactor;
+    let newHeight = self.height * heightScaleFactor;
+    
+    let newSize: CGSize = .init(width: newWidth, height: newHeight);
+    let scaledRect = self.scale(toNewSize: newSize);
+
+    return scaledRect;
+  };
+  
+  func scale(byScaleFactor scaleFactor: CGFloat) -> Self {
+    return self.scale(widthBy: scaleFactor, heightBy: scaleFactor);
+  };
+  
+  func scale(toNewSize newSize: CGSize) -> Self {
+    let center = self.centerPoint;
+
+    let newX = center.x - (newSize.width / 2);
+    let newY = center.y - (newSize.height / 2);
+    
+    return .init(
+      origin: .init(x: newX, y: newY),
+      size: newSize
+    );
+  };
 };
