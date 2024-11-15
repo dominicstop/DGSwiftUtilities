@@ -69,6 +69,27 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable, EnumCaseString
   };
   
   public var caseString: String {
+  public var normalized: Self {
+    let normalizedDegrees =
+      self.degrees.truncatingRemainder(dividingBy: 360);
+          
+    let adj: T = {
+      switch normalizedDegrees {
+        case let angle where angle > 180:
+          return -360;
+          
+        case let angle where angle < -180:
+          return 360.0;
+          
+        default:
+          return 0;
+      };
+    
+    }();
+        
+    let normalizedDegreesAdj = normalizedDegrees + adj;
+    return .degrees(normalizedDegreesAdj);
+  };
     switch self {
       case .radians:
         return "radians";
