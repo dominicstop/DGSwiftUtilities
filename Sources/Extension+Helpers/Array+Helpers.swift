@@ -24,7 +24,14 @@ public extension Array {
   }
   
   func index(forCyclicIndex cyclicIndex: Index) -> Index {
-    return cyclicIndex % self.count;
+    if cyclicIndex >= 0 {
+      return cyclicIndex % self.count;
+    };
+    
+    let rawIndex = (cyclicIndex % self.count);
+    let indexReversed = rawIndex + self.count;
+    
+    return indexReversed % self.count;
   };
   
   func first<T>(whereType type: T.Type) -> T? {
