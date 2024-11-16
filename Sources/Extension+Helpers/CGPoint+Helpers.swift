@@ -92,4 +92,95 @@ public extension CGPoint {
       usingCenter: center
     );
   };
+
+  /// Solve for the intersection point of two lines.
+  ///
+  /// The first line (`lineA`) passes through `self` with slope `slopeA`.
+  /// The second line (`lineB`) passes through `pointB` with slope `slopeB`.
+  ///
+  /// Solve for `intersection`:
+  /// ```
+  ///         self
+  ///           +
+  ///            \  lineA
+  ///             \
+  ///              \
+  ///  pointB --+---+-- intersection
+  ///                \
+  ///
+  ///            lineB
+  /// ```
+  ///
+  /// - Parameters:
+  ///   - slopeA: Slope of the line passing through `self`.
+  ///   - pointB: A point on the second line.
+  ///   - slopeB: Slope of the second line.
+  ///
+  /// - Returns: The intersection point, or `nil` if the lines are parallel.
+  ///
+  func findIntersection(
+    withSlopeForCurrentPoint slopeA: CGFloat,
+    betweenPointB pointB: Self,
+    withSlope slopeB: CGFloat
+  ) -> Self? {
+
+    // check if the slopes are parallel (no intersection)
+    if slopeA == slopeB {
+      return nil;
+    };
+    
+    /// find the equation of the line passing through `pointA` (`self`) with
+    /// the given slope (`slopeA`).
+    ///
+    /// define formula...
+    /// point-slope form:       `y - y1 = m(x - x1)`
+    /// rearrange, solve for y: `y = mx - mx1 + y1`
+    ///
+    /// plug in values...
+    /// point-slope form:       `y - self.y = slopeA * (x - self.x)`
+    /// rearrange, solve for y: `y = slopeA * x - (slopeA * self.x) + self.y`
+    ///
+    let equationForLineA = { (x: CGFloat) in
+      slopeA * (x - self.x) + self.y;
+    };
+    
+    /// solve the system of equations:
+    /// `equationForLineA(x) = equationForLineB(x)`
+    ///
+    /// expand:
+    /// `m1 * (x - x1) + y1 = m2 * (x - x2) + y2`
+    ///
+    /// plugin values:
+    /// `slopeA * (x - self.x) + self.y = slopeB * (x - pointB.x) + pointB.y`
+    ///
+    /// rearrange to solve for x:
+    /// `m1 * x - m1 * x1 + y1 = m2 * x - m2 * x2 + y2`
+    /// `m1 * x - m2 * x = m1 * x1 - y1 - m2 * x2 + y2`
+    /// `x * (m1 - m2) = m1 * x1 - y1 - m2 * x2 + y2`
+    /// `x = (m1 * x1 - y1 - m2 * x2 + y2) / (m1 - m2)`
+    ///
+    /// plug in values:
+    /// `x = (slopeA * self.x - self.y - slopeB * pointB.x + pointB.y) / (slopeA - slopeB)`
+    ///
+    let intersectionX: CGFloat? = {
+      let denominator = slopeA - slopeB;
+      guard denominator > 0 else {
+        return 0;
+      };
+      
+      let numerator =
+        (slopeA * self.x) - self.y - (slopeB * pointB.x) + pointB.y;
+        
+      return numerator / denominator;
+    }();
+    
+    guard let intersectionX = intersectionX else {
+      return nil;
+    };
+    
+    // solve for the y-coordinate using the first line's equation
+    let intersectionY = equationForLineA(intersectionX);
+    
+    return .init(x: intersectionX, y: intersectionY);
+  };
 };
