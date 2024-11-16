@@ -27,6 +27,30 @@ public extension Array where Element == CGPoint {
       maxY: maxY
     );
   };
+  
+  /// translates all points by a given `dx` and `dy` relative to the
+  /// bounding box.
+  ///
+  func translatePoints(dx: CGFloat, dy: CGFloat) -> [CGPoint] {
+    let boundingBox = self.getBoundingBoxForPoints();
+      
+    // calculate the translation for the derived bounding box
+    let translatedOrigin = CGPoint(
+      x: boundingBox.origin.x + dx,
+      y: boundingBox.origin.y + dy
+    );
+      
+    // adjust each point by translation
+    return self.map { point in
+      let adjX = translatedOrigin.x - boundingBox.origin.x;
+      let adjY = translatedOrigin.y - boundingBox.origin.y;
+      
+      return .init(
+        x: point.x + adjX,
+        y: point.y + adjY
+      );
+    };
+  };
 
   func scalePointsToFit(
     targetRect: CGRect,
