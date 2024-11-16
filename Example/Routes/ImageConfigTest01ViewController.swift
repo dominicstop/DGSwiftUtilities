@@ -326,6 +326,191 @@ class ImageConfigTest01ViewController: UIViewController {
       return cardVC;
     }());
     
+    /// Tests for `TBA` w/ multiple presets
+    cardControllers.append({
+      let presets: [ImageConfigSystem] = [
+        .init(
+          systemName: "star"
+        ),
+        .init(
+          systemName: "star",
+          color: .tintColor(.yellow)
+        ),
+        .init(
+          systemName: "star",
+          weight: .bold,
+          color: .tintColor(.yellow)
+        ),
+        .init(
+          systemName: "star",
+          pointSize: 32,
+          weight: .bold,
+          scale: .large,
+          color: .tintColor(.yellow)
+        ),
+      ];
+      
+      let initialImageConfig = presets.first!;
+      
+      let cardVC: CardViewController = .init(cardConfig: nil);
+      var cardContentItems: [CardContentItem] = [];
+      
+      cardVC.setInjectedValue(
+        forKey: "didLoadImage",
+        value: false
+      );
+      
+      cardVC.setInjectedValue(
+        forKey: "presetIndex",
+        value: 0
+      );
+      
+      cardVC.setInjectedValue(
+        forKey: "currentImageConfigPreset",
+        value: initialImageConfig
+      );
+      
+      cardContentItems.append(
+        .labelValueDisplay(
+          id: "configDisplay",
+          items: initialImageConfig.metadataAsLabelValueDisplayItems
+        )
+      );
+      
+      cardContentItems.append(
+        .labelValueDisplay(
+          id: "logDisplay",
+          items: []
+        )
+      );
+      
+      /// Next `ImageConfigGradient` preset button
+      cardContentItems.append(
+        .filledButton(
+          title: [
+            .init(text: "Next Preset"),
+          ],
+          subtitle: [],
+          handler: { _,_ in
+            var presetIndexCurrent = cardVC.getInjectedValue(
+              forKey: "presetIndex",
+              fallbackValue: 0
+            );
+            
+            presetIndexCurrent += 1;
+            cardVC.setInjectedValue(
+              forKey: "presetIndex",
+              value: presetIndexCurrent
+            );
+            
+            let currentPreset = presets[cyclicIndex: presetIndexCurrent];
+            cardVC.setInjectedValue(
+              forKey: "currentImageConfigPreset",
+              value: currentPreset
+            );
+            
+            Helpers.updateLogValueDisplay(
+              inCardController: cardVC,
+              forItemID: "configDisplay"
+            ) { _ in
+              return currentPreset.metadataAsLabelValueDisplayItems;
+            };
+            
+            cardVC.applyCardConfig();
+          }
+        )
+      );
+      
+      /// Load image button
+      cardContentItems.append(
+        .filledButton(
+          title: [
+            .init(text: "Load Image"),
+          ],
+          subtitle: [],
+          handler: { _,_ in
+          
+            let currentImageConfigPreset = cardVC.getInjectedValue(
+              forKey: "currentImageConfigPreset",
+              fallbackValue: initialImageConfig
+            );
+          
+            let didLoadImage = cardVC.getInjectedValue(
+              forKey: "didLoadImage",
+              fallbackValue: false
+            );
+            
+            if didLoadImage {
+              Helpers.updateLogValueDisplay(
+                inCardController: cardVC,
+                forItemID: "logDisplay"
+              ) { _ in
+                return [];
+              };
+            };
+            
+            Helpers.appendToLogValueDisplay(
+              inCardController: cardVC,
+              forItemID: "logDisplay",
+              withItems: [
+                .singleRow(
+                  label: [
+                    Helpers.createTimestamp(),
+                  ],
+                  value: [
+                    .init(text: "Load image start")
+                  ]
+                ),
+              ]
+            );
+            
+            cardVC.setInjectedValue(forKey: "didLoadImage", value: false);
+            cardVC.applyCardConfig();
+            
+            let imageLoader: ImageConfigLoader = .init(
+              imageConfig: currentImageConfigPreset
+            );
+            
+            imageLoader.loadImageIfNeeded { sender in
+              Helpers.appendToLogValueDisplay(
+                inCardController: cardVC,
+                forItemID: "logDisplay",
+                withItems: [
+                  .singleRow(
+                    label: [
+                      Helpers.createTimestamp(),
+                    ],
+                    value: [
+                      .init(text: "Image loaded")
+                    ]
+                  ),
+                  .singeRowWithImageValue(
+                    label: [
+                      .init(text: "Image")
+                    ],
+                    image: sender.cachedImage!,
+                    size: .init(width: 50, height: 50),
+                    contentMode: .scaleAspectFit
+                  ),
+                ]
+              );
+              
+              cardVC.applyCardConfig();
+              cardVC.setInjectedValue(forKey: "didLoadImage", value: true);
+            };
+          }
+        )
+      );
+    
+      cardVC.cardConfig = .init(
+        title: "ImageConfigGradient Test",
+        desc: [],
+        content: cardContentItems
+      );
+      
+      return cardVC;
+    }());
+    
     self.cardControllers = cardControllers;
     
     cardControllers.forEach {
@@ -545,6 +730,71 @@ extension ImageConfigGradient {
       .singleRowPlain(
         label: "endPoint",
         value: self.endPoint.debugDescription
+      ),
+    ];
+  };
+};
+
+extension ImageConfigSystem {
+  
+  var metadataAsLabelValueDisplayItems: [CardLabelValueDisplayItemConfig] {
+    return [
+      .singleRowPlain(
+        label: "imageType",
+        value: Self.imageType
+      ),
+      .multiLineRow(
+        spacing: 0,
+        label: [
+          .init(text: "colors"),
+        ],
+        value: {
+          guard let color = self.color else {
+            return [
+              .init(text: "N/A")
+            ];
+          };
+          
+          switch color {
+            case let .hierarchicalColor(color):
+              return [
+                .init(text: String(describing: color.rgba)),
+              ];
+              
+            case let .paletteColors(colors):
+              return colors.enumerated().map {
+                let isLast = $0.offset == (colors.count - 1);
+                
+                var text = String(describing: $0.element.rgba);
+                if !isLast {
+                  text += "\n"
+                };
+                
+                return .init(text: text);
+              }
+              
+            case let .tintColor(color):
+              return [
+                .init(text: String(describing: color.rgba)),
+              ];
+          };
+        }()
+      ),
+      .singleRowPlain(
+        label: "systemName",
+        value: self.systemName
+      ),
+      .singleRowPlain(
+        label: "pointSize",
+        value: self.pointSize?.description ?? "N/A"
+      ),
+      .singleRowPlain(
+        label: "weight",
+        value: self.weight?.caseString ?? "N/A"
+      ),
+      .singleRowPlain(
+        label: "scale",
+        value: self.scale?.caseString ?? "N/A"
       ),
     ];
   };
