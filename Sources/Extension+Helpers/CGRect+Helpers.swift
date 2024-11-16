@@ -33,6 +33,10 @@ public extension CGRect {
     minX: CGFloat? = nil,
     minY: CGFloat? = nil
   ){
+    guard !(minX == nil && minY == nil) else {
+      return;
+    };
+    
     self.origin = CGPoint(
       x: minX ?? self.minX,
       y: minY ?? self.minY
@@ -43,6 +47,10 @@ public extension CGRect {
     midX: CGFloat? = nil,
     midY: CGFloat? = nil
   ){
+    guard !(midX == nil && midY == nil) else {
+      return;
+    };
+    
     let newX: CGFloat = {
       guard let midX = midX else { return self.minX };
       return midX - (self.width / 2);
@@ -60,6 +68,10 @@ public extension CGRect {
     maxX: CGFloat? = nil,
     maxY: CGFloat? = nil
   ){
+    guard !(maxX == nil && maxY == nil) else {
+      return;
+    };
+    
     let newX: CGFloat = {
       guard let maxX = maxX else { return self.minX };
       return maxX - self.width;
@@ -77,7 +89,6 @@ public extension CGRect {
     widthBy widthScaleFactor: CGFloat,
     heightBy heightScaleFactor: CGFloat
   ) -> Self {
-    let center = self.centerPoint;
     
     let newWidth = self.width * widthScaleFactor;
     let newHeight = self.height * heightScaleFactor;
