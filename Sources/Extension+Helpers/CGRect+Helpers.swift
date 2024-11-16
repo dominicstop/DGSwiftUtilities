@@ -97,6 +97,16 @@ public extension CGRect {
     self.origin = CGPoint(x: newX, y: newY);
   };
   
+  mutating func setPoint(origin: CGPoint){
+    self.setPoint(minX: origin.x, minY: origin.y);
+  };
+  
+  mutating func setPoint(center: CGPoint) {
+    let newOriginX = center.x - (self.width / 2);
+    let newOriginY = center.y - (self.height / 2);
+    
+    self.setPoint(minX: newOriginX, minY: newOriginY);
+  };
   
   func scale(toNewSize newSize: CGSize) -> Self {
     let center = self.centerPoint;
