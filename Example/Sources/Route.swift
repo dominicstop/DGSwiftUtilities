@@ -8,11 +8,13 @@
 import UIKit
 import DGSwiftUtilities
 
+
 enum Route: String, CaseIterable {
   case routeList;
   case test01;
   case test02;
   case interpolationTest01;
+  case imageConfigTest01;
   
   // MARK: - Computed Properties
   // ---------------------------
@@ -30,6 +32,9 @@ enum Route: String, CaseIterable {
         
       case .interpolationTest01:
         return InterpolationTest01ViewController();
+        
+      case .imageConfigTest01:
+        return ImageConfigTest01ViewController();
     };
   };
   
@@ -49,6 +54,9 @@ enum Route: String, CaseIterable {
         
       case .interpolationTest01:
         return "Tests for Interpolator";
+        
+      case .imageConfigTest01:
+        return "Tests for ImageConfig";
     };
   };
   
@@ -102,6 +110,13 @@ enum Route: String, CaseIterable {
         
       case .interpolationTest01:
         return [];
+        
+      case .imageConfigTest01:
+        return [
+          .init(text: "Misc. test create image logic for `ImageConfig` types."),
+          .init(text: "\n"),
+          .init(text: "Tests for image loading logic via `ImageConfigLoader`")
+        ];
     };
   };
 };
