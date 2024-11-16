@@ -111,4 +111,27 @@ public extension Array {
     
     return .init(slice);
   };
+  
+  /// Creates a new array containing the specified number of elements from the 
+  /// end of the original array.
+  ///
+  /// - Parameter count: 
+  ///   The number of elements to include in the new array.
+  ///
+  /// - Returns: 
+  ///   A new array containing the specified number of elements from the end of 
+  ///   the original array.
+  ///
+  /// **Note:** 
+  /// If `count` is greater than the array's length, the entire array is 
+  /// returned.
+  ///
+  /// If `count` is negative, an empty array is returned.
+  ///
+  func suffixCopy(count: Int) -> Self {
+    let countAdj = count.clamped(min: 0, max: self.count);
+    let slice = self.suffix(countAdj);
+    
+    return .init(slice);
+  };
 };
