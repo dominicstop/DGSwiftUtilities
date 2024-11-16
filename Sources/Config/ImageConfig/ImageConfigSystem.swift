@@ -96,7 +96,7 @@ public struct ImageConfigSystem: ImageConfig {
     return UIImage(systemName: self.systemName);
   };
   
-  init(
+  public init(
     systemName: String,
     pointSize: CGFloat? = 16,
     weight: UIImage.SymbolWeight? = .regular,
