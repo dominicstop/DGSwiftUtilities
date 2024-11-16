@@ -137,4 +137,11 @@ public extension CGRect {
   func scale(byScaleFactor scaleFactor: CGFloat) -> Self {
     return self.scale(widthBy: scaleFactor, heightBy: scaleFactor);
   };
+  
+  func centered(inOtherRect otherRect: CGRect) -> CGRect {
+    var copy = self;
+    copy.setPoint(center: otherRect.centerPoint);
+    
+    return copy;
+  };
 };
