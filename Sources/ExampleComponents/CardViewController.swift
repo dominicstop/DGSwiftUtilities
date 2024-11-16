@@ -7,17 +7,17 @@
 
 import UIKit
 
-public class CardViewController: UIViewController {
+open class CardViewController: UIViewController {
 
-  public var cardConfig: CardConfig;
+  public var cardConfig: CardConfig?;
   public var cardView: UIView?;
   
-  public init(cardConfig: CardConfig){
+  public init(cardConfig: CardConfig?){
     self.cardConfig = cardConfig;
     super.init(nibName: nil, bundle: nil);
   };
   
-  required init?(coder: NSCoder) {
+  required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented");
   };
   
@@ -31,7 +31,9 @@ public class CardViewController: UIViewController {
       self.cardView = nil;
     };
     
-    let cardView = self.cardConfig.createCardView();
+    guard let cardConfig = self.cardConfig else { return };
+    
+    let cardView = cardConfig.createCardView();
     let cardRootView = cardView.rootVStack;
     self.cardView = cardRootView;
     
