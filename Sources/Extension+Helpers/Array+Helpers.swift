@@ -86,4 +86,29 @@ public extension Array {
     guard let element = element else { return };
     self.append(element);
   };
+  
+  /// Create a new array containing a specific number of elements from the 
+  /// beginning of the original array. 
+  ///
+  /// Ensures that the requested count doesn't exceed the array's length.
+  ///
+  /// - Parameter count: 
+  ///   The number of elements to include in the new array.
+  ///
+  /// - Returns: 
+  ///   A new array containing the specified number of elements from the 
+  ///   beginning of the original array.
+  ///
+  /// **Note:** 
+  /// If `count` is greater than the array's length, the entire array is 
+  /// returned.
+  ///
+  /// If `count` is negative, an empty array is returned.
+  ///
+  func prefixCopy(count: Int) -> Self {
+    let countAdj = count.clamped(min: 0, max: self.count);
+    let slice = self.prefix(countAdj);
+    
+    return .init(slice);
+  };
 };
