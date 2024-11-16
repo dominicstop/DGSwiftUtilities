@@ -87,4 +87,17 @@ public extension Array where Element == CGPoint {
     
     return scaledPoints;
   };
+  
+  func centerPoints(toTargetRect targetRect: CGRect) -> [CGPoint]{
+    let boundingBox = self.getBoundingBoxForPoints();
+    let boundingBoxCentered = boundingBox.centered(inOtherRect: targetRect);
+    
+    let translateX = boundingBoxCentered.origin.x - boundingBox.origin.x;
+    let translateY = boundingBoxCentered.origin.y - boundingBox.origin.y;
+    
+    return self.translatePoints(
+      dx: translateX,
+      dy: translateY
+    );
+  };
 };
