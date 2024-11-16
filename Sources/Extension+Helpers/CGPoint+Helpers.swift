@@ -92,6 +92,34 @@ public extension CGPoint {
       usingCenter: center
     );
   };
+  
+  func getBezierControlPoint(
+    forOtherPoint otherPoint: CGPoint,
+    withRadius cornerRadius: CGFloat
+  ) -> Self {
+    
+    let distanceToOtherPoint = self.getDistance(fromOtherPoint: otherPoint);
+    
+    let deltaX = otherPoint.x - self.x;
+    let deltaY = otherPoint.y - self.y;
+  
+    let offsetX = cornerRadius * deltaX / distanceToOtherPoint;
+    let offsetY = cornerRadius * deltaY / distanceToOtherPoint;
+
+    return .init(x: offsetX, y: offsetY);
+  };
+  
+  /// the diff. from 2 points
+  /// * also useful for getting the direction vector
+  ///
+  func getDelta(fromOtherPoint otherPoint: Self) -> Self {
+    self - otherPoint;
+  };
+  
+  func getSlope(relativeTo otherPoint: Self) -> CGFloat {
+    let delta = otherPoint.getDelta(fromOtherPoint: self);
+    return delta.y / delta.x;
+  };
 
   /// Solve for the intersection point of two lines.
   ///
