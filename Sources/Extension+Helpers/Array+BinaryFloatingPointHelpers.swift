@@ -14,4 +14,12 @@ public extension Array where Element: BinaryFloatingPoint {
       $0 += $1;
     };
   };
+  
+  var average: Element {
+    if self.count == 0 {
+      return 0;
+    };
+    
+    return self.sumTotal / Element(self.count);
+  };
 };
