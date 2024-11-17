@@ -34,12 +34,12 @@ public struct InterpolatorHelpers {
   /// `iv - vs = p * (vs - ve)`
   /// `(iv - vs) / (vs - ve) = p`
   ///
-  public static func inverseLerp(
-    valueStart: CGFloat,
-    valueEnd: CGFloat,
-    percent: CGFloat,
-    interpolatedValue: CGFloat
-  ) -> CGFloat {
+  public static func inverseLerp<T: BinaryFloatingPoint>(
+    valueStart: T,
+    valueEnd: T,
+    percent: T,
+    interpolatedValue: T
+  ) -> T {
 
     let deltaChange = interpolatedValue - valueStart;
     let deltaRange = valueEnd - valueStart;
@@ -376,6 +376,24 @@ public extension InterpolatorHelpers {
       valueStart: valueStart,
       valueEnd: valueEnd,
       percent: T(percent)
+    );
+  };
+  
+  static func inverseLerp<
+    T: BinaryFloatingPoint,
+    U: BinaryFloatingPoint
+  >(
+    valueStart: T,
+    valueEnd: T,
+    percent: U,
+    interpolatedValue: T
+  ) -> T {
+  
+    Self.inverseLerp(
+      valueStart: valueStart,
+      valueEnd: valueEnd,
+      percent: T(percent),
+      interpolatedValue: interpolatedValue
     );
   };
 };
