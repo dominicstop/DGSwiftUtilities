@@ -1,5 +1,5 @@
 //
-//  Array+CGPoint.swift
+//  Array+CGPointHelpers.swift
 //  Experiments-Misc
 //
 //  Created by Dominic Go on 11/13/24.
