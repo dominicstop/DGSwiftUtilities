@@ -26,6 +26,27 @@ public struct InterpolatorHelpers {
     let interpolatedValue = valueStart + totalChange;
     return interpolatedValue;
   };
+  
+  
+  /// solve for `percent`, given: `valueStart`, `valueEnd`, `interpolatedValue`
+  ///
+  /// lerp formula, solve for `p`
+  /// `iv = vs + p * (vs - ve)
+  /// `iv - vs = p * (vs - ve)`
+  /// `(iv - vs) / (vs - ve) = p`
+  ///
+  public static func inverseLerp(
+    valueStart: CGFloat,
+    valueEnd: CGFloat,
+    percent: CGFloat,
+    interpolatedValue: CGFloat
+  ) -> CGFloat {
+
+    let deltaChange = interpolatedValue - valueStart;
+    let deltaRange = valueEnd - valueStart;
+    
+    let changePercent = deltaChange / deltaRange;
+    return changePercent;
   };
 
   public static func lerp(
