@@ -1,5 +1,5 @@
 //
-//  Array+AttributedStringConfig.swift
+//  Array+AttributedStringConfigHelpers.swift
 //  ConfigBasedModalExample
 //
 //  Created by Dominic Go on 6/9/24.
