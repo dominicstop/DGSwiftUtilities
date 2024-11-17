@@ -17,4 +17,12 @@ public extension BinaryFloatingPoint {
   var isWholeNumber: Bool {
     self.asWholeNumberExact != nil;
   };
+  
+  /// Rounds the double to decimal places value
+  func roundToPlaces(_ places: Int) -> Self {
+    let divisorRaw = pow(10.0, .init(places));
+    let divisor = Self(divisorRaw);
+    
+    return (self * divisor).rounded() / divisor;
+  };
 };
