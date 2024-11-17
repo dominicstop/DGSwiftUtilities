@@ -37,7 +37,6 @@ public struct InterpolatorHelpers {
   public static func inverseLerp<T: BinaryFloatingPoint>(
     valueStart: T,
     valueEnd: T,
-    percent: T,
     interpolatedValue: T
   ) -> T {
 
@@ -376,24 +375,6 @@ public extension InterpolatorHelpers {
       valueStart: valueStart,
       valueEnd: valueEnd,
       percent: T(percent)
-    );
-  };
-  
-  static func inverseLerp<
-    T: BinaryFloatingPoint,
-    U: BinaryFloatingPoint
-  >(
-    valueStart: T,
-    valueEnd: T,
-    percent: U,
-    interpolatedValue: T
-  ) -> T {
-  
-    Self.inverseLerp(
-      valueStart: valueStart,
-      valueEnd: valueEnd,
-      percent: T(percent),
-      interpolatedValue: interpolatedValue
     );
   };
 };
