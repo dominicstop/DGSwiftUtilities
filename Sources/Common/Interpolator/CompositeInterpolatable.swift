@@ -199,6 +199,49 @@ public extension CompositeInterpolatable {
   };
 };
 
+// MARK: `CompositeInterpolatable+StaticHelpers`
+// ---------------------------------------------
+
+public extension CompositeInterpolatable {
+  
+  static func inverseLerp<T: BinaryFloatingPoint>(
+    valueStart: InterpolatableValue,
+    valueEnd: InterpolatableValue,
+    interpolatedValue: InterpolatableValue
+  ) -> T {
+    
+    let percentages: [T] = Self.interpolatablePropertiesMap.reduce(into: []) {
+      switch $1.key {
+        case let keyPath as WritableKeyPath<InterpolatableValue, T>:
+          let concreteValueStart = valueStart[keyPath: keyPath];
+          let concreteValueEnd = valueEnd[keyPath: keyPath];
+          let concreteInterpolatedValue = interpolatedValue[keyPath: keyPath];
+          
+          let percent = InterpolatorHelpers.inverseLerp(
+            valueStart: concreteValueStart,
+            valueEnd: concreteValueEnd,
+            interpolatedValue: concreteInterpolatedValue
+          );
+          
+          $0.append(percent);
+          
+        default:
+          #if DEBUG
+          let error = GenericError(
+            errorCode: .runtimeError,
+            description: "Case not implemented, unable to lerp"
+          );
+          fatalError(error.errorDescription!);
+          #endif
+          break;
+      };
+    };
+    
+    let percentAvg = percentages.average;
+    return percentAvg;
+  };
+};
+
 // MARK: - Dictionary+CompositeInterpolatable.EasingKeyPathMap
 // -----------------------------------------------------------
 
