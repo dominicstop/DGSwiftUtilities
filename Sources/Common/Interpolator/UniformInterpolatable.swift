@@ -110,3 +110,36 @@ public extension UniformInterpolatable {
   };
 };
 
+
+public extension UniformInterpolatable where InterpolatableValue: BinaryFloatingPoint {
+  
+  static func inverseLerp<T: BinaryFloatingPoint>(
+    valueStart: InterpolatableValue,
+    valueEnd: InterpolatableValue,
+    percent: T,
+    interpolatedValue: InterpolatableValue
+  ) -> InterpolatableValue where InterpolatableValue == T {
+  
+    InterpolatorHelpers.inverseLerp(
+      valueStart: valueStart,
+      valueEnd: valueEnd,
+      percent: percent,
+      interpolatedValue: interpolatedValue
+    );
+  };
+  
+  static func inverseLerp(
+    valueStart: InterpolatableValue,
+    valueEnd: InterpolatableValue,
+    percent: any BinaryFloatingPoint,
+    interpolatedValue: InterpolatableValue
+  ) -> InterpolatableValue {
+  
+    InterpolatorHelpers.inverseLerp(
+      valueStart: valueStart,
+      valueEnd: valueEnd,
+      percent: percent,
+      interpolatedValue: interpolatedValue
+    );
+  };
+};
