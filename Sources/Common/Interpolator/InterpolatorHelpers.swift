@@ -20,10 +20,12 @@ public struct InterpolatorHelpers {
     percent: CGFloat
   ) -> CGFloat {
   
-    let valueDelta = valueEnd - valueStart;
-    let valueProgress = valueDelta * percent
-    let result = valueStart + valueProgress;
-    return result;
+    let deltaRange = valueEnd - valueStart;
+    let totalChange = deltaRange * percent;
+    
+    let interpolatedValue = valueStart + totalChange;
+    return interpolatedValue;
+  };
   };
 
   public static func lerp(
