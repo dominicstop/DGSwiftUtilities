@@ -25,4 +25,11 @@ public extension BinaryFloatingPoint {
     
     return (self * divisor).rounded() / divisor;
   };
+  
+  func cutOffDecimalsAfter(_ places:Int) -> Self {
+    let divisorRaw = pow(10.0, .init(places));
+    let divisor = Self(divisorRaw);
+    
+    return (self * divisor).rounded(.towardZero) / divisor;
+  };
 };
