@@ -46,6 +46,9 @@ public extension CompositeInterpolatable {
       let easing = easingMap[partialKeyPath];
       let clampingOptions = clampingMap[partialKeyPath];
       
+      // recursive, not primitive value...
+      // current property provides it's own interpolation function
+      //
       if let type = type as? any CompositeInterpolatable.Type,
          InterpolatorHelpers.rangedLerp(
            rootType: InterpolatableValue.self,
@@ -61,7 +64,10 @@ public extension CompositeInterpolatable {
       {
         continue;
       };
-
+      
+      // not primitive value...
+      // current property provides it's own interpolation function
+      //
       if InterpolatorHelpers.rangedLerp(
         rootType: InterpolatableValue.self,
         valueType: type,
