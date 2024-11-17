@@ -14,11 +14,11 @@ public struct InterpolatorHelpers {
   // MARK: - Lerp-Related
   // --------------------
   
-  public static func lerp(
-    valueStart: CGFloat,
-    valueEnd: CGFloat,
-    percent: CGFloat
-  ) -> CGFloat {
+  public static func lerp<T: BinaryFloatingPoint>(
+    valueStart: T,
+    valueEnd: T,
+    percent: T
+  ) -> T {
   
     let deltaRange = valueEnd - valueStart;
     let totalChange = deltaRange * percent;
@@ -26,7 +26,6 @@ public struct InterpolatorHelpers {
     let interpolatedValue = valueStart + totalChange;
     return interpolatedValue;
   };
-  
   
   /// solve for `percent`, given: `valueStart`, `valueEnd`, `interpolatedValue`
   ///
@@ -49,12 +48,12 @@ public struct InterpolatorHelpers {
     return changePercent;
   };
 
-  public static func lerp(
-    valueStart: CGFloat,
-    valueEnd: CGFloat,
-    percent: CGFloat,
-    easingFunction: (CGFloat) -> CGFloat
-  ) -> CGFloat {
+  public static func lerp<T: BinaryFloatingPoint>(
+    valueStart: T,
+    valueEnd: T,
+    percent: T,
+    easingFunction: (T) -> T
+  ) -> T {
   
     let percentWithEasing = easingFunction(percent);
     return lerp(
@@ -359,3 +358,24 @@ public struct InterpolatorHelpers {
   };
 };
 
+// MARK: - Aliases/Alt
+// -------------------
+
+public extension InterpolatorHelpers {
+  
+  static func lerp<
+    T: BinaryFloatingPoint,
+    U: BinaryFloatingPoint
+  >(
+    valueStart: T,
+    valueEnd: T,
+    percent: U
+  ) -> T {
+  
+    Self.lerp(
+      valueStart: valueStart,
+      valueEnd: valueEnd,
+      percent: T(percent)
+    );
+  };
+};
