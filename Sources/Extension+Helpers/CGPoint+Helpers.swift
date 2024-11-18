@@ -215,4 +215,21 @@ public extension CGPoint {
     
     return .init(x: intersectionX, y: intersectionY);
   };
+  
+  func traveseLine(
+    withEndPoint endPoint: CGPoint,
+    byDistance distanceToTraverse: CGFloat
+  ) -> Self {
+  
+    let totalDistance = self.getDistance(fromOtherPoint: endPoint);
+    let percentTraversed = distanceToTraverse / totalDistance;
+    
+    let stopPoint = Self.lerp(
+      valueStart: self,
+      valueEnd: endPoint,
+      percent: percentTraversed
+    );
+    
+    return stopPoint;
+  };
 };
