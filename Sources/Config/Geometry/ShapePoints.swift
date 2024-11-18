@@ -19,8 +19,8 @@ public enum ShapePoints {
   
   public func createPoints(
     forFrame enclosingFrame: CGRect,
-    shouldScaleToFitTargetRect: Bool = true,
-    shouldPreserveAspectRatioWhenScaling: Bool = true,
+    shouldScaleToFitTargetRect: Bool,
+    shouldPreserveAspectRatioWhenScaling: Bool,
     shouldCenterToFrameIfNeeded: Bool = true
   ) -> [CGPoint] {
   
@@ -85,8 +85,20 @@ public enum ShapePoints {
     };
   };
   
-  public func createPath(forFrame enclosingFrame: CGRect) -> UIBezierPath {
-    var points = self.createPoints(forFrame: enclosingFrame);
+  public func createPath(
+    forFrame enclosingFrame: CGRect,
+    shouldScaleToFitTargetRect: Bool,
+    shouldPreserveAspectRatioWhenScaling: Bool,
+    shouldCenterToFrameIfNeeded: Bool = true
+  ) -> UIBezierPath {
+  
+    var points = self.createPoints(
+      forFrame: enclosingFrame,
+      shouldScaleToFitTargetRect: shouldScaleToFitTargetRect,
+      shouldPreserveAspectRatioWhenScaling: shouldPreserveAspectRatioWhenScaling,
+      shouldCenterToFrameIfNeeded: shouldCenterToFrameIfNeeded
+    );
+      
     let path = UIBezierPath();
         
     // move to the first point
@@ -103,8 +115,19 @@ public enum ShapePoints {
     return path;
   };
   
-  public func createShape(forFrame enclosingFrame: CGRect) -> CAShapeLayer {
-    let path = self.createPath(forFrame: enclosingFrame);
+  public func createShape(
+    forFrame enclosingFrame: CGRect,
+    shouldScaleToFitTargetRect: Bool,
+    shouldPreserveAspectRatioWhenScaling: Bool,
+    shouldCenterToFrameIfNeeded: Bool = true
+  ) -> CAShapeLayer {
+  
+    let path = self.createPath(
+      forFrame: enclosingFrame,
+      shouldScaleToFitTargetRect: shouldScaleToFitTargetRect,
+      shouldPreserveAspectRatioWhenScaling: shouldPreserveAspectRatioWhenScaling,
+      shouldCenterToFrameIfNeeded: shouldCenterToFrameIfNeeded
+    );
     
     // assign the path to the shape
     let shapeLayer = CAShapeLayer();
