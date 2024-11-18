@@ -108,7 +108,6 @@ public extension ShapePoints {
     };
   };
   
-  
   static func createPointsForStar(
     center: CGPoint,
     outerRadius: CGFloat,
