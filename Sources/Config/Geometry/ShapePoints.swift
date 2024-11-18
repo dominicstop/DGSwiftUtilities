@@ -20,8 +20,10 @@ public enum ShapePoints {
   public func createPoints(
     forFrame enclosingFrame: CGRect,
     shouldScaleToFitTargetRect: Bool = true,
-    shouldPreserveAspectRatioWhenScaling: Bool = false
+    shouldPreserveAspectRatioWhenScaling: Bool = true,
+    shouldCenterToFrameIfNeeded: Bool = true
   ) -> [CGPoint] {
+  
     var points: [CGPoint] = [];
     
     switch self {
@@ -44,8 +46,13 @@ public enum ShapePoints {
         );
     };
     
-    if !shouldScaleToFitTargetRect {
+    if !shouldScaleToFitTargetRect && !shouldCenterToFrameIfNeeded {
       return points;
+    };
+    
+    if !shouldScaleToFitTargetRect && shouldCenterToFrameIfNeeded {
+      let pointsCentered = points.centerPoints(toTargetRect: enclosingFrame);
+      return pointsCentered;
     };
     
     let pointsScaledToFit = points.scalePointsToFit(
