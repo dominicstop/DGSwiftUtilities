@@ -17,6 +17,32 @@ public enum ShapePoints {
     spikeRadius: CGFloat
   );
   
+  // MARK: - Functions
+  // -----------------
+  
+  public func createRawPoints(
+    forFrame enclosingFrame: CGRect
+  ) -> [CGPoint] {
+    switch self {
+      case let .regularPolygon(numberOfSides):
+        let radius = enclosingFrame.width / 2;
+        
+        return Self.createPointsForRegularPolygon(
+          center: enclosingFrame.centerPoint,
+          radius: radius,
+          numberOfSides: numberOfSides
+        );
+        
+      case let .regularStarPolygon(numberOfSpikes, innerRadius, outerRadius):
+        return Self.createPointsForStar(
+          center: enclosingFrame.centerPoint,
+          outerRadius: outerRadius,
+          innerRadius: innerRadius,
+          numberOfPoints: numberOfSpikes
+        );
+    };
+  };
+  
   public func createPoints(
     forFrame enclosingFrame: CGRect,
     shouldScaleToFitTargetRect: Bool,
@@ -24,27 +50,7 @@ public enum ShapePoints {
     shouldCenterToFrameIfNeeded: Bool = true
   ) -> [CGPoint] {
   
-    var points: [CGPoint] = [];
-    
-    switch self {
-      case let .regularPolygon(numberOfSides):
-        let radius = enclosingFrame.width / 2;
-        let angleIncrement = 360 / CGFloat(numberOfSides);
-        
-        points = Self.createPointsForRegularPolygon(
-          center: enclosingFrame.centerPoint,
-          radius: radius,
-          numberOfSides: numberOfSides
-        );
-        
-      case let .regularStarPolygon(numberOfSpikes, innerRadius, outerRadius):
-        points = Self.createPointsForStar(
-          center: enclosingFrame.centerPoint,
-          outerRadius: outerRadius,
-          innerRadius: innerRadius,
-          numberOfPoints: numberOfSpikes
-        );
-    };
+    let points = self.createRawPoints(forFrame: enclosingFrame);
     
     // 3 bits, 8 possible combinations
     switch (
