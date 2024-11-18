@@ -100,7 +100,7 @@ public struct Triangle {
       self.leadingSide.traverse(byPercent: percentTraversed);
 
     let trailingPointNext =
-      self.leadingSide.traverse(byPercent: percentTraversed);
+      self.trailingSide.traverse(byPercent: percentTraversed);
     
     return .init(
       topPoint: self.topPoint,
