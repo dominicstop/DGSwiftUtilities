@@ -46,21 +46,43 @@ public enum ShapePoints {
         );
     };
     
-    if !shouldScaleToFitTargetRect && !shouldCenterToFrameIfNeeded {
-      return points;
+    // 3 bits, 8 possible combinations
+    switch (
+      shouldScaleToFitTargetRect,
+      shouldPreserveAspectRatioWhenScaling,
+      shouldCenterToFrameIfNeeded
+    ) {
+      // no scaling, centered
+      case (false, _, true):
+        return points.centerPoints(toTargetRect: enclosingFrame);
+      
+      // scale to fit
+      case (true, true, _):
+        return points.scalePointsToFit(
+          targetRect: enclosingFrame,
+          shouldPreserveAspectRatio: true
+        );
+      
+      // scale and preserve aspect ratio, centered
+      case (true, false, true):
+        let pointsScaledToFit = points.scalePointsToFit(
+          targetRect: enclosingFrame,
+          shouldPreserveAspectRatio: true
+        );
+        
+        return pointsScaledToFit.centerPoints(toTargetRect: enclosingFrame);
+      
+      // scale and preserve aspect ratio, no centering
+      case (true, false, false):
+        return points.scalePointsToFit(
+          targetRect: enclosingFrame,
+          shouldPreserveAspectRatio: true
+        );
+        
+      // no scaling or centering
+      default:
+        return points;
     };
-    
-    if !shouldScaleToFitTargetRect && shouldCenterToFrameIfNeeded {
-      let pointsCentered = points.centerPoints(toTargetRect: enclosingFrame);
-      return pointsCentered;
-    };
-    
-    let pointsScaledToFit = points.scalePointsToFit(
-      targetRect: enclosingFrame,
-      shouldPreserveAspectRatio: shouldPreserveAspectRatioWhenScaling
-    );
-    
-    return pointsScaledToFit;
   };
   
   public func createPath(forFrame enclosingFrame: CGRect) -> UIBezierPath {
