@@ -29,27 +29,14 @@ public extension CGPoint {
     
     return .init(x: unitVectorX, y: unitVectorY);
   };
-
-  func getDistance(
-    fromOtherPoint otherPoint: Self,
-    isDeltaAbsolute: Bool = false
-  ) -> CGFloat {
   
-    let deltaX = {
-      let delta = otherPoint.x - self.x;
-      return isDeltaAbsolute
-        ? abs(delta)
-        : delta;
-    }();
-    
-    let deltaY = {
-      let delta = otherPoint.y - self.y;
-      return isDeltaAbsolute
-        ? abs(delta)
-        : delta;
-    }();
-    
-    return sqrt(deltaX * deltaX + deltaY * deltaY);
+  func createLine(toPoint otherPoint: Self) -> Line {
+    .init(startPoint: self, endPoint: otherPoint);
+  };
+
+  func getDistance(fromOtherPoint otherPoint: Self) -> CGFloat {
+    let line = self.createLine(toPoint: otherPoint);
+    return line.distance;
   };
   
   /// calculate angle of point with respect to the center
@@ -62,13 +49,8 @@ public extension CGPoint {
   };
   
   func getMidpoint(betweenOtherPoint otherPoint: Self) -> Self {
-    let deltaX = self.x + otherPoint.x;
-    let midX = deltaX / 2;
-    
-    let deltaY = self.y + otherPoint.y;
-    let midY = deltaY / 2;
-    
-    return .init(x: midX, y: midY)
+    let line = self.createLine(toPoint: otherPoint);
+    return line.midPoint;
   };
   
   func getMidPointAlongsideArc(
@@ -77,10 +59,7 @@ public extension CGPoint {
     usingCenter center: Self
   ) -> Self {
   
-    let radius = radius ?? self.getDistance(
-      fromOtherPoint: center,
-      isDeltaAbsolute: true
-    );
+    let radius = radius ?? self.getDistance(fromOtherPoint: center);
     
     let leadingAngle = self.getAngleAlongCircle(withCenter: center);
     let trailingAngle = trailingPoint.getAngleAlongCircle(withCenter: center);
@@ -117,8 +96,8 @@ public extension CGPoint {
   };
   
   func getSlope(relativeTo otherPoint: Self) -> CGFloat {
-    let delta = otherPoint.getDelta(fromOtherPoint: self);
-    return delta.y / delta.x;
+    let line = self.createLine(toPoint: otherPoint);
+    return line.slope;
   };
 
   /// Solve for the intersection point of two lines.
