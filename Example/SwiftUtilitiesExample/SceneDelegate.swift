@@ -185,7 +185,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       let x = b.rangeInput;
     };
     
-    self.testClassRegistry();
+    // self.testClassRegistry();
   };
   
   func sceneDidDisconnect(_ scene: UIScene) {

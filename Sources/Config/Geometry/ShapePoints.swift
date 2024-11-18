@@ -148,6 +148,7 @@ public enum ShapePoints {
 // ---------------------------------
 
 public extension ShapePoints {
+
   static func createPointsForRegularPolygon(
     center: CGPoint,
     radius: CGFloat,
@@ -190,7 +191,8 @@ public extension ShapePoints {
       
       $0.append(innerPoint);
       
-      let outerAngle: Angle<CGFloat> = .degrees(innerAngle.degrees + angleIncrementHalf);
+      let outerAngle: Angle<CGFloat> =
+        .degrees(innerAngle.degrees + angleIncrementHalf);
       
       let outerPoint = outerAngle.getPointAlongCircle(
         withRadius: outerRadius,
@@ -240,3 +242,4 @@ public extension ShapePoints {
     return path;
   };
 };
+
