@@ -188,7 +188,11 @@ public extension CGPoint {
     /// `x = (m1 * x1 - y1 - m2 * x2 + y2) / (m1 - m2)`
     ///
     /// plug in values:
-    /// `x = (slopeA * self.x - self.y - slopeB * pointB.x + pointB.y) / (slopeA - slopeB)`
+    /// ```
+    ///     (slopeA * self.x - self.y - slopeB * pointB.x + pointB.y)
+    /// x = ---------------------------------------------------------
+    ///                       (slopeA - slopeB)
+    /// ```
     ///
     let intersectionX: CGFloat? = {
       let denominator = slopeA - slopeB;
