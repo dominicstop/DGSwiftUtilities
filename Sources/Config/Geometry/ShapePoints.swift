@@ -149,4 +149,43 @@ public extension ShapePoints {
       $0.append(outerPoint);
     };
   };
+  
+  static func createPathForRoundedPolygon(
+    forPoints points: [CGPoint],
+    cornerRadius: CGFloat
+  ) -> UIBezierPath {
+  
+    let path = UIBezierPath();
+  
+    for index in 0 ..< points.count {
+      let pointPrev = points[cyclicIndex: index - 1];
+      let pointCurrent = points[index];
+      let pointNext = points[cyclicIndex: index + 1];
+      
+      let triangle: Triangle = .init(
+        topPoint: pointCurrent,
+        leadingPoint: pointPrev,
+        trailingPoint: pointNext
+      );
+      
+      let triangleSmaller = triangle.resizedTriangleRelativeToTopPoint(
+        toNewHeight: cornerRadius
+      );
+      
+      if index == 0 {
+        path.move(to: triangleSmaller.leadingPoint);
+        
+      } else {
+        path.addLine(to: triangleSmaller.leadingPoint);
+      };
+      
+      path.addQuadCurve(
+        to: triangleSmaller.trailingPoint,
+        controlPoint: triangleSmaller.topPoint
+      );
+    };
+    
+    path.close();
+    return path;
+  };
 };
