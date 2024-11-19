@@ -91,13 +91,40 @@ class Test02ViewController: UIViewController {
       );
     };
   };
+  
+  static func testTriangle(){
+    let triangle: Triangle = .init(
+      topPoint: .init(x: 50, y: 0),
+      leadingPoint: .init(x: 0, y: 100),
+      trailingPoint: .init(x: 100, y: 100)
+    );
+    
+    print(
+      "original triangle",
+      "\n - leadingPoint", triangle.leadingPoint,
+      "\n - topPoint", triangle.topPoint,
+      "\n - trailingPoint", triangle.trailingPoint,
+      "\n"
+    );
+    
+    let triangleSmaller = triangle.resizedTriangleRelativeToTopPoint(toNewHeight: 50);
+    
+    print(
+      "triangleSmaller",
+      "\n - leadingPoint", triangleSmaller.leadingPoint,
+      "\n - topPoint", triangleSmaller.topPoint,
+      "\n - trailingPoint", triangleSmaller.trailingPoint,
+      "\n"
+    );
+  };
 
   override func loadView() {
     let view = UIView();
     view.backgroundColor = .white;
     
     self.view = view;
-    Self.testForComputeMidAngle();
+    // Self.testForComputeMidAngle();
+    Self.testTriangle();
   };
   
   override func viewDidLoad() {
