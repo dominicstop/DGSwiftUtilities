@@ -178,9 +178,9 @@ class Test02ViewController: UIViewController {
     boxWrapperView.layoutIfNeeded();
     boxView.layoutIfNeeded();
     
-    let pentagon: ShapePoints = .regularPolygon(numberOfSides: 3);
+    let pentagon: PolygonPreset = .regularPolygon(numberOfSides: 3);
     
-    let star: ShapePoints = .regularStarPolygon(
+    let star: PolygonPreset = .regularStarPolygon(
       numberOfSpikes: 6,
       spikeRadius: 20
     );

@@ -1,5 +1,5 @@
 //
-//  ShapePoints.swift
+//  PolygonPreset.swift
 //  Experiments-Misc
 //
 //  Created by Dominic Go on 11/13/24.
@@ -8,7 +8,7 @@
 import UIKit
 
 
-public enum ShapePoints {
+public enum PolygonPreset {
   case regularPolygon(numberOfSides: Int);
   
   case regularStarPolygon(
@@ -147,7 +147,7 @@ public enum ShapePoints {
 // MARK: - ShapePoints+StaticHelpers
 // ---------------------------------
 
-public extension ShapePoints {
+public extension PolygonPreset {
 
   static func createPointsForRegularPolygon(
     center: CGPoint,
