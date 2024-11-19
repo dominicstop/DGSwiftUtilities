@@ -129,7 +129,7 @@ class Test02ViewController: UIViewController {
   
   override func viewDidLoad() {
     let initialFrame: CGRect = .init(
-      origin: .init(x: 30, y: 30),
+      origin: .init(x: 45, y: 45),
       size: .init(width: 75, height: 75)
     );
     
@@ -178,14 +178,20 @@ class Test02ViewController: UIViewController {
     boxWrapperView.layoutIfNeeded();
     boxView.layoutIfNeeded();
     
+    let pentagon: ShapePoints = .regularPolygon(numberOfSides: 3);
     
-    let shapeLayer = ShapePoints.regularPolygon(
-      numberOfSides: 3
-    ).createShape(
+    let star: ShapePoints = .regularStarPolygon(
+      numberOfSpikes: 6,
+      spikeRadius: 20
+    );
+    
+    let shapeLayer = pentagon.createShape(
       forFrame: .init(
         origin: .zero,
         size: initialFrame.size
-      )
+      ),
+      shouldScaleToFitTargetRect: true,
+      shouldPreserveAspectRatioWhenScaling: true
     );
     
     boxView.layer.addSublayer(shapeLayer);
