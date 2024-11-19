@@ -95,44 +95,37 @@ public enum PolygonPreset {
     forFrame enclosingFrame: CGRect,
     shouldScaleToFitTargetRect: Bool,
     shouldPreserveAspectRatioWhenScaling: Bool,
-    shouldCenterToFrameIfNeeded: Bool = true
+    shouldCenterToFrameIfNeeded: Bool = true,
+    pointConnectionStrategy: PointConnectionStrategy = .straight
   ) -> UIBezierPath {
   
-    var points = self.createPoints(
+    let points = self.createPoints(
       forFrame: enclosingFrame,
       shouldScaleToFitTargetRect: shouldScaleToFitTargetRect,
       shouldPreserveAspectRatioWhenScaling: shouldPreserveAspectRatioWhenScaling,
       shouldCenterToFrameIfNeeded: shouldCenterToFrameIfNeeded
     );
-      
-    let path = UIBezierPath();
-        
-    // move to the first point
-    let firstPoint = points.removeFirst();
-    path.move(to: firstPoint);
     
-    // add lines to the remaining points
-    for point in points {
-      path.addLine(to: point);
-    };
-    
-    // close path
-    path.close();
-    return path;
+    return pointConnectionStrategy.createPath(
+      forPoints: points,
+      inRect: enclosingFrame
+    );
   };
   
   public func createShape(
     forFrame enclosingFrame: CGRect,
     shouldScaleToFitTargetRect: Bool,
     shouldPreserveAspectRatioWhenScaling: Bool,
-    shouldCenterToFrameIfNeeded: Bool = true
+    shouldCenterToFrameIfNeeded: Bool = true,
+    pointConnectionStrategy: PointConnectionStrategy = .straight
   ) -> CAShapeLayer {
   
     let path = self.createPath(
       forFrame: enclosingFrame,
       shouldScaleToFitTargetRect: shouldScaleToFitTargetRect,
       shouldPreserveAspectRatioWhenScaling: shouldPreserveAspectRatioWhenScaling,
-      shouldCenterToFrameIfNeeded: shouldCenterToFrameIfNeeded
+      shouldCenterToFrameIfNeeded: shouldCenterToFrameIfNeeded,
+      pointConnectionStrategy: pointConnectionStrategy
     );
     
     // assign the path to the shape
@@ -201,45 +194,6 @@ public extension PolygonPreset {
       
       $0.append(outerPoint);
     };
-  };
-  
-  static func createPathForRoundedPolygon(
-    forPoints points: [CGPoint],
-    cornerRadius: CGFloat
-  ) -> UIBezierPath {
-  
-    let path = UIBezierPath();
-  
-    for index in 0 ..< points.count {
-      let pointPrev = points[cyclicIndex: index - 1];
-      let pointCurrent = points[index];
-      let pointNext = points[cyclicIndex: index + 1];
-      
-      let triangle: Triangle = .init(
-        topPoint: pointCurrent,
-        leadingPoint: pointPrev,
-        trailingPoint: pointNext
-      );
-      
-      let triangleSmaller = triangle.resizedTriangleRelativeToTopPoint(
-        toNewHeight: cornerRadius
-      );
-      
-      if index == 0 {
-        path.move(to: triangleSmaller.leadingPoint);
-        
-      } else {
-        path.addLine(to: triangleSmaller.leadingPoint);
-      };
-      
-      path.addQuadCurve(
-        to: triangleSmaller.trailingPoint,
-        controlPoint: triangleSmaller.topPoint
-      );
-    };
-    
-    path.close();
-    return path;
   };
 };
 
