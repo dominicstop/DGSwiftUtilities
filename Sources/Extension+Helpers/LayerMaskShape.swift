@@ -1,5 +1,5 @@
 //
-//  LayerMaskConfig.swift
+//  LayerMaskShape.swift
 //  Experiments-Misc
 //
 //  Created by Dominic Go on 11/13/24.
@@ -8,7 +8,7 @@
 import UIKit
 
 
-public enum LayerMaskConfig {
+public enum LayerMaskShape {
   
   case rectRoundedVariadic(
     cornerRadiusTopLeft: CGFloat = .leastNonzeroMagnitude,
@@ -50,7 +50,7 @@ public enum LayerMaskConfig {
 };
 
 
-public extension LayerMaskConfig {
+public extension LayerMaskShape {
   static var none: Self =
     .rectRoundedUniform(cornerRadius: .leastNonzeroMagnitude);
 };

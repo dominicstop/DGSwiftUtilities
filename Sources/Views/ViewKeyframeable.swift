@@ -72,7 +72,7 @@ public class ViewKeyframeable: UIView {
     UIView.inheritedAnimationDuration > 0;
   };
 
-  public var cornerRadiusConfig: LayerMaskConfig = .none {
+  public var cornerRadiusConfig: LayerMaskShape = .none {
     didSet {
       self.updateLayerMask();
     }
