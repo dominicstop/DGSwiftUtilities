@@ -61,14 +61,14 @@ public enum PolygonPreset {
         return points.centerPoints(toTargetRect: targetRect);
       
       // scale to fit
-      case (true, true, _):
+      case (true, false, _):
         return points.scalePointsToFit(
           targetRect: targetRect,
-          shouldPreserveAspectRatio: true
+          shouldPreserveAspectRatio: false
         );
       
       // scale and preserve aspect ratio, centered
-      case (true, false, true):
+      case (true, true, true):
         let pointsScaledToFit = points.scalePointsToFit(
           targetRect: targetRect,
           shouldPreserveAspectRatio: true
@@ -77,7 +77,7 @@ public enum PolygonPreset {
         return pointsScaledToFit.centerPoints(toTargetRect: targetRect);
       
       // scale and preserve aspect ratio, no centering
-      case (true, false, false):
+      case (true, true, false):
         return points.scalePointsToFit(
           targetRect: targetRect,
           shouldPreserveAspectRatio: true
