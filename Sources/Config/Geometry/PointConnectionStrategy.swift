@@ -88,7 +88,8 @@ public extension PointConnectionStrategy {
   static func createPathWithRoundedCorners(
     forPoints points: [CGPoint],
     defaultCornerRadius: CGFloat,
-    cornerRadiusProvider: PolygonCornerRadiusProvider? = nil
+    cornerRadiusProvider: PolygonCornerRadiusProvider? = nil,
+    shouldClampCornerRadius: Bool = true
   ) -> UIBezierPath {
   
     let path = UIBezierPath();
@@ -104,7 +105,7 @@ public extension PointConnectionStrategy {
         trailingPoint: pointNext
       );
       
-      let cornerRadius = {
+      let cornerRadiusRaw = {
         guard let cornerRadiusProvider = cornerRadiusProvider else {
           return defaultCornerRadius;
         };
@@ -112,6 +113,16 @@ public extension PointConnectionStrategy {
         return cornerRadiusProvider(points, index, triangle);
       }();
       
+      let cornerRadius = {
+        guard shouldClampCornerRadius else {
+          return cornerRadiusRaw;
+        };
+        
+        // TODO: magic number, doesn't properly clamp
+        let cornerRadiusMax = triangle.height / 1.75;
+        
+        return min(cornerRadiusRaw, cornerRadiusMax);
+      }();
       let triangleSmaller = triangle.resizedTriangleRelativeToTopPoint(
         toNewHeight: cornerRadius
       );
