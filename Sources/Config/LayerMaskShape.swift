@@ -11,10 +11,10 @@ import UIKit
 public enum LayerMaskShape {
   
   case rectRoundedVariadic(
-    cornerRadiusTopLeft: CGFloat = .leastNonzeroMagnitude,
-    cornerRadiusTopRight: CGFloat = .leastNonzeroMagnitude,
-    cornerRadiusBottomLeft: CGFloat = .leastNonzeroMagnitude,
-    cornerRadiusBottomRight: CGFloat = .leastNonzeroMagnitude
+    cornerRadiusTopLeft: CGFloat,
+    cornerRadiusTopRight: CGFloat,
+    cornerRadiusBottomLeft: CGFloat,
+    cornerRadiusBottomRight: CGFloat
   );
   
   case rectRoundedUniform(cornerRadius: CGFloat);
@@ -30,10 +30,17 @@ public enum LayerMaskShape {
         // temp
         return .init(
           shouldRoundRect: rect,
-          topLeftRadius: cornerRadiusTopLeft,
-          topRightRadius: cornerRadiusTopRight,
-          bottomLeftRadius: cornerRadiusBottomLeft,
-          bottomRightRadius: cornerRadiusBottomRight
+          topLeftRadius:
+            max(.leastNonzeroMagnitude, cornerRadiusTopLeft),
+            
+          topRightRadius:
+            max(.leastNonzeroMagnitude, cornerRadiusTopRight),
+            
+          bottomLeftRadius:
+            max(.leastNonzeroMagnitude, cornerRadiusBottomLeft),
+            
+          bottomRightRadius:
+            max(.leastNonzeroMagnitude, cornerRadiusBottomRight)
         );
         
       case let .rectRoundedUniform(cornerRadius):
