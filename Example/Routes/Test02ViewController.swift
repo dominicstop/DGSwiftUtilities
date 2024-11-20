@@ -9,37 +9,6 @@ import UIKit
 import DGSwiftUtilities
 
 
-struct PolygonConfig {
-
-  var pointsAlongCircle: [Angle<CGFloat>];
-  var bounds: CGRect;
-  var rotation: CGFloat = 0;
-  var shouldAdjustToFitInsideBounds: Bool;
-
-  
-  init(
-    pointsAlongCircle: [Angle<CGFloat>],
-    bounds: CGRect,
-    rotation: CGFloat,
-    shouldAdjustToFitInsideBounds: Bool
-  ) {
-    self.pointsAlongCircle = pointsAlongCircle;
-    self.bounds = bounds;
-    self.rotation = rotation;
-    self.shouldAdjustToFitInsideBounds = shouldAdjustToFitInsideBounds;
-  };
-  
-  
-  // triangleEqual
-  // triangleRight
-  // triangleIsoceles
-  // triangleCustom
-  // square
-  //
-
-};
-
-
 class Test02ViewController: UIViewController {
 
   static func testForComputeMidAngle(){
@@ -178,7 +147,7 @@ class Test02ViewController: UIViewController {
     boxWrapperView.layoutIfNeeded();
     boxView.layoutIfNeeded();
     
-    let pentagon: PolygonPreset = .regularPolygon(numberOfSides: 3);
+    let pentagon: PolygonPreset = .regularPolygon(numberOfSides: 5);
     
     let star: PolygonPreset = .regularStarPolygon(
       numberOfSpikes: 6,
@@ -191,7 +160,8 @@ class Test02ViewController: UIViewController {
         size: initialFrame.size
       ),
       shouldScaleToFitTargetRect: true,
-      shouldPreserveAspectRatioWhenScaling: true
+      shouldPreserveAspectRatioWhenScaling: true,
+      pointConnectionStrategy: .roundedCornersUniform(cornerRadius: 10)
     );
     
     boxView.layer.addSublayer(shapeLayer);
