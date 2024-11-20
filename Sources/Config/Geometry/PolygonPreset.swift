@@ -20,22 +20,20 @@ public enum PolygonPreset {
   // MARK: - Functions
   // -----------------
   
-  public func createRawPoints(
-    forFrame enclosingFrame: CGRect
-  ) -> [CGPoint] {
+  public func createRawPoints(inRect targetRect: CGRect) -> [CGPoint] {
     switch self {
       case let .regularPolygon(numberOfSides):
-        let radius = enclosingFrame.width / 2;
+        let radius = targetRect.width / 2;
         
         return Self.createPointsForRegularPolygon(
-          center: enclosingFrame.centerPoint,
+          center: targetRect.centerPoint,
           radius: radius,
           numberOfSides: numberOfSides
         );
         
       case let .regularStarPolygon(numberOfSpikes, innerRadius, outerRadius):
         return Self.createPointsForStar(
-          center: enclosingFrame.centerPoint,
+          center: targetRect.centerPoint,
           outerRadius: outerRadius,
           innerRadius: innerRadius,
           numberOfPoints: numberOfSpikes
@@ -44,13 +42,13 @@ public enum PolygonPreset {
   };
   
   public func createPoints(
-    forFrame enclosingFrame: CGRect,
+    inRect targetRect: CGRect,
     shouldScaleToFitTargetRect: Bool,
     shouldPreserveAspectRatioWhenScaling: Bool,
     shouldCenterToFrameIfNeeded: Bool = true
   ) -> [CGPoint] {
   
-    let points = self.createRawPoints(forFrame: enclosingFrame);
+    let points = self.createRawPoints(inRect: targetRect);
     
     // 3 bits, 8 possible combinations
     switch (
@@ -60,28 +58,28 @@ public enum PolygonPreset {
     ) {
       // no scaling, centered
       case (false, _, true):
-        return points.centerPoints(toTargetRect: enclosingFrame);
+        return points.centerPoints(toTargetRect: targetRect);
       
       // scale to fit
       case (true, true, _):
         return points.scalePointsToFit(
-          targetRect: enclosingFrame,
+          targetRect: targetRect,
           shouldPreserveAspectRatio: true
         );
       
       // scale and preserve aspect ratio, centered
       case (true, false, true):
         let pointsScaledToFit = points.scalePointsToFit(
-          targetRect: enclosingFrame,
+          targetRect: targetRect,
           shouldPreserveAspectRatio: true
         );
         
-        return pointsScaledToFit.centerPoints(toTargetRect: enclosingFrame);
+        return pointsScaledToFit.centerPoints(toTargetRect: targetRect);
       
       // scale and preserve aspect ratio, no centering
       case (true, false, false):
         return points.scalePointsToFit(
-          targetRect: enclosingFrame,
+          targetRect: targetRect,
           shouldPreserveAspectRatio: true
         );
         
@@ -92,7 +90,7 @@ public enum PolygonPreset {
   };
   
   public func createPath(
-    forFrame enclosingFrame: CGRect,
+    inRect targetRect: CGRect,
     shouldScaleToFitTargetRect: Bool,
     shouldPreserveAspectRatioWhenScaling: Bool,
     shouldCenterToFrameIfNeeded: Bool = true,
@@ -100,7 +98,7 @@ public enum PolygonPreset {
   ) -> UIBezierPath {
   
     let points = self.createPoints(
-      forFrame: enclosingFrame,
+      inRect: targetRect,
       shouldScaleToFitTargetRect: shouldScaleToFitTargetRect,
       shouldPreserveAspectRatioWhenScaling: shouldPreserveAspectRatioWhenScaling,
       shouldCenterToFrameIfNeeded: shouldCenterToFrameIfNeeded
@@ -108,7 +106,7 @@ public enum PolygonPreset {
     
     return pointConnectionStrategy.createPath(
       forPoints: points,
-      inRect: enclosingFrame
+      inRect: targetRect
     );
   };
   
@@ -121,7 +119,7 @@ public enum PolygonPreset {
   ) -> CAShapeLayer {
   
     let path = self.createPath(
-      forFrame: enclosingFrame,
+      inRect: enclosingFrame,
       shouldScaleToFitTargetRect: shouldScaleToFitTargetRect,
       shouldPreserveAspectRatioWhenScaling: shouldPreserveAspectRatioWhenScaling,
       shouldCenterToFrameIfNeeded: shouldCenterToFrameIfNeeded,
@@ -135,7 +133,6 @@ public enum PolygonPreset {
     return shapeLayer;
   };
 };
-
 
 // MARK: - ShapePoints+StaticHelpers
 // ---------------------------------
