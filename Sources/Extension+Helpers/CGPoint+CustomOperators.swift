@@ -70,4 +70,35 @@ public extension CGPoint {
       y: lhs.y / rhs
     );
   };
+  
+  // MARK: - lhs = Self, rhs: CGVector
+  // ---------------------------------
+  
+  static func +(lhs: Self, rhs: CGVector) -> Self {
+    return .init(
+      x: lhs.x + rhs.dx,
+      y: lhs.y + rhs.dy
+    );
+  };
+  
+  static func -(lhs: Self, rhs: CGVector) -> Self {
+    return .init(
+      x: lhs.x - rhs.dx,
+      y: lhs.y - rhs.dy
+    );
+  };
+  
+  static func *(lhs: Self, rhs: CGVector) -> Self {
+    return .init(
+      x: lhs.x * rhs.dx,
+      y: lhs.y * rhs.dy
+    );
+  };
+  
+  static func /(lhs: Self, rhs: CGVector) -> Self {
+    return .init(
+      x: lhs.x / rhs.dx,
+      y: lhs.y / rhs.dy
+    );
+  };
 };
