@@ -172,7 +172,12 @@ public extension Array where Element == BezierPathOperation {
     targetRect: CGRect,
     shouldPreserveAspectRatio: Bool = false
   ) -> [Self.Element] {
+  
     let boundingBox = self.boundingBoxForRawPoints;
+    
+    guard boundingBox != targetRect else {
+      return self;
+    };
     
     // calculate the scaling factors
     let scaleX = targetRect.width / boundingBox.width;
@@ -203,6 +208,11 @@ public extension Array where Element == BezierPathOperation {
   
   func centerPoints(toTargetRect targetRect: CGRect) -> [Self.Element]{
     let boundingBox = self.boundingBoxForRawPoints;
+    
+    guard boundingBox.centerPoint != targetRect.centerPoint else {
+      return self;
+    };
+    
     let boundingBoxCentered = boundingBox.centered(inOtherRect: targetRect);
     
     let translateX = boundingBoxCentered.origin.x - boundingBox.origin.x;
