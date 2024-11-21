@@ -10,7 +10,25 @@ import Foundation
 
 public extension CGPoint {
   
+  /// for convenience, math operations are directly done between points (bc
+  /// it's a bit clunky to have to use 2 diff. types).
   ///
+  /// however, after doing math operations on the points, it is more idiomatic
+  /// to represent/store it as a vector as it's final type.
+  ///
+  /// this signals that it's not a "concrete point", and prevents accidental
+  /// usage.
+  ///
+  /// * for example, you get the diff. between `pointA` and `pointB` and store
+  ///   the point as `vectorAB`.
+  ///
+  /// * you then use `vectorAB` to displace `pointC`.
+  ///
+  /// * although a bit cumbersome, this signals the intent more clearly;
+  ///   `vectorAB` is not a point! use it to displace other points!
+  ///
+  var asVector: CGVector {
+    .init(dx: self.x, dy: self.y);
   };
   
   func createLine(toPoint otherPoint: Self) -> Line {
@@ -76,6 +94,18 @@ public extension CGPoint {
   ///
   func getDelta(fromOtherPoint otherPoint: Self) -> Self {
     self - otherPoint;
+  };
+  
+  /// `self -> otherPoint`
+  func getVector(pointingTo headPoint: CGPoint) -> CGVector{
+    let delta = headPoint - self;
+    return .init(dx: delta.x, dy: delta.y);
+  };
+  
+  /// `otherPoint -> self`
+  func getVector(pointingFrom tailPoint: CGPoint) -> CGVector{
+    let delta = self - tailPoint;
+    return .init(dx: delta.x, dy: delta.y);
   };
   
   func getSlope(relativeTo otherPoint: Self) -> CGFloat {
