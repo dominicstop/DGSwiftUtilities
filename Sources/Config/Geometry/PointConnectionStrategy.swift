@@ -26,59 +26,53 @@ public enum PointConnectionStrategy {
   // MARK: - Functions
   // -----------------
   
-  func createPath(
+  public func createPath(
     forPoints points: [CGPoint],
     inRect targetRect: CGRect
   ) -> UIBezierPath {
   
     switch self {
       case .straight:
-        let path = UIBezierPath();
-        
-        guard points.count > 1 else {
-          return path;
-        };
-        
-        // move to the first point
-        path.move(to: points.first!);
-        
-        // add lines to the remaining points
-        for index in 1 ..< points.count {
-          let currentPoint = points[index];
-          path.addLine(to: currentPoint);
-        };
-        
-        // close path
-        path.close();
-        return path;
+        let pathOperations =
+          Self.createPathUsingStraightLines(forPoints: points);
+          
+        return pathOperations.path;
         
       case let .roundedCornersUniform(cornerRadius):
-        return Self.createPathWithRoundedCorners(
+        let pathOperations = Self.createPathWithRoundedCorners(
           forPoints: points,
           defaultCornerRadius: cornerRadius
         );
         
+        return pathOperations.path;
+        
       case let .roundedCornersVariadic(cornerRadiusList):
-        return Self.createPathWithRoundedCorners(
+        let pathOperations = Self.createPathWithRoundedCorners(
           forPoints: points,
           defaultCornerRadius: 0
         ) { (_, pointIndex, _) in
           cornerRadiusList[safeIndex: pointIndex] ?? 0;
         };
         
+        return pathOperations.path;
+        
       case let .roundedCornersCustom(cornerRadiusProvider):
-        return Self.createPathWithRoundedCorners(
+        let pathOperations = Self.createPathWithRoundedCorners(
           forPoints: points,
           defaultCornerRadius: 0,
           cornerRadiusProvider: cornerRadiusProvider
         );
         
+        return pathOperations.path;
+        
         case let .continuousCurvedCorners(curvinessAmount, curveHeightOffset):
-          return Self.createPathWithContinuousCurvedCorners(
+          let pathOperations = Self.createPathWithContinuousCurvedCorners(
             forPoints: points,
             curvinessAmount: curvinessAmount,
             curveHeightOffset: curveHeightOffset
           );
+          
+          return pathOperations.path;
     };
   };
 };
@@ -97,14 +91,43 @@ public extension PointConnectionStrategy {
     _ currentCorner: Triangle
   ) -> CGFloat;
   
+  static func createPathUsingStraightLines(
+    forPoints points: [CGPoint]
+  ) -> [BezierPathOperation] {
+  
+    guard points.count > 1 else {
+      return [];
+    };
+  
+    var pathOperations: [BezierPathOperation] = [];
+    
+    // move to the first point
+    pathOperations.append(
+      .moveTo(point: points.first!)
+    );
+    
+    // add lines to the remaining points
+    for index in 1 ..< points.count {
+      let currentPoint = points[index];
+      
+      pathOperations.append(
+        .addLine(endPoint: currentPoint)
+      );
+    };
+    
+    // close path
+    pathOperations.append(.close);
+    return pathOperations;
+  };
+  
   static func createPathWithRoundedCorners(
     forPoints points: [CGPoint],
     defaultCornerRadius: CGFloat,
     cornerRadiusProvider: PolygonCornerRadiusProvider? = nil,
     shouldClampCornerRadius: Bool = true
-  ) -> UIBezierPath {
-  
-    let path = UIBezierPath();
+  ) -> [BezierPathOperation] {
+    
+    var pathOperations: [BezierPathOperation] = [];
   
     for index in 0 ..< points.count {
       let pointPrev = points[cyclicIndex: index - 1];
@@ -135,34 +158,41 @@ public extension PointConnectionStrategy {
         
         return min(cornerRadiusRaw, cornerRadiusMax);
       }();
+      
       let triangleSmaller = triangle.resizedTriangleRelativeToTopPoint(
         toNewHeight: cornerRadius
       );
       
       if index == 0 {
-        path.move(to: triangleSmaller.leadingPoint);
+        pathOperations.append(
+          .moveTo(point: triangleSmaller.leadingPoint)
+        );
         
       } else {
-        path.addLine(to: triangleSmaller.leadingPoint);
+        pathOperations.append(
+          .addLine(endPoint: triangleSmaller.leadingPoint)
+        );
       };
       
-      path.addQuadCurve(
-        to: triangleSmaller.trailingPoint,
-        controlPoint: triangleSmaller.topPoint
+      pathOperations.append(
+        .addQuadCurve(
+          endPoint: triangleSmaller.trailingPoint,
+          controlPoint: triangleSmaller.topPoint
+        )
       );
     };
     
-    path.close();
-    return path;
+    pathOperations.append(.close);
+    return pathOperations;
   };
   
   static func createPathWithContinuousCurvedCorners(
     forPoints points: [CGPoint],
     curvinessAmount: CGFloat,
     curveHeightOffset: CGFloat = 0
-  ) -> UIBezierPath {
+  ) -> [BezierPathOperation] {
     
-    let path = UIBezierPath();
+    var pathOperations: [BezierPathOperation] = [];
         
     for index in 0 ..< points.count {
       let pointPrev = points[cyclicIndex: index - 1];
@@ -213,22 +243,29 @@ public extension PointConnectionStrategy {
       }();
       
       if index == 0 {
-        path.move(to: startPoint);
+        pathOperations.append(
+          .moveTo(point: startPoint)
+        );
         
       } else {
-        path.addLine(to: startPoint);
+        pathOperations.append(
+          .addLine(endPoint: startPoint)
+        );
       };
       
-      path.addLine(to: leadingCurveStartPoint);
+      pathOperations.append(
+        .addLine(endPoint: leadingCurveStartPoint)
+      );
       
-      path.addCurve(
-        to: trailingCurveEndPoint,
-        controlPoint1: leadingCurveEndPoint,
-        controlPoint2: trailingCurveStartPoint
+      pathOperations.append(
+        .addCurve(
+          endPoint: trailingCurveEndPoint,
+          controlPoint1: leadingCurveEndPoint,
+          controlPoint2: trailingCurveStartPoint
+        )
       );
     };
     
-    return path
+    return pathOperations;
   };
 };
- 
