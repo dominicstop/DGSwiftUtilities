@@ -34,6 +34,13 @@ public struct Line {
     return delta.y / delta.x;
   };
   
+  public var reversed: Self {
+    .init(
+      startPoint: self.endPoint,
+      endPoint: self.startPoint
+    );
+  };
+  
   // MARK: - Init
   // ------------
   
