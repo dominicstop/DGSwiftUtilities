@@ -58,6 +58,10 @@ public extension Array where Element == CGPoint {
   ) -> [Self.Element] {
     let boundingBox = self.getBoundingBoxForPoints();
     
+    guard boundingBox != targetRect else {
+      return self;
+    };
+    
     // calculate the scaling factors
     let scaleX = targetRect.width / boundingBox.width;
     let scaleY = targetRect.height / boundingBox.height;
@@ -90,6 +94,11 @@ public extension Array where Element == CGPoint {
   
   func centerPoints(toTargetRect targetRect: CGRect) -> [CGPoint]{
     let boundingBox = self.getBoundingBoxForPoints();
+    
+    guard boundingBox.centerPoint != targetRect.centerPoint else {
+      return self;
+    };
+    
     let boundingBoxCentered = boundingBox.centered(inOtherRect: targetRect);
     
     let translateX = boundingBoxCentered.origin.x - boundingBox.origin.x;
