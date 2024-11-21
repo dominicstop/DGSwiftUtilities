@@ -26,54 +26,56 @@ public enum PointConnectionStrategy {
   // MARK: - Functions
   // -----------------
   
-  public func createPath(
+  public func createRawPathOperations(
     forPoints points: [CGPoint],
     inRect targetRect: CGRect
-  ) -> UIBezierPath {
-  
+  ) -> [BezierPathOperation] {
+    
     switch self {
       case .straight:
-        let pathOperations =
-          Self.createPathUsingStraightLines(forPoints: points);
-          
-        return pathOperations.path;
+        return Self.createPathUsingStraightLines(forPoints: points);
         
       case let .roundedCornersUniform(cornerRadius):
-        let pathOperations = Self.createPathWithRoundedCorners(
+        return Self.createPathWithRoundedCorners(
           forPoints: points,
           defaultCornerRadius: cornerRadius
         );
         
-        return pathOperations.path;
-        
       case let .roundedCornersVariadic(cornerRadiusList):
-        let pathOperations = Self.createPathWithRoundedCorners(
+        return Self.createPathWithRoundedCorners(
           forPoints: points,
           defaultCornerRadius: 0
         ) { (_, pointIndex, _) in
           cornerRadiusList[safeIndex: pointIndex] ?? 0;
         };
         
-        return pathOperations.path;
-        
       case let .roundedCornersCustom(cornerRadiusProvider):
-        let pathOperations = Self.createPathWithRoundedCorners(
+        return Self.createPathWithRoundedCorners(
           forPoints: points,
           defaultCornerRadius: 0,
           cornerRadiusProvider: cornerRadiusProvider
         );
         
-        return pathOperations.path;
-        
         case let .continuousCurvedCorners(curvinessAmount, curveHeightOffset):
-          let pathOperations = Self.createPathWithContinuousCurvedCorners(
+          return Self.createPathWithContinuousCurvedCorners(
             forPoints: points,
             curvinessAmount: curvinessAmount,
             curveHeightOffset: curveHeightOffset
           );
-          
-          return pathOperations.path;
     };
+  };
+  
+  public func createPath(
+    forPoints points: [CGPoint],
+    inRect targetRect: CGRect
+  ) -> UIBezierPath {
+  
+    let pathOperations = self.createRawPathOperations(
+      forPoints: points,
+      inRect: targetRect
+    );
+    
+    return pathOperations.path;
   };
 };
 
