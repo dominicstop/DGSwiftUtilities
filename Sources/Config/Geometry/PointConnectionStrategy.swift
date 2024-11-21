@@ -18,6 +18,11 @@ public enum PointConnectionStrategy {
   
   case roundedCornersCustom(cornerRadiusProvider: PolygonCornerRadiusProvider);
   
+  case continuousCurvedCorners(
+    curvinessAmount: CGFloat,
+    curveHeightOffset: CGFloat = 0
+  );
+  
   // MARK: - Functions
   // -----------------
   
@@ -45,8 +50,8 @@ public enum PointConnectionStrategy {
         
         // close path
         path.close();
+        return path;
         
-    return path;
       case let .roundedCornersUniform(cornerRadius):
         return Self.createPathWithRoundedCorners(
           forPoints: points,
@@ -67,6 +72,13 @@ public enum PointConnectionStrategy {
           defaultCornerRadius: 0,
           cornerRadiusProvider: cornerRadiusProvider
         );
+        
+        case let .continuousCurvedCorners(curvinessAmount, curveHeightOffset):
+          return Self.createPathWithContinuousCurvedCorners(
+            forPoints: points,
+            curvinessAmount: curvinessAmount,
+            curveHeightOffset: curveHeightOffset
+          );
     };
   };
 };
@@ -142,6 +154,81 @@ public extension PointConnectionStrategy {
     
     path.close();
     return path;
+  };
+  
+  static func createPathWithContinuousCurvedCorners(
+    forPoints points: [CGPoint],
+    curvinessAmount: CGFloat,
+    curveHeightOffset: CGFloat = 0
+  ) -> UIBezierPath {
+    
+    let path = UIBezierPath();
+        
+    for index in 0 ..< points.count {
+      let pointPrev = points[cyclicIndex: index - 1];
+      let pointCurrent = points[index];
+      let pointNext = points[cyclicIndex: index + 1];
+      
+      let triangle: Triangle = .init(
+        topPoint: pointCurrent,
+        leadingPoint: pointPrev,
+        trailingPoint: pointNext
+      );
+      
+      let leadingSide = triangle.leadingSide;
+      let startPoint = leadingSide.startPoint;
+      
+      let leadingCurveStartPoint =
+        leadingSide.traverse(byPercent: curvinessAmount);
+        
+      let leadingCurveEndPoint: CGPoint = {
+        if curvinessAmount == 0 {
+          return triangle.topPoint;
+        };
+        
+        let innerLine: Line = .init(
+          startPoint: triangle.topPoint,
+          endPoint: leadingCurveStartPoint
+        );
+        
+        return innerLine.traverse(byPercent: curveHeightOffset);
+      }();
+      
+      let trailingSide = triangle.trailingSide;
+      
+      let trailingCurveEndPoint =
+        trailingSide.traverse(byPercent: curvinessAmount);
+        
+      let trailingCurveStartPoint = {
+        if curvinessAmount == 0 {
+          return triangle.topPoint;
+        };
+        
+        let innerLine: Line = .init(
+          startPoint: triangle.topPoint,
+          endPoint: trailingCurveEndPoint
+        );
+        
+        return innerLine.traverse(byPercent: curveHeightOffset);
+      }();
+      
+      if index == 0 {
+        path.move(to: startPoint);
+        
+      } else {
+        path.addLine(to: startPoint);
+      };
+      
+      path.addLine(to: leadingCurveStartPoint);
+      
+      path.addCurve(
+        to: trailingCurveEndPoint,
+        controlPoint1: leadingCurveEndPoint,
+        controlPoint2: trailingCurveStartPoint
+      );
+    };
+    
+    return path
   };
 };
  
