@@ -9,25 +9,8 @@ import Foundation
 
 
 public extension CGPoint {
-
-  var vectorMagnitude: CGFloat {
-    let xSquared = self.x * self.x;
-    let ySquared = self.y * self.y;
-    
-    return sqrt(xSquared + ySquared);
-  };
   
-  /// convert to unit vector
-  /// * converts the vector to have a length/magnitude of 1, while preserving
-  ///   the original direction
   ///
-  var vectorNormalized: Self {
-    let length = self.vectorMagnitude;
-    
-    let unitVectorX = self.x / length;
-    let unitVectorY = self.y / length;
-    
-    return .init(x: unitVectorX, y: unitVectorY);
   };
   
   func createLine(toPoint otherPoint: Self) -> Line {
