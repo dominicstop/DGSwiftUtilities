@@ -67,15 +67,21 @@ public enum PointConnectionStrategy {
   
   public func createPath(
     forPoints points: [CGPoint],
-    inRect targetRect: CGRect
+    inRect targetRect: CGRect,
+    pointAdjustments: PointGroupAdjustment
   ) -> UIBezierPath {
   
-    let pathOperations = self.createRawPathOperations(
+    let pathOperationsRaw = self.createRawPathOperations(
       forPoints: points,
       inRect: targetRect
     );
     
-    return pathOperations.path;
+    let pathOperationsAdj = pointAdjustments.apply(
+      toPathOperations: pathOperationsRaw,
+      forRect: targetRect
+    );
+    
+    return pathOperationsAdj.path;
   };
 };
 

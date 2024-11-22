@@ -43,88 +43,49 @@ public enum PolygonPreset {
   
   public func createPoints(
     inRect targetRect: CGRect,
-    shouldScaleToFitTargetRect: Bool,
-    shouldPreserveAspectRatioWhenScaling: Bool,
-    shouldCenterToFrameIfNeeded: Bool = true
+    pointAdjustments: PointGroupAdjustment
   ) -> [CGPoint] {
   
     let points = self.createRawPoints(inRect: targetRect);
-    
-    // 3 bits, 8 possible combinations
-    switch (
-      shouldScaleToFitTargetRect,
-      shouldPreserveAspectRatioWhenScaling,
-      shouldCenterToFrameIfNeeded
-    ) {
-      // no scaling, centered
-      case (false, _, true):
-        return points.centerPoints(toTargetRect: targetRect);
-      
-      // scale to fit
-      case (true, false, _):
-        return points.scalePointsToFit(
-          targetRect: targetRect,
-          shouldPreserveAspectRatio: false
-        );
-      
-      // scale and preserve aspect ratio, centered
-      case (true, true, true):
-        let pointsScaledToFit = points.scalePointsToFit(
-          targetRect: targetRect,
-          shouldPreserveAspectRatio: true
-        );
-        
-        return pointsScaledToFit.centerPoints(toTargetRect: targetRect);
-      
-      // scale and preserve aspect ratio, no centering
-      case (true, true, false):
-        return points.scalePointsToFit(
-          targetRect: targetRect,
-          shouldPreserveAspectRatio: true
-        );
-        
-      // no scaling or centering
-      default:
-        return points;
-    };
+    return pointAdjustments.apply(toPoints: points, forRect: targetRect);
   };
   
   public func createPath(
     inRect targetRect: CGRect,
-    shouldScaleToFitTargetRect: Bool,
-    shouldPreserveAspectRatioWhenScaling: Bool,
-    shouldCenterToFrameIfNeeded: Bool = true,
-    pointConnectionStrategy: PointConnectionStrategy = .straight
+    pointAdjustments: PointGroupAdjustment,
+    pointConnectionStrategy: PointConnectionStrategy
   ) -> UIBezierPath {
   
     let points = self.createPoints(
       inRect: targetRect,
-      shouldScaleToFitTargetRect: shouldScaleToFitTargetRect,
-      shouldPreserveAspectRatioWhenScaling: shouldPreserveAspectRatioWhenScaling,
-      shouldCenterToFrameIfNeeded: shouldCenterToFrameIfNeeded
+      pointAdjustments: pointAdjustments
     );
     
     return pointConnectionStrategy.createPath(
       forPoints: points,
-      inRect: targetRect
+      inRect: targetRect,
+      pointAdjustments: pointAdjustments
     );
   };
   
   public func createShape(
-    forFrame enclosingFrame: CGRect,
-    shouldScaleToFitTargetRect: Bool,
-    shouldPreserveAspectRatioWhenScaling: Bool,
-    shouldCenterToFrameIfNeeded: Bool = true,
-    pointConnectionStrategy: PointConnectionStrategy = .straight
+    forFrame targetRect: CGRect,
+    pointAdjustments: PointGroupAdjustment,
+    pointConnectionStrategy: PointConnectionStrategy
   ) -> CAShapeLayer {
   
     let path = self.createPath(
-      inRect: enclosingFrame,
-      shouldScaleToFitTargetRect: shouldScaleToFitTargetRect,
-      shouldPreserveAspectRatioWhenScaling: shouldPreserveAspectRatioWhenScaling,
-      shouldCenterToFrameIfNeeded: shouldCenterToFrameIfNeeded,
+      inRect: targetRect,
+      pointAdjustments: pointAdjustments,
       pointConnectionStrategy: pointConnectionStrategy
     );
+    
+    pointAdjustments.apply(
+      toPath: path,
+      forRect: targetRect
+    );
+    
+    pointAdjustments.applyPostTransform(toPath: path);
     
     // assign the path to the shape
     let shapeLayer = CAShapeLayer();
