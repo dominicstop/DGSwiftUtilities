@@ -144,4 +144,31 @@ public extension CGRect {
     
     return copy;
   };
+  
+  func createScaleToFitTransform(
+    intoRect targetRect: CGRect,
+    shouldPreserveAspectRatio: Bool,
+    shouldCenter: Bool
+  ) -> CGAffineTransform {
+  
+    var transformations: [CGAffineTransform] = [.identity];
+    
+    let transformScale = self.size.createScaleTransform(
+      scalingTo: targetRect.size,
+      shouldPreserveAspectRatio: shouldPreserveAspectRatio
+    );
+    
+    transformations.append(transformScale);
+    let newBoundsRaw = self.applying(transformScale);
+    
+    if shouldCenter {
+      let displacement = newBoundsRaw.centerPoint.getVector(
+        pointingTo: targetRect.centerPoint
+      );
+      
+      transformations.append(displacement.translateTransform);
+    };
+    
+    return transformations.concatenateTransforms()!;
+  };
 };
