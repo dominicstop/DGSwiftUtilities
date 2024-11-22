@@ -362,4 +362,46 @@ public struct Transform3D: Equatable {
       };
     };
   };
+  
+  public mutating func append(otherTransform: Self) {
+    Self.keys.forEach {
+      let value = self[keyPath: $0];
+      
+      let isValueNil: Bool = {
+        guard value is ExpressibleByNilLiteral,
+            let optionalValue = value as? OptionalUnwrappable,
+            !optionalValue.isSome()
+        else {
+          return true;
+        };
+        
+        return false;
+      }();
+      
+      switch $0 {
+        case let key as WritableKeyPath<Self, CGFloat>:
+          guard !isValueNil else {
+            self[keyPath: key] = otherTransform[keyPath: key];
+            break;
+          };
+          
+          let currentValue = self[keyPath: key];
+          let otherValue = otherTransform[keyPath: key];
+          self[keyPath: key] = currentValue + otherValue;
+          
+        case let key as WritableKeyPath<Self, Angle<CGFloat>>:
+          guard !isValueNil else {
+            self[keyPath: key] = otherTransform[keyPath: key];
+            break;
+          };
+          
+          let currentValue = self[keyPath: key].degrees;
+          let otherValue = otherTransform[keyPath: key].degrees;
+          self[keyPath: key] = .degrees(currentValue + otherValue);
+          
+        default:
+          break;
+      };
+    };
+  };
 };
