@@ -259,6 +259,10 @@ public struct Transform3D: Equatable {
     return transform;
   };
   
+  public var affineTransform: CGAffineTransform {
+    CATransform3DGetAffineTransform(self.transform);
+  };
+  
   public var isAllValueSet: Bool {
     Self.keys.allSatisfy {
       let value = self[keyPath: $0];
