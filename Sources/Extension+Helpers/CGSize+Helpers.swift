@@ -13,6 +13,14 @@ public extension CGSize {
     self == .zero || (self.width == 0 && self.height == 0);
   };
   
+  var smallestDimension: CGFloat {
+    min(self.width, self.height);
+  };
+  
+  var largestDimension: CGFloat {
+    max(self.width, self.height);
+  };
+  
   func getScaleFactor(
     scalingTo newScale: Self,
     shouldPreserveAspectRatio: Bool
