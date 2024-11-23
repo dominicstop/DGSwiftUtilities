@@ -49,19 +49,13 @@ public enum ShapePreset {
         cornerRadiusBottomLeft,
         cornerRadiusBottomRight
       ):
+        let minCornerRadius = 0.01;
         return .init(
           shouldRoundRect: targetRect,
-          topLeftRadius:
-            max(.leastNonzeroMagnitude, cornerRadiusTopLeft),
-            
-          topRightRadius:
-            max(.leastNonzeroMagnitude, cornerRadiusTopRight),
-            
-          bottomLeftRadius:
-            max(.leastNonzeroMagnitude, cornerRadiusBottomLeft),
-            
-          bottomRightRadius:
-            max(.leastNonzeroMagnitude, cornerRadiusBottomRight)
+          topLeftRadius: max(minCornerRadius, cornerRadiusTopLeft),
+          topRightRadius: max(minCornerRadius, cornerRadiusTopRight),
+          bottomLeftRadius: max(minCornerRadius, cornerRadiusBottomLeft),
+          bottomRightRadius: max(minCornerRadius, cornerRadiusBottomRight)
         );
         
       case .oval:
