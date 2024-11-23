@@ -28,6 +28,62 @@ public extension CGRect {
       y: self.midY
     );
   };
+  
+  var topMidPoint: CGPoint {
+    .init(
+      x: self.midX,
+      y: self.minY
+    );
+  };
+  
+  var bottomMidPoint: CGPoint {
+    .init(
+      x: self.midX,
+      y: self.maxY
+    );
+  };
+  
+  var leftMidPoint: CGPoint {
+    .init(
+      x: self.minX,
+      y: self.midY
+    );
+  };
+  
+  var rightMidPoint: CGPoint {
+    .init(
+      x: self.maxX,
+      y: self.midY
+    );
+  };
+  
+  var topLeftPoint: CGPoint {
+    .init(
+      x: self.minX,
+      y: self.minY
+    );
+  };
+  
+  var topRightPoint: CGPoint {
+    .init(
+      x: self.maxX,
+      y: self.minY
+    );
+  };
+  
+  var bottomLeftPoint: CGPoint {
+    .init(
+      x: self.minX,
+      y: self.maxY
+    );
+  };
+  
+  var bottomRightPoint: CGPoint {
+    .init(
+      x: self.maxX,
+      y: self.maxY
+    );
+  };
 
   mutating func setPoint(
     minX: CGFloat? = nil,
