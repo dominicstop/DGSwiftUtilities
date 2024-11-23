@@ -61,8 +61,11 @@ public enum PolygonPreset {
       pointAdjustments: pointAdjustments
     );
     
+    let pointsTransformed =
+      pointAdjustments.applyPointTransform(toPoints: points);
+    
     return pointConnectionStrategy.createPath(
-      forPoints: points,
+      forPoints: pointsTransformed,
       inRect: targetRect,
       pointAdjustments: pointAdjustments
     );

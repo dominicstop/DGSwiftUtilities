@@ -23,6 +23,7 @@ public struct PointGroupAdjustment {
   public var shouldPreserveAspectRatioWhenScaling: Bool;
   public var shouldCenterToFrameIfNeeded: Bool = true;
   
+  public var pointTransform: Transform3D? = nil;
   public var postTransform: Transform3D? = nil;
   
   // MARK: - Init
@@ -32,11 +33,14 @@ public struct PointGroupAdjustment {
     shouldScaleToFitTargetRect: Bool,
     shouldPreserveAspectRatioWhenScaling: Bool,
     shouldCenterToFrameIfNeeded: Bool = true,
+    pointTransform: Transform3D? = nil,
     postTransform: Transform3D? = nil
   ) {
     self.shouldScaleToFitTargetRect = shouldScaleToFitTargetRect;
     self.shouldPreserveAspectRatioWhenScaling = shouldPreserveAspectRatioWhenScaling;
     self.shouldCenterToFrameIfNeeded = shouldCenterToFrameIfNeeded;
+    
+    self.pointTransform = pointTransform;
     self.postTransform = postTransform;
   };
   
@@ -173,6 +177,20 @@ public struct PointGroupAdjustment {
       // no scaling or centering
       default:
         break;
+    };
+  };
+  
+  public func applyPointTransform(toPoints points: [CGPoint]) -> [CGPoint] {
+    guard let pointTransform = self.pointTransform,
+          pointTransform != .default
+    else {
+      return points;
+    };
+    
+    let transform = pointTransform.affineTransform;
+    
+    return points.map {
+      $0.applying(transform);
     };
   };
   
