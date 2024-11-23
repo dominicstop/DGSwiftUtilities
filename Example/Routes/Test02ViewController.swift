@@ -99,7 +99,7 @@ class Test02ViewController: UIViewController {
   override func viewDidLoad() {
     let initialFrame: CGRect = .init(
       origin: .init(x: 45, y: 45),
-      size: .init(width: 75 * 3, height: 75 * 3)
+      size: .init(width: 75, height: 75)
     );
     
     let boxWrapperView = {
@@ -113,7 +113,17 @@ class Test02ViewController: UIViewController {
     let boxView: ViewKeyframeable = {
       let view = ViewKeyframeable();
       view.backgroundColor = .red;
-      view.cornerRadiusConfig = .none;
+      view.layerMaskShapePreset = .regularPolygon(
+        polygonPreset: .regularPolygon(numberOfSides: 3),
+        pointAdjustments: .init(
+          shouldScaleToFitTargetRect: true,
+          shouldPreserveAspectRatioWhenScaling: false
+        ),
+        pointConnectionStrategy: .continuousCurvedCorners(
+          curvinessAmount: 0,
+          curveHeightOffset: 0
+        )
+      );
       
       return view;
     }();
@@ -146,55 +156,6 @@ class Test02ViewController: UIViewController {
     boxView.prevFrame = initialFrame;
     boxWrapperView.layoutIfNeeded();
     boxView.layoutIfNeeded();
-    
-    let polygon: PolygonPreset = .regularPolygon(numberOfSides: 4);
-    
-    let star: PolygonPreset = .regularStarPolygon(
-      numberOfSpikes: 6,
-      spikeRadius: 30
-    );
-    
-    let superelipse: CAShapeLayer = {
-      let path: UIBezierPath = .superellipse(
-        in: .init(
-          origin: .init(x: 10, y: 10),
-          size: .init(
-            width: initialFrame.size.width / 2,
-            height: initialFrame.size.height / 2
-          )
-        ),
-        cornerRadius: 75
-      );
-      
-      let shape = CAShapeLayer();
-      shape.path = path.cgPath;
-      
-      return shape;
-    }();
-    
-    let shapeLayer = polygon.createShape(
-      forFrame: .init(
-        origin: .zero,
-        size: initialFrame.size
-      ),
-      pointAdjustments: .init(
-        shouldScaleToFitTargetRect: true,
-        shouldPreserveAspectRatioWhenScaling: false,
-        postTransform: .init(
-          scaleX: 1 + (1 / 20),
-          scaleY: 1 + (1 / 20)
-        )
-      ),
-      pointConnectionStrategy: .continuousCurvedCorners(
-        curvinessAmount: 0.25,
-        curveHeightOffset: 0
-      )
-    );
-    
-    // shapeLayer = superelipse;
-    
-    boxView.layer.addSublayer(shapeLayer);
-    return;
     
     print("Animation start\n");
     
