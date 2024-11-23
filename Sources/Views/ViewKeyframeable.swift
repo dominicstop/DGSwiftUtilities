@@ -72,7 +72,7 @@ public class ViewKeyframeable: UIView {
     UIView.inheritedAnimationDuration > 0;
   };
 
-  public var cornerRadiusConfig: LayerMaskShape = .none {
+  public var layerMaskShapePreset: ShapePreset = .none {
     didSet {
       self.updateLayerMask();
     }
@@ -142,9 +142,11 @@ public class ViewKeyframeable: UIView {
           return;
         };
         
-        let maskPath = self.cornerRadiusConfig.createPath(forRect: self.bounds);
+        let shapePathMask =
+          self.layerMaskShapePreset.createPath(inRect: self.bounds);
+        
         let maskShape = CAShapeLayer();
-        maskShape.path = maskPath.cgPath;
+        maskShape.path = shapePathMask.cgPath;
         
         self.layer.mask = maskShape;
           
@@ -165,7 +167,7 @@ public class ViewKeyframeable: UIView {
         
         let nextShapeMaskPath: CGPath = {
           let maskPath =
-            self.cornerRadiusConfig.createPath(forRect: nextFrame);
+            self.layerMaskShapePreset.createPath(inRect: nextFrame);
             
           return maskPath.cgPath;
         }();
