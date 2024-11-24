@@ -89,7 +89,7 @@ public class ViewKeyframeable: UIView {
     return false;
   };
 
-  public var layerMaskShapePreset: ShapePreset = .none {
+  public var layerMaskShape: ShapePreset = .none {
     didSet {
       guard !self.isAnimating else {
         return;
@@ -183,7 +183,7 @@ public class ViewKeyframeable: UIView {
         };
         
         let shapePathMask =
-          self.layerMaskShapePreset.createPath(inRect: self.bounds);
+          self.layerMaskShape.createPath(inRect: self.bounds);
         
         let maskShape = CAShapeLayer();
         maskShape.path = shapePathMask.cgPath;
@@ -207,7 +207,7 @@ public class ViewKeyframeable: UIView {
         
         let nextShapeMaskPath: CGPath = {
           let maskPath =
-            self.layerMaskShapePreset.createPath(inRect: nextFrame);
+            self.layerMaskShape.createPath(inRect: nextFrame);
             
           return maskPath.cgPath;
         }();
