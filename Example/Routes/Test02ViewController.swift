@@ -113,17 +113,7 @@ class Test02ViewController: UIViewController {
     let boxView: ViewKeyframeable = {
       let view = ViewKeyframeable();
       view.backgroundColor = .red;
-      view.layerMaskShapePreset = .regularPolygon(
-        polygonPreset: .regularPolygon(numberOfSides: 3),
-        pointAdjustments: .init(
-          shouldScaleToFitTargetRect: true,
-          shouldPreserveAspectRatioWhenScaling: false
-        ),
-        pointConnectionStrategy: .continuousCurvedCorners(
-          curvinessAmount: 0,
-          curveHeightOffset: 0
-        )
-      );
+      view.layerMaskShape = .rectRoundedUniform(cornerRadius: 0.01)
       
       return view;
     }();
@@ -159,8 +149,10 @@ class Test02ViewController: UIViewController {
     
     print("Animation start\n");
     
+    
     UIView.animate(withDuration: 3, delay: 1) {
       boxView.backgroundColor = .yellow;
+      boxView.layerMaskShape = .rectRoundedUniform(cornerRadius: 15)
       boxWrapperView.frame = nextFrame;
       
       // boxWrapperView.layoutIfNeeded();
