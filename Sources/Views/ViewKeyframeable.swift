@@ -54,15 +54,6 @@ public class ViewKeyframeable: UIView {
     };
   };
   
-  static let commonLayerAnimationKeys: [String] = [
-    "bounds.size",
-    #keyPath(CALayer.position),
-    #keyPath(CALayer.transform),
-    #keyPath(CALayer.backgroundColor),
-    #keyPath(CALayer.opacity),
-    #keyPath(CALayer.borderColor),
-    #keyPath(CALayer.borderWidth),
-  ];
   
   public var prevFrame: CGRect?;
   public var animationState: AnimationState = .noAnimation;
@@ -98,7 +89,7 @@ public class ViewKeyframeable: UIView {
       };
       
       let animationBase = self.layer.recursivelyFindParentAnimation(
-        forKeys: Self.commonLayerAnimationKeys,
+        forKeys: CALayer.commonAnimationKeys,
         shouldSkipCurrentLayer: false,
         forType: CABasicAnimation.self
       );

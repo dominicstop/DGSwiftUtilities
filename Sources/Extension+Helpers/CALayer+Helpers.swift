@@ -9,6 +9,16 @@ import UIKit
 
 
 public extension CALayer {
+
+  static let commonAnimationKeys: [String] = [
+    "bounds.size",
+    #keyPath(CALayer.position),
+    #keyPath(CALayer.transform),
+    #keyPath(CALayer.backgroundColor),
+    #keyPath(CALayer.opacity),
+    #keyPath(CALayer.borderColor),
+    #keyPath(CALayer.borderWidth),
+  ];
   
   func recursivelyFindParentAnimation<T: CAAnimation>(
     forKeys keys: [String],
