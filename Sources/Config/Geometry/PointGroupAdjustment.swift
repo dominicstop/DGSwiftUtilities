@@ -10,15 +10,6 @@ import UIKit
 
 public struct PointGroupAdjustment {
 
-  public static var none: Self {
-    .init(
-      shouldScaleToFitTargetRect: false,
-      shouldPreserveAspectRatioWhenScaling: false,
-      shouldCenterToFrameIfNeeded: false,
-      postTransform: .default
-    );
-  };
-
   public var shouldScaleToFitTargetRect: Bool;
   public var shouldPreserveAspectRatioWhenScaling: Bool;
   public var shouldCenterToFrameIfNeeded: Bool = true;
@@ -208,4 +199,35 @@ public struct PointGroupAdjustment {
     
     path.recenter(toPoint: centerPoint);
   };
+};
+
+// MARK: - PointGroupAdjustment+StaticAlias
+// ----------------------------------------
+
+public extension PointGroupAdjustment {
+  
+  static var none: Self {
+    .init(
+      shouldScaleToFitTargetRect: false,
+      shouldPreserveAspectRatioWhenScaling: false,
+      shouldCenterToFrameIfNeeded: false
+    );
+  };
+  
+  static var scaleToFit: Self {
+    .init(
+      shouldScaleToFitTargetRect: true,
+      shouldPreserveAspectRatioWhenScaling: true,
+      shouldCenterToFrameIfNeeded: true
+    );
+  };
+  
+  static var scaleToFill: Self {
+    .init(
+      shouldScaleToFitTargetRect: true,
+      shouldPreserveAspectRatioWhenScaling: false,
+      shouldCenterToFrameIfNeeded: true
+    );
+  };
+
 };
