@@ -10,6 +10,9 @@ import UIKit
 
 public class ViewKeyframeable: UIView {
 
+  // MARK: - Embedded Types
+  // ----------------------
+
   public enum AnimationState {
     case noAnimation;
     
@@ -27,16 +30,26 @@ public class ViewKeyframeable: UIView {
       nextFrame: CGRect
     );
     
+    var isAnimating: Bool {
+      switch self {
+        case .pendingAnimation, .animating:
+          return true;
+          
+        default:
+          return false;
+      };
+    };
+    
     var isAnimatingFrame: Bool {
       switch self {
-        case .noAnimation:
-          return false;
-    
         case let .pendingAnimation(_, _, currentFrame, nextFrame):
           return currentFrame != nextFrame;
         
         case let .animating(_, _, currentFrame, nextFrame):
           return currentFrame != nextFrame;
+          
+        default:
+          return false;
       };
     };
     
@@ -54,25 +67,48 @@ public class ViewKeyframeable: UIView {
     };
   };
   
+  // MARK: - Properties
+  // ------------------
   
   public var prevFrame: CGRect?;
+  
   public var animationState: AnimationState = .noAnimation;
   public var isExplicitlyBeingAnimated: Bool?;
   
   public var isAnimating: Bool {
-    UIView.inheritedAnimationDuration > 0;
+    if UIView.inheritedAnimationDuration > 0 {
+      return true;
+    };
+    
+    if let isExplicitlyBeingAnimated = self.isExplicitlyBeingAnimated,
+       isExplicitlyBeingAnimated
+    {
+      return true;
+    };
+    
+    return false;
   };
 
   public var layerMaskShapePreset: ShapePreset = .none {
     didSet {
+      guard !self.isAnimating else {
+        return;
+      };
+      
       self.updateLayerMask();
     }
   };
+  
+  // MARK: - View Lifecycle
+  // ----------------------
   
   public override func layoutSubviews() {
     super.layoutSubviews();
     self.updateLayers();
   };
+  
+  // MARK: - Methods (Private)
+  // -------------------------
   
   private func updateLayers(){
     let animationStateCurrent = self.animationState;
@@ -114,6 +150,19 @@ public class ViewKeyframeable: UIView {
             pendingAnimations: [],
             currentFrame: currentFrame,
             nextFrame: self.frame
+          );
+          
+        case let .pendingAnimation(
+          animationBase,
+          pendingAnimations,
+          currentFrame,
+          nextFrame
+        ):
+          return .animating(
+            animationBase: animationBase,
+            currentAnimations: pendingAnimations,
+            prevFrame: currentFrame,
+            nextFrame: nextFrame
           );
           
         default:
@@ -229,6 +278,13 @@ public class ViewKeyframeable: UIView {
     );
   };
   #endif
+  
+  // MARK: - Methods (Public)
+  // ------------------------
+  
+  public func prepareForAnimation(){
+    self.isExplicitlyBeingAnimated = true;
+  };
 };
 
 // MARK: - ViewKeyframeable+CAAnimationDelegate
