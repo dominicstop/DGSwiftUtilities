@@ -14,8 +14,16 @@ public struct PointGroupAdjustment {
   public var shouldPreserveAspectRatioWhenScaling: Bool;
   public var shouldCenterToFrameIfNeeded: Bool = true;
   
+  /// pre transform, apply to generated points (before the path is created)
+  /// * generally useful for rotating the "shape" without affecting sizing
+  ///
   public var pointTransform: Transform3D? = nil;
-  public var postTransform: Transform3D? = nil;
+  
+  /// post transform, apply to shape (after the points are generated)
+  /// * generally useful for scaling the "shape" when using curved/rounded
+  ///   paths so that it fits the bounds better.
+  ///
+  public var pathTransform: Transform3D? = nil;
   
   // MARK: - Init
   // ------------
@@ -32,7 +40,7 @@ public struct PointGroupAdjustment {
     self.shouldCenterToFrameIfNeeded = shouldCenterToFrameIfNeeded;
     
     self.pointTransform = pointTransform;
-    self.postTransform = postTransform;
+    self.pathTransform = postTransform;
   };
   
   // MARK: - Functions
@@ -185,8 +193,8 @@ public struct PointGroupAdjustment {
     };
   };
   
-  public func applyPostTransform(toPath path: UIBezierPath){
-    guard let postTransform = self.postTransform else {
+  public func applyPathTransform(toPath path: UIBezierPath){
+    guard let postTransform = self.pathTransform else {
       return;
     };
     

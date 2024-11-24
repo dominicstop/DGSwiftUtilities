@@ -88,7 +88,7 @@ public enum PolygonPreset {
       forRect: targetRect
     );
     
-    pointAdjustments.applyPostTransform(toPath: path);
+    pointAdjustments.applyPathTransform(toPath: path);
     
     // assign the path to the shape
     let shapeLayer = CAShapeLayer();
