@@ -110,8 +110,8 @@ class Test02ViewController: UIViewController {
       return view;
     }();
   
-    let boxView: ViewKeyframeable = {
-      let view = ViewKeyframeable();
+    let boxView: ShapeView = {
+      let view = ShapeView();
       view.backgroundColor = .red;
       view.layerMaskShape = .rectRoundedUniform(cornerRadius: 0.01)
       

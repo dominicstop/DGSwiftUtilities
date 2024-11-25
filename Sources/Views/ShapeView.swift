@@ -8,7 +8,7 @@
 import UIKit
 
 
-public class ViewKeyframeable: UIView {
+public class ShapeView: UIView {
 
   // MARK: - Embedded Types
   // ----------------------
@@ -290,7 +290,7 @@ public class ViewKeyframeable: UIView {
 // MARK: - ViewKeyframeable+CAAnimationDelegate
 // --------------------------------------------
 
-extension ViewKeyframeable: CAAnimationDelegate {
+extension ShapeView: CAAnimationDelegate {
   
   public func animationDidStart(_ anim: CAAnimation) {
     switch self.animationState {

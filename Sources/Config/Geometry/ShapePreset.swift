@@ -127,6 +127,39 @@ public extension ShapePreset {
       cornerRadiusBottomRight: cornerRadius
     );
   };
+  
+  // MARK: - `PolygonPreset`
+  // -----------------------
+  
+  static func regularPolygon(
+    numberOfSides: Int,
+    pointConnectionStrategy: PointConnectionStrategy,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: numberOfSides),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: pointConnectionStrategy
+    );
+  };
+  
+  static func regularStarPolygon(
+    numberOfSpikes: Int,
+    innerRadius: CGFloat? = nil,
+    spikeRadius: CGFloat,
+    pointConnectionStrategy: PointConnectionStrategy,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularStarPolygon(
+        numberOfSpikes: numberOfSpikes,
+        innerRadius: innerRadius,
+        spikeRadius: spikeRadius
+      ),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: pointConnectionStrategy
+    );
+  };
     
   // MARK: - `PolygonPreset` (Straight)
   // ----------------------------------
@@ -193,6 +226,212 @@ public extension ShapePreset {
       polygonPreset: .regularPolygon(numberOfSides: 8),
       pointAdjustments: pointAdjustments,
       pointConnectionStrategy: .straight
+    );
+  };
+  
+  // MARK: - `PolygonPreset` (Rounded Uniform)
+  // -----------------------------------------
+  
+  static func regularTriangleRoundedUniform(
+    cornerRadius: CGFloat,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 3),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .roundedCornersUniform(cornerRadius: cornerRadius)
+    );
+  };
+  
+  static func regularDiamondRoundedUniform(
+    cornerRadius: CGFloat,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 4),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .roundedCornersUniform(cornerRadius: cornerRadius)
+    );
+  };
+  
+  static func regularSquareRoundedUniform(
+    cornerRadius: CGFloat,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    var pointTransform = pointAdjustments.pointTransform ?? .default;
+    
+    pointTransform.append(
+      otherTransform: .init(rotateZ: .degrees(45))
+    );
+    
+    var pointAdjustments = pointAdjustments;
+    pointAdjustments.pointTransform = pointTransform;
+  
+    return .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 4),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .roundedCornersUniform(cornerRadius: cornerRadius)
+    );
+  };
+  
+  static func regularPentagonRoundedUniform(
+    cornerRadius: CGFloat,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 5),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .roundedCornersUniform(cornerRadius: cornerRadius)
+    );
+  };
+  
+  static func regularHexagonRoundedUniform(
+    cornerRadius: CGFloat,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 6),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .roundedCornersUniform(cornerRadius: cornerRadius)
+    );
+  };
+  
+  static func regularHeptagonRoundedUniform(
+    cornerRadius: CGFloat,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 7),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .roundedCornersUniform(cornerRadius: cornerRadius)
+    );
+  };
+  
+  static func regularOctagonRoundedUniform(
+    cornerRadius: CGFloat,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 8),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .roundedCornersUniform(cornerRadius: cornerRadius)
+    );
+  };
+  
+  // MARK: - `PolygonPreset` (Continuous Curved Corners)
+  // ---------------------------------------------------
+  
+  static func regularTriangleWithContinuosCurves(
+    curvinessAmount: CGFloat,
+    curveHeightOffset: CGFloat = 0,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 3),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .continuousCurvedCorners(
+        curvinessAmount: curvinessAmount,
+        curveHeightOffset: curveHeightOffset
+      )
+    );
+  };
+  
+  static func regularDiamondWithContinuosCurves(
+    curvinessAmount: CGFloat,
+    curveHeightOffset: CGFloat = 0,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 4),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .continuousCurvedCorners(
+        curvinessAmount: curvinessAmount,
+        curveHeightOffset: curveHeightOffset
+      )
+    );
+  };
+  
+  static func regularSquareWithContinuosCurves(
+    curvinessAmount: CGFloat,
+    curveHeightOffset: CGFloat = 0,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    var pointTransform = pointAdjustments.pointTransform ?? .default;
+    
+    pointTransform.append(
+      otherTransform: .init(rotateZ: .degrees(45))
+    );
+    
+    var pointAdjustments = pointAdjustments;
+    pointAdjustments.pointTransform = pointTransform;
+  
+    return .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 4),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .continuousCurvedCorners(
+        curvinessAmount: curvinessAmount,
+        curveHeightOffset: curveHeightOffset
+      )
+    );
+  };
+  
+  static func regularPentagonWithContinuosCurves(
+    curvinessAmount: CGFloat,
+    curveHeightOffset: CGFloat = 0,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 5),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .continuousCurvedCorners(
+        curvinessAmount: curvinessAmount,
+        curveHeightOffset: curveHeightOffset
+      )
+    );
+  };
+  
+  static func regularHexagonWithContinuosCurves(
+    curvinessAmount: CGFloat,
+    curveHeightOffset: CGFloat = 0,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 6),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .continuousCurvedCorners(
+        curvinessAmount: curvinessAmount,
+        curveHeightOffset: curveHeightOffset
+      )
+    );
+  };
+  
+  static func regularHeptagonWithContinuosCurves(
+    curvinessAmount: CGFloat,
+    curveHeightOffset: CGFloat = 0,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 7),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .continuousCurvedCorners(
+        curvinessAmount: curvinessAmount,
+        curveHeightOffset: curveHeightOffset
+      )
+    );
+  };
+  
+  static func regularOctagonWithContinuosCurves(
+    curvinessAmount: CGFloat,
+    curveHeightOffset: CGFloat = 0,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: 8),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .continuousCurvedCorners(
+        curvinessAmount: curvinessAmount,
+        curveHeightOffset: curveHeightOffset
+      )
     );
   };
 };
