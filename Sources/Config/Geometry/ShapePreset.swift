@@ -321,7 +321,7 @@ public extension ShapePreset {
   // MARK: - `PolygonPreset` (Continuous Curved Corners)
   // ---------------------------------------------------
   
-  static func regularTriangleWithContinuosCurves(
+  static func regularTriangleWithContinuousCurves(
     curvinessAmount: CGFloat,
     curveHeightOffset: CGFloat = 0,
     pointAdjustments: PointGroupAdjustment
@@ -336,7 +336,7 @@ public extension ShapePreset {
     );
   };
   
-  static func regularDiamondWithContinuosCurves(
+  static func regularDiamondWithContinuousCurves(
     curvinessAmount: CGFloat,
     curveHeightOffset: CGFloat = 0,
     pointAdjustments: PointGroupAdjustment
@@ -351,7 +351,7 @@ public extension ShapePreset {
     );
   };
   
-  static func regularSquareWithContinuosCurves(
+  static func regularSquareWithContinuousCurves(
     curvinessAmount: CGFloat,
     curveHeightOffset: CGFloat = 0,
     pointAdjustments: PointGroupAdjustment
@@ -375,7 +375,7 @@ public extension ShapePreset {
     );
   };
   
-  static func regularPentagonWithContinuosCurves(
+  static func regularPentagonWithContinuousCurves(
     curvinessAmount: CGFloat,
     curveHeightOffset: CGFloat = 0,
     pointAdjustments: PointGroupAdjustment
@@ -390,7 +390,7 @@ public extension ShapePreset {
     );
   };
   
-  static func regularHexagonWithContinuosCurves(
+  static func regularHexagonWithContinuousCurves(
     curvinessAmount: CGFloat,
     curveHeightOffset: CGFloat = 0,
     pointAdjustments: PointGroupAdjustment
@@ -405,7 +405,7 @@ public extension ShapePreset {
     );
   };
   
-  static func regularHeptagonWithContinuosCurves(
+  static func regularHeptagonWithContinuousCurves(
     curvinessAmount: CGFloat,
     curveHeightOffset: CGFloat = 0,
     pointAdjustments: PointGroupAdjustment
@@ -420,7 +420,7 @@ public extension ShapePreset {
     );
   };
   
-  static func regularOctagonWithContinuosCurves(
+  static func regularOctagonWithContinuousCurves(
     curvinessAmount: CGFloat,
     curveHeightOffset: CGFloat = 0,
     pointAdjustments: PointGroupAdjustment

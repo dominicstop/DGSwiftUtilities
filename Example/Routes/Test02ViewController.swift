@@ -114,7 +114,7 @@ class Test02ViewController: UIViewController {
       let view = ShapeView();
       view.backgroundColor = .red;
       // continuous
-      view.layerMaskShape = .regularTriangleWithContinuosCurves(
+      view.layerMaskShape = .regularTriangleWithContinuousCurves(
         curvinessAmount: 0.01,
         curveHeightOffset: 0,
         pointAdjustments: .scaleToFit
@@ -160,7 +160,7 @@ class Test02ViewController: UIViewController {
     
     UIView.animate(withDuration: 3, delay: 1) {
       boxView.backgroundColor = .yellow;
-      boxView.layerMaskShape = .regularTriangleWithContinuosCurves(
+      boxView.layerMaskShape = .regularTriangleWithContinuousCurves(
         curvinessAmount: 0.8,
         curveHeightOffset: 0,
         pointAdjustments: .scaleToFit
