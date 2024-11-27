@@ -106,25 +106,13 @@ public class ShapeView: UIView {
   // ------------------
   
   public var borderLayer: CAShapeLayer!;
-  
   public var prevFrame: CGRect?;
   
   public var animationState: AnimationState = .noAnimation;
   public var isExplicitlyBeingAnimated: Bool?;
   
-  public var isAnimating: Bool {
-    if UIView.inheritedAnimationDuration > 0 {
-      return true;
-    };
-    
-    if let isExplicitlyBeingAnimated = self.isExplicitlyBeingAnimated,
-       isExplicitlyBeingAnimated
-    {
-      return true;
-    };
-    
-    return false;
-  };
+  // MARK: - Animatable Properties
+  // -----------------------------
   
   public var layerMaskShape: ShapePreset = .none {
     didSet {
@@ -151,6 +139,23 @@ public class ShapeView: UIView {
         self.updateBorderLayer();
       };
     }
+  };
+  
+  // MARK: - Computed Properties
+  // ---------------------------
+  
+  public var isAnimating: Bool {
+    if UIView.inheritedAnimationDuration > 0 {
+      return true;
+    };
+    
+    if let isExplicitlyBeingAnimated = self.isExplicitlyBeingAnimated,
+       isExplicitlyBeingAnimated
+    {
+      return true;
+    };
+    
+    return false;
   };
   
   // MARK: - View Lifecycle
