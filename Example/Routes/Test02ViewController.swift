@@ -104,7 +104,7 @@ class Test02ViewController: UIViewController {
     
     let boxWrapperView = {
       let view = UIView();
-      view.backgroundColor = .gray;
+      // view.backgroundColor = .gray;
       view.frame = initialFrame;
       
       return view;
@@ -113,7 +113,14 @@ class Test02ViewController: UIViewController {
     let boxView: ShapeView = {
       let view = ShapeView();
       view.backgroundColor = .red;
-      view.layerMaskShape = .rectRoundedUniform(cornerRadius: 0.01)
+      // continuous
+      view.layerMaskShape = .regularTriangleWithContinuosCurves(
+        curvinessAmount: 0.01,
+        curveHeightOffset: 0,
+        pointAdjustments: .scaleToFit
+      );
+      
+      view.layerBorderStyle = .init(lineWidth: 6, strokeColor: .blue);
       
       return view;
     }();
@@ -147,12 +154,20 @@ class Test02ViewController: UIViewController {
     boxWrapperView.layoutIfNeeded();
     boxView.layoutIfNeeded();
     
+    // return;
     print("Animation start\n");
     
     
     UIView.animate(withDuration: 3, delay: 1) {
       boxView.backgroundColor = .yellow;
-      boxView.layerMaskShape = .rectRoundedUniform(cornerRadius: 15)
+      boxView.layerMaskShape = .regularTriangleWithContinuosCurves(
+        curvinessAmount: 0.8,
+        curveHeightOffset: 0,
+        pointAdjustments: .scaleToFit
+      );
+      
+      boxView.layerBorderStyle = .init(lineWidth: 8, strokeColor: .green);
+      
       boxWrapperView.frame = nextFrame;
       
       // boxWrapperView.layoutIfNeeded();
