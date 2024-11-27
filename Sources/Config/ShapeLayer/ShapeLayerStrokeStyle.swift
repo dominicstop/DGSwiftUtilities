@@ -24,8 +24,8 @@ public struct ShapeLayerStrokeStyle {
     strokeColor: UIColor?,
     linePattern: LineDashPattern = .noPattern,
     lineDashPhase: CGFloat = 0,
-    strokeStart: CGFloat = 1,
-    strokeEnd: CGFloat = 0
+    strokeStart: CGFloat = 0,
+    strokeEnd: CGFloat = 1
   ) {
     self.lineWidth = lineWidth;
     self.strokeColor = strokeColor;
