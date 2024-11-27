@@ -274,6 +274,7 @@ public extension PointConnectionStrategy {
       );
     };
     
+    pathOperations.append(.close);
     return pathOperations;
   };
 };
