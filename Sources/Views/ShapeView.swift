@@ -211,10 +211,10 @@ public class ShapeView: UIView {
       
       switch animationStateCurrent {
         case .noAnimation:
-          let nextFrame = self.frame;
+          let nextFrame = self.bounds;
           
           let currentFrame =
-               self.layer.presentation()?.frame
+               self.layer.presentation()?.bounds
             ?? self.prevFrame
             ?? .zero;
             
