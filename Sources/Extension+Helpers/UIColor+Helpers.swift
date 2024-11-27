@@ -305,8 +305,8 @@ public extension UIColor {
     return nil;
   };
   
-  // MARK: - Static Members
-  // ----------------------
+  // MARK: - Computed Properties
+  // ---------------------------
   
   var rgba: (r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) {
     var red  : CGFloat = 0;
@@ -316,6 +316,11 @@ public extension UIColor {
     
     getRed(&red, green: &green, blue: &blue, alpha: &alpha);
     return (red, green, blue, alpha);
+  };
+  
+  var components: [CGFloat] {
+    let rgba = self.rgba;
+    return [rgba.r, rgba.g, rgba.b, rgba.a];
   };
   
   // MARK: - Init
