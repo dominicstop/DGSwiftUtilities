@@ -20,14 +20,18 @@ public class ShapeView: UIView {
       animationBase: CABasicAnimation,
       pendingAnimations: [CABasicAnimation],
       currentFrame: CGRect,
-      nextFrame: CGRect
+      nextFrame: CGRect,
+      currentPath: CGPath,
+      nextPath: CGPath
     );
     
     case animating(
       animationBase: CABasicAnimation,
       currentAnimations: [CABasicAnimation],
       prevFrame: CGRect,
-      nextFrame: CGRect
+      nextFrame: CGRect,
+      prevPath: CGPath,
+      nextPath: CGPath
     );
     
     var isAnimating: Bool {
@@ -42,10 +46,10 @@ public class ShapeView: UIView {
     
     var isAnimatingFrame: Bool {
       switch self {
-        case let .pendingAnimation(_, _, currentFrame, nextFrame):
+        case let .pendingAnimation(_, _, currentFrame, nextFrame, _, _):
           return currentFrame != nextFrame;
         
-        case let .animating(_, _, currentFrame, nextFrame):
+        case let .animating(_, _, currentFrame, nextFrame, _, _):
           return currentFrame != nextFrame;
           
         default:
@@ -55,20 +59,53 @@ public class ShapeView: UIView {
     
     var animationBase: CABasicAnimation? {
       switch self {
-        case let .pendingAnimation(animationBase, _, _, _):
+        case let .pendingAnimation(animationBase, _, _, _, _, _):
           return animationBase;
         
-        case let .animating(animationBase, _, _, _):
+        case let .animating(animationBase, _, _, _, _, _):
           return animationBase;
           
         default:
           return nil;
       };
     };
+    
+    mutating func appendAnimations(_ animations: [CABasicAnimation]){
+      switch self {
+        case let .pendingAnimation(
+          animationBase,
+          pendingAnimations,
+          currentFrame,
+          nextFrame,
+          currentPath,
+          nextPath
+        ):
+          self = .pendingAnimation(
+            animationBase: animationBase,
+            pendingAnimations: pendingAnimations + animations,
+            currentFrame: currentFrame,
+            nextFrame: nextFrame,
+            currentPath: currentPath,
+            nextPath: nextPath
+          );
+          
+        default:
+          #if DEBUG
+          assertionFailure("can only append animations to `.pendingAnimation`");
+          #endif
+          break;
+      };
+    };
+    
+    mutating func appendAnimation(_ animation: CABasicAnimation){
+      self.appendAnimations([animation]);
+    };
   };
   
   // MARK: - Properties
   // ------------------
+  
+  public var borderLayer: CAShapeLayer!;
   
   public var prevFrame: CGRect?;
   
@@ -88,14 +125,31 @@ public class ShapeView: UIView {
     
     return false;
   };
-
+  
   public var layerMaskShape: ShapePreset = .none {
     didSet {
       guard !self.isAnimating else {
         return;
       };
       
-      self.updateLayerMask();
+      self.updateLayers();
+    }
+  };
+  
+  private var _layerBorderStyleCurrent: ShapeLayerStrokeStyle = .noBorder;
+  private var _layerBorderStylePending: ShapeLayerStrokeStyle?;
+  public var layerBorderStyle: ShapeLayerStrokeStyle {
+    get {
+      if let pendingValue = self._layerBorderStylePending {
+        return pendingValue;
+      };
+      return self._layerBorderStyleCurrent;
+    }
+    set {
+      self._layerBorderStylePending = newValue;
+      if !self.isAnimating {
+        self.updateBorderLayer();
+      };
     }
   };
   
@@ -109,6 +163,18 @@ public class ShapeView: UIView {
   
   // MARK: - Methods (Private)
   // -------------------------
+  
+  private func setupBorderLayerIfNeeded(){
+    guard self.borderLayer == nil else {
+      return;
+    };
+    
+    let borderLayer = CAShapeLayer();
+    borderLayer.fillColor = nil;
+    
+    self.borderLayer = borderLayer;
+    self.layer.addSublayer(borderLayer);
+  };
   
   private func updateLayers(){
     let animationStateCurrent = self.animationState;
@@ -140,29 +206,50 @@ public class ShapeView: UIView {
       
       switch animationStateCurrent {
         case .noAnimation:
+          let nextFrame = self.frame;
+          
           let currentFrame =
                self.layer.presentation()?.frame
             ?? self.prevFrame
             ?? .zero;
+            
+          let currentShapeMask = self.layer.mask as! CAShapeLayer;
+        
+          let currentShapeMaskPath =
+               currentShapeMask.presentation()?.path
+            ?? currentShapeMask.path!;
+          
+          let nextShapeMaskPath: CGPath = {
+            let maskPath =
+              self.layerMaskShape.createPath(inRect: nextFrame);
+              
+            return maskPath.cgPath;
+          }();
           
           return .pendingAnimation(
             animationBase: animationBase,
             pendingAnimations: [],
             currentFrame: currentFrame,
-            nextFrame: self.frame
+            nextFrame: nextFrame,
+            currentPath: currentShapeMaskPath,
+            nextPath: nextShapeMaskPath
           );
           
         case let .pendingAnimation(
           animationBase,
           pendingAnimations,
           currentFrame,
-          nextFrame
+          nextFrame,
+          currentPath,
+          nextPath
         ):
           return .animating(
             animationBase: animationBase,
             currentAnimations: pendingAnimations,
             prevFrame: currentFrame,
-            nextFrame: nextFrame
+            nextFrame: nextFrame,
+            prevPath: currentPath,
+            nextPath: nextPath
           );
           
         default:
@@ -173,6 +260,7 @@ public class ShapeView: UIView {
         
     self.animationState = animationStateNext
     self.updateLayerMask();
+    self.updateBorderLayer();
   };
   
   private func updateLayerMask(){
@@ -190,44 +278,88 @@ public class ShapeView: UIView {
         
         self.layer.mask = maskShape;
           
-      case let .pendingAnimation(
-        animationBase,
-        pendingAnimations,
-        currentFrame,
-        nextFrame
-      ):
+      case let .pendingAnimation(animationBase, _, _, _, currentPath, nextPath):
+        let animationKay = "pathAnimation";
         let currentShapeMask = self.layer.mask as! CAShapeLayer;
+        
+        guard currentShapeMask.animation(forKey: animationKay) == nil else {
+          break;
+        };
         
         let pathAnimation = animationBase.copy() as! CABasicAnimation;
         pathAnimation.keyPath = #keyPath(CAShapeLayer.path);
         
-        let currentShapeMaskPath =
-             currentShapeMask.presentation()?.path
-          ?? currentShapeMask.path;
-        
-        let nextShapeMaskPath: CGPath = {
-          let maskPath =
-            self.layerMaskShape.createPath(inRect: nextFrame);
-            
-          return maskPath.cgPath;
-        }();
-        
-        pathAnimation.fromValue = currentShapeMaskPath;
-        pathAnimation.toValue = nextShapeMaskPath;
+        pathAnimation.fromValue = currentPath;
+        pathAnimation.toValue = nextPath;
         
         pathAnimation.delegate = self;
         
-        currentShapeMask.add(pathAnimation, forKey: "pathAnimation");
-        currentShapeMask.path = nextShapeMaskPath;
+        currentShapeMask.add(pathAnimation, forKey: animationKay);
+        currentShapeMask.path = nextPath;
         
-        let pendingAnimationsNext = pendingAnimations + [pathAnimation];
+        self.animationState.appendAnimations([pathAnimation]);
         
-        self.animationState = .pendingAnimation(
-          animationBase: animationBase,
-          pendingAnimations: pendingAnimationsNext,
-          currentFrame: currentFrame,
-          nextFrame: nextFrame
+      case .animating:
+        break;
+    };
+  };
+  
+  private func updateBorderLayer(){
+    let borderStyleCurrent = self._layerBorderStyleCurrent;
+    
+    let borderStylePending =
+         self._layerBorderStylePending
+      ?? borderStyleCurrent;
+        
+    defer {
+      self._layerBorderStyleCurrent = borderStylePending;
+      self._layerBorderStylePending = nil;
+    };
+    
+    
+    switch self.animationState {
+      case .noAnimation:
+        self.setupBorderLayerIfNeeded();
+        
+        guard !self.bounds.isEmpty else {
+          return;
+        };
+        
+        let maskShape = self.layer.mask as! CAShapeLayer;
+        self.borderLayer.path = maskShape.path;
+        borderStylePending.apply(toShape: self.borderLayer);
+        
+      case let .pendingAnimation(animationBase, _, _, _, currentPath, nextPath):
+        let pathAnimation: CABasicAnimation? = {
+          let animationKey = #keyPath(CAShapeLayer.path);
+          
+          guard self.borderLayer.animation(forKey: animationKey) == nil else {
+            return nil;
+          };
+          
+          let animation = animationBase.copy() as! CABasicAnimation;
+          animation.keyPath = animationKey;
+          animation.fromValue = currentPath;
+          animation.toValue = nextPath;
+          
+          animation.delegate = self;
+          
+          self.borderLayer.add(animation, forKey: animationKey);
+          self.borderLayer.path = nextPath;
+          
+          return animation;
+        }();
+      
+        var animations: [CABasicAnimation] = [];
+        animations.unwrapThenAppend(pathAnimation);
+        
+        animations += borderStylePending.createAnimations(
+          forShape: self.borderLayer,
+          withPrevStyle: borderStyleCurrent,
+          usingBaseAnimation: animationBase
         );
+        
+        self.animationState.appendAnimations(animations);
         
       case .animating:
         break;
@@ -298,13 +430,17 @@ extension ShapeView: CAAnimationDelegate {
         animationBase,
         pendingAnimations,
         currentFrame,
-        nextFrame
+        nextFrame,
+        currentPath,
+        nextPath
       ):
         self.animationState = .animating(
           animationBase: animationBase,
           currentAnimations: pendingAnimations,
           prevFrame: currentFrame,
-          nextFrame: nextFrame
+          nextFrame: nextFrame,
+          prevPath: currentPath,
+          nextPath: nextPath
         );
       
       default:
