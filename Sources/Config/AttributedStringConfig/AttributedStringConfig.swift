@@ -178,4 +178,25 @@ public struct AttributedStringConfig {
   };
 };
 
+// MARK: - AttributedStringConfig+StaticHelpers
+// --------------------------------------------
+
+public extension AttributedStringConfig {
+
+  static func createTimestamp(
+    fontConfig: FontConfig? = nil
+  ) -> Self {
+    .init(
+      text: .createTimestamp(),
+      fontConfig: fontConfig ?? .init(
+        size: nil,
+        weight: nil,
+        symbolicTraits: [
+          .traitMonoSpace,
+          .traitBold,
+        ]
+      )
+    );
+  };
+};
 

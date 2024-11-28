@@ -72,7 +72,7 @@ class ImageConfigTest01ViewController: UIViewController {
               withItems: [
                 .singleRow(
                   label: [
-                    Helpers.createTimestamp(),
+                    .createTimestamp(),
                   ],
                   value: [
                     .init(text: "Load image start")
@@ -93,7 +93,7 @@ class ImageConfigTest01ViewController: UIViewController {
                 withItems: [
                   .singleRow(
                     label: [
-                      Helpers.createTimestamp(),
+                      .createTimestamp(),
                     ],
                     value: [
                       .init(text: "Image loaded")
@@ -265,7 +265,7 @@ class ImageConfigTest01ViewController: UIViewController {
               withItems: [
                 .singleRow(
                   label: [
-                    Helpers.createTimestamp(),
+                    .createTimestamp(),
                   ],
                   value: [
                     .init(text: "Load image start")
@@ -287,7 +287,7 @@ class ImageConfigTest01ViewController: UIViewController {
                 withItems: [
                   .singleRow(
                     label: [
-                      Helpers.createTimestamp(),
+                      .createTimestamp(),
                     ],
                     value: [
                       .init(text: "Image loaded")
@@ -446,7 +446,7 @@ class ImageConfigTest01ViewController: UIViewController {
               withItems: [
                 .singleRow(
                   label: [
-                    Helpers.createTimestamp(),
+                    .createTimestamp(),
                   ],
                   value: [
                     .init(text: "Load image start")
@@ -468,7 +468,7 @@ class ImageConfigTest01ViewController: UIViewController {
                 withItems: [
                   .singleRow(
                     label: [
-                      Helpers.createTimestamp(),
+                      .createTimestamp(),
                     ],
                     value: [
                       .init(text: "Image loaded")
@@ -571,31 +571,6 @@ class ImageConfigTest01ViewController: UIViewController {
     guard let match = match else { return };
     match.applyCardConfig();
   };
-};
-
-
-fileprivate struct Helpers {
-  
-  static func createTimestamp() -> String {
-    let dateFormatter = DateFormatter();
-    dateFormatter.dateFormat = "HH:mm:ss.SSS";
-    return dateFormatter.string(from: Date());
-  };
-  
-  static func createTimestamp() -> AttributedStringConfig {
-    .init(
-      text: Self.createTimestamp(),
-      fontConfig: .init(
-        size: nil,
-        weight: nil,
-        symbolicTraits: [
-          .traitMonoSpace,
-          .traitBold,
-        ]
-      )
-    );
-  };
-  
 };
 
 extension ImageConfigSolid {
