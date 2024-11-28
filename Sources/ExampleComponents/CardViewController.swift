@@ -55,4 +55,51 @@ open class CardViewController: UIViewController {
       ),
     ]);
   };
+  
+  public func updateLogValueDisplay(
+    forItemID targetItemID: String? = nil,
+    transformItems: (
+      _ oldItems: [CardLabelValueDisplayItemConfig]
+    ) -> [CardLabelValueDisplayItemConfig]
+  ) {
+    var cardContentItems = self.cardConfig?.content ?? [];
+    var labelValueDisplayItems: [CardLabelValueDisplayItemConfig] = [];
+    
+    let match = cardContentItems.indexedLast {
+      guard case let .labelValueDisplay(currentItemID, itemsOld) = $1 else {
+        return false;
+      };
+      
+      if let targetItemID = targetItemID,
+         let currentItemID = currentItemID,
+         targetItemID != currentItemID
+      {
+        return false;
+      };
+      
+      labelValueDisplayItems += itemsOld;
+      return true;
+    };
+    
+    guard let match = match else { return };
+    labelValueDisplayItems = transformItems(labelValueDisplayItems);
+    
+    cardContentItems[match.index] = .labelValueDisplay(
+      id: match.value.id,
+      items: labelValueDisplayItems
+    );
+      
+    self.cardConfig?.content = cardContentItems;
+  };
+  
+  public func appendToLogValueDisplay(
+    forItemID targetItemID: String? = nil,
+    withItems itemsNew: [CardLabelValueDisplayItemConfig],
+    maxItems: Int = 6
+  ){
+    self.updateLogValueDisplay(forItemID: targetItemID) {
+      let items = $0 + itemsNew;
+      return items.suffixCopy(count: maxItems);
+    };
+  };
 };

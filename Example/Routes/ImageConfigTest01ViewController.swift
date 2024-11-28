@@ -63,13 +63,12 @@ class ImageConfigTest01ViewController: UIViewController {
               forKey: "didLoadImage",
               fallbackValue: false
             ) {
-              Helpers.updateLogValueDisplay(inCardController: cardVC) { _ in
+              cardVC.updateLogValueDisplay { _ in
                 return [];
               };
             };
             
-            Helpers.appendToLogValueDisplay(
-              inCardController: cardVC,
+            cardVC.appendToLogValueDisplay(
               withItems: [
                 .singleRow(
                   label: [
@@ -90,8 +89,7 @@ class ImageConfigTest01ViewController: UIViewController {
             );
             
             imageLoader.loadImageIfNeeded { sender in
-              Helpers.appendToLogValueDisplay(
-                inCardController: cardVC,
+              cardVC.appendToLogValueDisplay(
                 withItems: [
                   .singleRow(
                     label: [
@@ -224,8 +222,7 @@ class ImageConfigTest01ViewController: UIViewController {
               value: currentPreset
             );
             
-            Helpers.updateLogValueDisplay(
-              inCardController: cardVC,
+            cardVC.updateLogValueDisplay(
               forItemID: "configDisplay"
             ) { _ in
               return currentPreset.metadataAsLabelValueDisplayItems;
@@ -256,16 +253,14 @@ class ImageConfigTest01ViewController: UIViewController {
             );
             
             if didLoadImage {
-              Helpers.updateLogValueDisplay(
-                inCardController: cardVC,
+              cardVC.updateLogValueDisplay(
                 forItemID: "logDisplay"
               ) { _ in
                 return [];
               };
             };
             
-            Helpers.appendToLogValueDisplay(
-              inCardController: cardVC,
+            cardVC.appendToLogValueDisplay(
               forItemID: "logDisplay",
               withItems: [
                 .singleRow(
@@ -287,8 +282,7 @@ class ImageConfigTest01ViewController: UIViewController {
             );
             
             imageLoader.loadImageIfNeeded { sender in
-              Helpers.appendToLogValueDisplay(
-                inCardController: cardVC,
+              cardVC.appendToLogValueDisplay(
                 forItemID: "logDisplay",
                 withItems: [
                   .singleRow(
@@ -409,8 +403,7 @@ class ImageConfigTest01ViewController: UIViewController {
               value: currentPreset
             );
             
-            Helpers.updateLogValueDisplay(
-              inCardController: cardVC,
+            cardVC.updateLogValueDisplay(
               forItemID: "configDisplay"
             ) { _ in
               return currentPreset.metadataAsLabelValueDisplayItems;
@@ -441,16 +434,14 @@ class ImageConfigTest01ViewController: UIViewController {
             );
             
             if didLoadImage {
-              Helpers.updateLogValueDisplay(
-                inCardController: cardVC,
+              cardVC.updateLogValueDisplay(
                 forItemID: "logDisplay"
               ) { _ in
                 return [];
               };
             };
             
-            Helpers.appendToLogValueDisplay(
-              inCardController: cardVC,
+            cardVC.appendToLogValueDisplay(
               forItemID: "logDisplay",
               withItems: [
                 .singleRow(
@@ -472,8 +463,7 @@ class ImageConfigTest01ViewController: UIViewController {
             );
             
             imageLoader.loadImageIfNeeded { sender in
-              Helpers.appendToLogValueDisplay(
-                inCardController: cardVC,
+              cardVC.appendToLogValueDisplay(
                 forItemID: "logDisplay",
                 withItems: [
                   .singleRow(
@@ -606,57 +596,6 @@ fileprivate struct Helpers {
     );
   };
   
-  static func updateLogValueDisplay(
-    inCardController cardVC: CardViewController,
-    forItemID targetItemID: String? = nil,
-    transformItems: (_ oldItems: [CardLabelValueDisplayItemConfig]) -> [CardLabelValueDisplayItemConfig]
-  ) {
-    var cardContentItems = cardVC.cardConfig?.content ?? [];
-    var labelValueDisplayItems: [CardLabelValueDisplayItemConfig] = [];
-    
-    let match = cardContentItems.indexedLast {
-      guard case let .labelValueDisplay(currentItemID, itemsOld) = $1 else {
-        return false;
-      };
-      
-      if let targetItemID = targetItemID,
-         let currentItemID = currentItemID,
-         targetItemID != currentItemID
-      {
-        return false;
-      };
-      
-      labelValueDisplayItems += itemsOld;
-      return true;
-    };
-    
-    guard let match = match else { return };
-    
-    labelValueDisplayItems = transformItems(labelValueDisplayItems);
-    
-    cardContentItems[match.index] = .labelValueDisplay(
-      id: match.value.id,
-      items: labelValueDisplayItems
-    );
-      
-    cardVC.cardConfig?.content = cardContentItems;
-  };
-  
-  static func appendToLogValueDisplay(
-    inCardController cardVC: CardViewController,
-    forItemID targetItemID: String? = nil,
-    withItems itemsNew: [CardLabelValueDisplayItemConfig],
-    maxItems: Int = 6
-  ){
-  
-    Self.updateLogValueDisplay(
-      inCardController: cardVC,
-      forItemID: targetItemID
-    ) {
-      let items = $0 + itemsNew;
-      return items.suffixCopy(count: maxItems);
-    };
-  };
 };
 
 extension ImageConfigSolid {
