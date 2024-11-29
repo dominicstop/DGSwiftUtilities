@@ -18,6 +18,31 @@ public enum CardContentItem {
     handler: ((_ context: CardConfig, _ button: UIButton) -> Void)?
   );
   
+  case slider(
+    id: String? = nil,
+    minValue: Float,
+    maxValue: Float,
+    initialValue: Float,
+    valueLabelStyle: AttributedStringConfig? = nil,
+    valueLabelMinWidth: CGFloat? = nil,
+    setup: ((
+      _ context: CardConfig,
+      _ button: UISlider
+    ) -> Void)? = nil,
+    onValueTrackingStarted: ((
+      _ context: CardConfig,
+      _ button: UISlider
+    ) -> Void)? = nil,
+    onValueTrackingEnded: ((
+      _ context: CardConfig,
+      _ button: UISlider
+    ) -> Void)? = nil,
+    onValueChanged: ((
+      _ context: CardConfig,
+      _ button: UISlider
+    ) -> Void)? = nil
+  );
+  
   case label(
     id: String?,
     items: [AttributedStringConfig]
@@ -49,6 +74,9 @@ public enum CardContentItem {
   public var id: String? {
     switch self {
       case let .filledButton(id, _, _, _, _):
+        return id;
+        
+      case let .slider(id, _, _, _, _, _, _, _, _, _):
         return id;
         
       case let .label(id, _):
@@ -145,6 +173,91 @@ public enum CardContentItem {
         };
         
         return button;
+        
+      case let .slider(
+        _, minValue, maxValue, initialValue,
+        valueLabelStyle, valueLabelMinWidth,
+        setup, onValueTrackingStarted, onValueTrackingEnded, onValueChanged
+      ):
+        let valueLabelStyle = valueLabelStyle ?? .init(
+          fontConfig: .init(
+            size: 14,
+            weight: .bold,
+            symbolicTraits: [.traitMonoSpace]
+          ),
+          paragraphStyle: {
+            let paragraphStyle = NSMutableParagraphStyle();
+            paragraphStyle.alignment = .center;
+            
+            return paragraphStyle;
+          }(),
+          color: themeColorConfig.colorTextDark
+        );
+      
+        let rowStack: UIStackView = {
+          let stack = UIStackView();
+          stack.axis = .horizontal;
+          stack.spacing = 12;
+          stack.distribution = .fill;
+          stack.alignment = .fill;
+          
+          return stack;
+        }();
+        
+        let labelSliderValue: UILabel = {
+          let label = UILabel();
+          label.alpha = 0.8;
+          label.textAlignment = .center;
+          label.numberOfLines = 1;
+          
+          label.attributedText = valueLabelStyle.makeAttributedString(
+            withNewText: "\(initialValue.cutOffDecimalsAfter(2))"
+          );
+          
+          let valueLabelMinWidth = valueLabelMinWidth ?? 40;
+          label.translatesAutoresizingMaskIntoConstraints = false;
+          
+          NSLayoutConstraint.activate([
+            label.widthAnchor.constraint(
+              greaterThanOrEqualToConstant: valueLabelMinWidth
+            ),
+          ]);
+          
+          return label;
+        }();
+      
+        let slider = UISlider();
+        slider.minimumValue = minValue;
+        slider.maximumValue = maxValue;
+        slider.value = initialValue;
+        slider.minimumTrackTintColor = themeColorConfig.colorBgAccent;
+        
+        setup?(cardConfig, slider);
+        
+        if let onValueTrackingStarted = onValueTrackingStarted {
+          slider.addAction(for: [.touchDown]){
+            onValueTrackingStarted(cardConfig, slider);
+          };
+        };
+        
+        if let onValueTrackingEnded = onValueTrackingEnded {
+          slider.addAction(for: [.touchUpOutside, .touchUpInside]){
+            onValueTrackingEnded(cardConfig, slider);
+          };  
+        };
+        
+        slider.addAction(for: [.valueChanged]){
+          onValueChanged?(cardConfig, slider);
+          
+          let labelText = "\(slider.value.cutOffDecimalsAfter(2))";
+          labelSliderValue.attributedText = valueLabelStyle.makeAttributedString(
+            withNewText: labelText
+          );
+        };
+        
+        rowStack.addArrangedSubview(slider);
+        rowStack.addArrangedSubview(labelSliderValue);
+        return rowStack;
         
       case let .label(_, configs):
         let label = UILabel();

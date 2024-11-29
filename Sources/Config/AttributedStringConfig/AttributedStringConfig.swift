@@ -100,6 +100,31 @@ public struct AttributedStringConfig {
   // ----------
   
   public init(
+    fontConfig: FontConfig = .default,
+    paragraphStyle: NSParagraphStyle = .default,
+    color: UIColor? = nil,
+    backgroundColor: UIColor? = nil,
+    strikethroughStyle: NSUnderlineStyle? = nil,
+    strikethroughColor: UIColor? = nil,
+    underlineStyle: NSUnderlineStyle? = nil,
+    underlineColor: UIColor? = nil,
+    strokeColor: UIColor? = nil,
+    strokeWidth: CGFloat? = nil
+  ) {
+    self.text = "";
+    self.fontConfig = fontConfig;
+    self.paragraphStyle = paragraphStyle;
+    self.foregroundColor = color;
+    self.backgroundColor = backgroundColor;
+    self.strikethroughStyle = strikethroughStyle;
+    self.strikethroughColor = strikethroughColor;
+    self.underlineStyle = underlineStyle;
+    self.underlineColor = underlineColor;
+    self.strokeColor = strokeColor;
+    self.strokeWidth = strokeWidth;
+  };
+  
+  public init(
     text: String,
     fontConfig: FontConfig = .default,
     paragraphStyle: NSParagraphStyle = .default,
@@ -170,11 +195,25 @@ public struct AttributedStringConfig {
   // MARK: - Functions
   // -----------------
   
+  public func modifiedCopy(withNewText newText: String) -> Self {
+    var copy = self;
+    copy.text = newText;
+    
+    return copy;
+  };
+  
   public func makeAttributedString() -> NSMutableAttributedString {
     return .init(
       string: self.text,
       attributes: self.attributes
     );
+  };
+  
+  public func makeAttributedString(
+    withNewText newText: String
+  ) -> NSMutableAttributedString {
+  
+    self.modifiedCopy(withNewText: newText).makeAttributedString();
   };
 };
 
