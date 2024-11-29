@@ -27,19 +27,21 @@ public enum CardContentItem {
     valueLabelMinWidth: CGFloat? = nil,
     setup: ((
       _ context: CardConfig,
-      _ button: UISlider
+      _ control: UISlider
     ) -> Void)? = nil,
     onValueTrackingStarted: ((
       _ context: CardConfig,
-      _ button: UISlider
+      _ control: UISlider
     ) -> Void)? = nil,
     onValueTrackingEnded: ((
       _ context: CardConfig,
-      _ button: UISlider
+      _ control: UISlider
     ) -> Void)? = nil,
     onValueChanged: ((
       _ context: CardConfig,
-      _ button: UISlider
+      _ control: UISlider
+    ) -> Void)? = nil
+  );
   
   case stepper(
     id: String? = nil,
