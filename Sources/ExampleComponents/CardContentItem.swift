@@ -40,6 +40,22 @@ public enum CardContentItem {
     onValueChanged: ((
       _ context: CardConfig,
       _ button: UISlider
+  
+  case stepper(
+    id: String? = nil,
+    minValue: CGFloat,
+    maxValue: CGFloat,
+    initialValue: CGFloat,
+    title: [AttributedStringConfig],
+    valueLabelStyle: AttributedStringConfig? = nil,
+    valueLabelMinWidth: CGFloat? = nil,
+    setup: ((
+      _ context: CardConfig,
+      _ button: UIStepper
+    ) -> Void)? = nil,
+    onValueChanged: ((
+      _ context: CardConfig,
+      _ control: UIStepper
     ) -> Void)? = nil
   );
   
@@ -77,6 +93,9 @@ public enum CardContentItem {
         return id;
         
       case let .slider(id, _, _, _, _, _, _, _, _, _):
+        return id;
+        
+      case let .stepper(id, _, _, _, _, _, _, _, _):
         return id;
         
       case let .label(id, _):
@@ -257,6 +276,138 @@ public enum CardContentItem {
         
         rowStack.addArrangedSubview(slider);
         rowStack.addArrangedSubview(labelSliderValue);
+        return rowStack;
+        
+      case let .stepper(
+        _, minValue, maxValue, initialValue,
+        title, valueLabelStyle, valueLabelMinWidth,
+        setup, onValueChanged
+      ):
+        let valueLabelStyle = valueLabelStyle ?? .init(
+          fontConfig: .init(
+            size: 14,
+            weight: .bold,
+            symbolicTraits: [.traitMonoSpace]
+          ),
+          paragraphStyle: {
+            let paragraphStyle = NSMutableParagraphStyle();
+            paragraphStyle.alignment = .center;
+            
+            return paragraphStyle;
+          }(),
+          color: themeColorConfig.colorTextDark
+        );
+      
+        let rowStack: UIStackView = {
+          let stack = UIStackView();
+          stack.axis = .horizontal;
+          stack.spacing = 12;
+          stack.distribution = .equalSpacing;
+          stack.alignment = .fill;
+          
+          return stack;
+        }();
+        
+        let labelTitle: UILabel = {
+          let label = UILabel();
+          
+          var attributedStringConfigs: [AttributedStringConfig] = [];
+          attributedStringConfigs += title.map {
+            var config = $0;
+            if config.fontConfig.weight == nil {
+              config.fontConfig.weight = .bold;
+            };
+            
+            if config.foregroundColor == nil {
+              config.foregroundColor = themeColorConfig.colorTextDark;
+            };
+            
+            return config;
+          };
+          
+          label.attributedText = attributedStringConfigs.makeAttributedString();
+          return label;
+        }();
+        
+        let labelStepperValue: UILabel = {
+          let label = UILabel();
+          label.alpha = 1;
+          label.textAlignment = .center;
+          label.numberOfLines = 1;
+          
+          label.attributedText = valueLabelStyle.makeAttributedString(
+            withNewText: "\(Int(initialValue))"
+          );
+          
+          if let valueLabelMinWidth = valueLabelMinWidth {
+            label.translatesAutoresizingMaskIntoConstraints = false;
+            
+            NSLayoutConstraint.activate([
+              label.widthAnchor.constraint(
+                greaterThanOrEqualToConstant: valueLabelMinWidth
+              ),
+            ]);
+          };
+          
+          return label;
+        }();
+        
+        let stepper: UIStepper = {
+          let stepper = UIStepper();
+          stepper.minimumValue = minValue;
+          stepper.maximumValue = maxValue;
+          stepper.value = initialValue;
+          
+          stepper.setDecrementImage(
+            stepper.decrementImage(for: .normal),
+            for: .normal
+          );
+          
+          stepper.setIncrementImage(
+            stepper.incrementImage(for: .normal),
+            for: .normal
+          );
+          
+          stepper.setBackgroundImage(UIImage(), for: .normal);
+          stepper.layer.cornerRadius = 12;
+          
+          stepper.backgroundColor =
+            themeColorConfig.colorBgAccent.withAlphaComponent(0.075);
+            
+          stepper.tintColor = themeColorConfig.colorTextDark;
+          setup?(cardConfig, stepper);
+          
+          return stepper;
+        }();
+        
+        stepper.addAction(for: [.valueChanged]){
+          onValueChanged?(cardConfig, stepper);
+          
+          let labelText = "\(Int(stepper.value))";
+          labelStepperValue.attributedText = valueLabelStyle.makeAttributedString(
+            withNewText: labelText
+          );
+        };
+        
+        rowStack.addArrangedSubview(labelTitle);
+        rowStack.addArrangedSubview(stepper);
+        
+        rowStack.addSubview(labelStepperValue);
+        labelStepperValue.translatesAutoresizingMaskIntoConstraints = false;
+        
+        NSLayoutConstraint.activate([
+          labelStepperValue.topAnchor.constraint(
+            equalTo: rowStack.topAnchor
+          ),
+          labelStepperValue.bottomAnchor.constraint(
+            equalTo: rowStack.bottomAnchor
+          ),
+          labelStepperValue.trailingAnchor.constraint(
+            equalTo: stepper.leadingAnchor,
+            constant: -10
+          ),
+        ]);
+        
         return rowStack;
         
       case let .label(_, configs):
