@@ -13,11 +13,21 @@ public extension CALayer {
   static let commonAnimationKeys: [String] = [
     "bounds.size",
     #keyPath(CALayer.position),
+    #keyPath(CALayer.zPosition),
+    #keyPath(CALayer.anchorPoint),
+    #keyPath(CALayer.anchorPointZ),
     #keyPath(CALayer.transform),
     #keyPath(CALayer.backgroundColor),
     #keyPath(CALayer.opacity),
     #keyPath(CALayer.borderColor),
     #keyPath(CALayer.borderWidth),
+    #keyPath(CALayer.cornerRadius),
+    #keyPath(CALayer.cornerRadius),
+    #keyPath(CALayer.shadowColor),
+    #keyPath(CALayer.shadowOffset),
+    #keyPath(CALayer.shadowOpacity),
+    #keyPath(CALayer.shadowPath),
+    #keyPath(CALayer.shadowRadius),
   ];
   
   func recursivelyFindParentAnimation<T: CAAnimation>(
