@@ -174,6 +174,30 @@ public extension ShapePreset {
       )
     );
   };
+  
+  static func regularStarPolygonWithRoundedCorners(
+    numberOfSpikes: Int,
+    innerRadius: CGFloat? = nil,
+    spikeRadius: CGFloat,
+    innerCornerRadius: CGFloat,
+    spikeCornerRadius: CGFloat,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularStarPolygon(
+        numberOfSpikes: numberOfSpikes,
+        innerRadius: innerRadius,
+        spikeRadius: spikeRadius
+      ),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .roundedCornersCustom { _, index, _ in
+        let isSpike = index % 2 == 1;
+        return isSpike
+          ? spikeCornerRadius
+          : innerCornerRadius;
+      }
+    );
+  };
     
   // MARK: - `PolygonPreset` (Straight)
   // ----------------------------------
