@@ -160,6 +160,20 @@ public extension ShapePreset {
       pointConnectionStrategy: pointConnectionStrategy
     );
   };
+  
+  static func regularPolygonWithUniformRoundedCorners(
+    numberOfSides: Int,
+    uniformCornerRadius: CGFloat,
+    pointAdjustments: PointGroupAdjustment
+  ) -> Self {
+    .regularPolygon(
+      polygonPreset: .regularPolygon(numberOfSides: numberOfSides),
+      pointAdjustments: pointAdjustments,
+      pointConnectionStrategy: .roundedCornersUniform(
+        cornerRadius: uniformCornerRadius
+      )
+    );
+  };
     
   // MARK: - `PolygonPreset` (Straight)
   // ----------------------------------
