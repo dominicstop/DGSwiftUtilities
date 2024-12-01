@@ -104,7 +104,7 @@ class Test02ViewController: UIViewController {
     
     let boxWrapperView = {
       let view = UIView();
-      // view.backgroundColor = .gray;
+      view.backgroundColor = .gray;
       view.frame = initialFrame;
       
       return view;
@@ -114,34 +114,38 @@ class Test02ViewController: UIViewController {
       let view = ShapeView();
       view.backgroundColor = .red;
       // continuous
-      view.layerMaskShape = .regularTriangleWithContinuousCurves(
-        curvinessAmount: 0.01,
-        curveHeightOffset: 0,
-        pointAdjustments: .scaleToFit
-      );
+      view.layerMaskShape = .regularPentagonRoundedUniform(cornerRadius: 0.01, pointAdjustments: .scaleToFit)
       
-      view.layerBorderStyle = .init(lineWidth: 6, strokeColor: .blue);
+      view.layerBorderStyle = .init(
+        lineWidth: 6,
+        strokeColor: .blue,
+        linePattern:  .uniform(dashLength: 3, spacing: 0)
+      );
       
       return view;
     }();
     
-    boxWrapperView.addSubview(boxView);
-    boxView.translatesAutoresizingMaskIntoConstraints = false;
+    if true {
+      boxWrapperView.addSubview(boxView);
+      boxView.translatesAutoresizingMaskIntoConstraints = false;
     
-    NSLayoutConstraint.activate([
-      boxView.leadingAnchor.constraint(
-        equalTo: boxWrapperView.leadingAnchor
-      ),
-      boxView.trailingAnchor.constraint(
-        equalTo: boxWrapperView.trailingAnchor
-      ),
-      boxView.topAnchor.constraint(
-        equalTo: boxWrapperView.topAnchor
-      ),
-      boxView.bottomAnchor.constraint(
-        equalTo: boxWrapperView.bottomAnchor
-      ),
-    ]);
+      NSLayoutConstraint.activate([
+        boxView.leadingAnchor.constraint(
+          equalTo: boxWrapperView.leadingAnchor
+        ),
+        boxView.trailingAnchor.constraint(
+          equalTo: boxWrapperView.trailingAnchor
+        ),
+        boxView.topAnchor.constraint(
+          equalTo: boxWrapperView.topAnchor
+        ),
+        boxView.bottomAnchor.constraint(
+          equalTo: boxWrapperView.bottomAnchor
+        ),
+      ]);
+    };
+    
+    
     
     self.view.addSubview(boxWrapperView);
     
@@ -157,16 +161,22 @@ class Test02ViewController: UIViewController {
     // return;
     print("Animation start\n");
     
+    let transform: Transform3D = .init(
+      rotateZ: .degrees(90)
+    );
+    
     
     UIView.animate(withDuration: 3, delay: 1) {
       boxView.backgroundColor = .yellow;
-      boxView.layerMaskShape = .regularTriangleWithContinuousCurves(
-        curvinessAmount: 0.8,
-        curveHeightOffset: 0,
-        pointAdjustments: .scaleToFit
+      boxView.layerMaskShape = .regularPentagonRoundedUniform(cornerRadius: 25, pointAdjustments: .scaleToFit)
+      
+      boxView.layerBorderStyle = .init(
+        lineWidth: 8,
+        strokeColor: .green,
+        linePattern: .uniform(dashLength: 3, spacing: 4)
       );
       
-      boxView.layerBorderStyle = .init(lineWidth: 8, strokeColor: .green);
+      boxWrapperView.transform3D = transform.transform;
       
       boxWrapperView.frame = nextFrame;
       
