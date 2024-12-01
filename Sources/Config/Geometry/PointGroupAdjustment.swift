@@ -33,14 +33,14 @@ public struct PointGroupAdjustment {
     shouldPreserveAspectRatioWhenScaling: Bool,
     shouldCenterToFrameIfNeeded: Bool = true,
     pointTransform: Transform3D? = nil,
-    postTransform: Transform3D? = nil
+    pathTransform: Transform3D? = nil
   ) {
     self.shouldScaleToFitTargetRect = shouldScaleToFitTargetRect;
     self.shouldPreserveAspectRatioWhenScaling = shouldPreserveAspectRatioWhenScaling;
     self.shouldCenterToFrameIfNeeded = shouldCenterToFrameIfNeeded;
     
     self.pointTransform = pointTransform;
-    self.pathTransform = postTransform;
+    self.pathTransform = pathTransform;
   };
   
   // MARK: - Functions
