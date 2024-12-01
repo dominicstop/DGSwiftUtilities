@@ -114,9 +114,9 @@ class Test02ViewController: UIViewController {
       let view = ShapeView();
       view.backgroundColor = .red;
       // continuous
-      view.layerMaskShape = .regularPentagonRoundedUniform(cornerRadius: 0.01, pointAdjustments: .scaleToFit)
+      view.maskShapeConfig = .regularPentagonRoundedUniform(cornerRadius: 0.01, pointAdjustments: .scaleToFit)
       
-      view.layerBorderStyle = .init(
+      view.borderStyle = .init(
         lineWidth: 6,
         strokeColor: .blue,
         linePattern:  .uniform(dashLength: 3, spacing: 0)
@@ -168,9 +168,9 @@ class Test02ViewController: UIViewController {
     
     UIView.animate(withDuration: 3, delay: 1) {
       boxView.backgroundColor = .yellow;
-      boxView.layerMaskShape = .regularPentagonRoundedUniform(cornerRadius: 25, pointAdjustments: .scaleToFit)
+      boxView.maskShapeConfig = .regularPentagonRoundedUniform(cornerRadius: 25, pointAdjustments: .scaleToFit)
       
-      boxView.layerBorderStyle = .init(
+      boxView.borderStyle = .init(
         lineWidth: 8,
         strokeColor: .green,
         linePattern: .uniform(dashLength: 3, spacing: 4)

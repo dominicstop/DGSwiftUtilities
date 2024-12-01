@@ -106,7 +106,7 @@ class ShapeViewTest01ViewController: UIViewController {
       let shapeContainer = UIView();
       let shapeView = ShapeView();
       
-      shapeView.layerMaskShape = .regularPolygon(
+      shapeView.maskShapeConfig = .regularPolygon(
         polygonPreset: .regularPolygon(numberOfSides: 3),
         pointAdjustments: .init(
           shouldScaleToFitTargetRect: true,
@@ -116,7 +116,7 @@ class ShapeViewTest01ViewController: UIViewController {
         pointConnectionStrategy: .roundedCornersUniform(cornerRadius: 0)
       );
       
-      shapeView.layerBorderStyle = .init(
+      shapeView.borderStyle = .init(
         lineWidth: 8,
         strokeColor: self.colorThemeConfig.colorBgAccent
       );
@@ -200,7 +200,7 @@ class ShapeViewTest01ViewController: UIViewController {
               fallbackValue: 0.0
             );
             
-            shapeView.layerMaskShape = .regularPolygon(
+            shapeView.maskShapeConfig = .regularPolygon(
               polygonPreset: .regularPolygon(numberOfSides: numberOfSidesCount),
               pointAdjustments: .init(
                 shouldScaleToFitTargetRect: true,
@@ -243,7 +243,7 @@ class ShapeViewTest01ViewController: UIViewController {
               fallbackValue: 0.0
             );
             
-            shapeView.layerMaskShape = .regularPolygon(
+            shapeView.maskShapeConfig = .regularPolygon(
               polygonPreset: .regularPolygon(numberOfSides: numberOfSidesCount),
               pointAdjustments: .init(
                 shouldScaleToFitTargetRect: true,
@@ -285,7 +285,7 @@ class ShapeViewTest01ViewController: UIViewController {
               fallbackValue: 0.0
             );
             
-            shapeView.layerMaskShape = .regularPolygon(
+            shapeView.maskShapeConfig = .regularPolygon(
               polygonPreset: .regularPolygon(numberOfSides: Int(control.value)),
               pointAdjustments: .init(
                 shouldScaleToFitTargetRect: true,
@@ -327,7 +327,7 @@ class ShapeViewTest01ViewController: UIViewController {
       let shapeContainer = UIView();
       let shapeView = ShapeView();
       
-      shapeView.layerMaskShape = .regularStarPolygonWithRoundedCorners(
+      shapeView.maskShapeConfig = .regularStarPolygonWithRoundedCorners(
         numberOfSpikes: 3,
         innerRadius: starInnerRadiusDefault,
         spikeRadius: starOuterRadius,
@@ -340,7 +340,7 @@ class ShapeViewTest01ViewController: UIViewController {
         )
       );
       
-      shapeView.layerBorderStyle = .init(
+      shapeView.borderStyle = .init(
         lineWidth: 8,
         strokeColor: self.colorThemeConfig.colorBgAccent
       );
@@ -439,7 +439,7 @@ class ShapeViewTest01ViewController: UIViewController {
               fallbackValue: 0.0
             );
             
-            shapeView.layerMaskShape = .regularStarPolygonWithRoundedCorners(
+            shapeView.maskShapeConfig = .regularStarPolygonWithRoundedCorners(
               numberOfSpikes: numberOfSidesCount,
               innerRadius: starInnerRadius,
               spikeRadius: starOuterRadius,
@@ -497,7 +497,7 @@ class ShapeViewTest01ViewController: UIViewController {
               fallbackValue: 0.0
             );
             
-            shapeView.layerMaskShape = .regularStarPolygonWithRoundedCorners(
+            shapeView.maskShapeConfig = .regularStarPolygonWithRoundedCorners(
               numberOfSpikes: numberOfSidesCount,
               innerRadius: starInnerRadius,
               spikeRadius: starOuterRadius,
@@ -555,7 +555,7 @@ class ShapeViewTest01ViewController: UIViewController {
               fallbackValue: 3
             );
             
-            shapeView.layerMaskShape = .regularStarPolygonWithRoundedCorners(
+            shapeView.maskShapeConfig = .regularStarPolygonWithRoundedCorners(
               numberOfSpikes: numberOfSidesCount,
               innerRadius: starInnerRadius,
               spikeRadius: starOuterRadius,
@@ -613,7 +613,7 @@ class ShapeViewTest01ViewController: UIViewController {
               fallbackValue: 3
             );
             
-            shapeView.layerMaskShape = .regularStarPolygonWithRoundedCorners(
+            shapeView.maskShapeConfig = .regularStarPolygonWithRoundedCorners(
               numberOfSpikes: numberOfSidesCount,
               innerRadius: starInnerRadius,
               spikeRadius: starOuterRadius,
@@ -666,7 +666,7 @@ class ShapeViewTest01ViewController: UIViewController {
               fallbackValue: 0.0
             );
             
-            shapeView.layerMaskShape = .regularStarPolygonWithRoundedCorners(
+            shapeView.maskShapeConfig = .regularStarPolygonWithRoundedCorners(
               numberOfSpikes: numberOfSidesCount,
               innerRadius: starInnerRadius,
               spikeRadius: starOuterRadius,
@@ -704,7 +704,7 @@ class ShapeViewTest01ViewController: UIViewController {
       let shapeContainer = UIView();
       let shapeView = ShapeView();
       
-      shapeView.layerMaskShape = .regularPolygon(
+      shapeView.maskShapeConfig = .regularPolygon(
         numberOfSides: 3,
         pointConnectionStrategy: .continuousCurvedCorners(
           curvinessAmount: 0,
@@ -717,7 +717,7 @@ class ShapeViewTest01ViewController: UIViewController {
         )
       );
       
-      shapeView.layerBorderStyle = .init(
+      shapeView.borderStyle = .init(
         lineWidth: 8,
         strokeColor: self.colorThemeConfig.colorBgAccent
       );
@@ -807,7 +807,7 @@ class ShapeViewTest01ViewController: UIViewController {
               fallbackValue: 0.0
             );
             
-            shapeView.layerMaskShape = .regularPolygon(
+            shapeView.maskShapeConfig = .regularPolygon(
               numberOfSides: numberOfSidesCount,
               pointConnectionStrategy: .continuousCurvedCorners(
                 curvinessAmount: curvinessAmount,
@@ -856,7 +856,7 @@ class ShapeViewTest01ViewController: UIViewController {
               fallbackValue: 0.0
             );
             
-            shapeView.layerMaskShape = .regularPolygon(
+            shapeView.maskShapeConfig = .regularPolygon(
               numberOfSides: numberOfSidesCount,
               pointConnectionStrategy: .continuousCurvedCorners(
                 curvinessAmount: nextValue,
@@ -898,7 +898,7 @@ class ShapeViewTest01ViewController: UIViewController {
               fallbackValue: 0.0
             );
             
-            shapeView.layerMaskShape = .regularPolygon(
+            shapeView.maskShapeConfig = .regularPolygon(
               numberOfSides: nextValue,
               pointConnectionStrategy: .continuousCurvedCorners(
                 curvinessAmount: curvinessAmount,

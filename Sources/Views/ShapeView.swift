@@ -114,7 +114,7 @@ public class ShapeView: UIView {
   // MARK: - Animatable Properties
   // -----------------------------
   
-  public var layerMaskShape: ShapePreset = .none {
+  public var maskShapeConfig: ShapePreset = .none {
     didSet {
       guard !self.isAnimating else {
         return;
@@ -124,17 +124,17 @@ public class ShapeView: UIView {
     }
   };
   
-  private var _layerBorderStyleCurrent: ShapeLayerStrokeStyle = .noBorder;
-  private var _layerBorderStylePending: ShapeLayerStrokeStyle?;
-  public var layerBorderStyle: ShapeLayerStrokeStyle {
+  private var _borderStyleCurrent: ShapeLayerStrokeStyle = .noBorder;
+  private var _borderStylePending: ShapeLayerStrokeStyle?;
+  public var borderStyle: ShapeLayerStrokeStyle {
     get {
-      if let pendingValue = self._layerBorderStylePending {
+      if let pendingValue = self._borderStylePending {
         return pendingValue;
       };
-      return self._layerBorderStyleCurrent;
+      return self._borderStyleCurrent;
     }
     set {
-      self._layerBorderStylePending = newValue;
+      self._borderStylePending = newValue;
       if !self.isAnimating {
         self.updateBorderLayer();
       };
@@ -229,7 +229,7 @@ public class ShapeView: UIView {
           
           let nextShapeMaskPath: CGPath = {
             let maskPath =
-              self.layerMaskShape.createPath(inRect: nextFrame);
+              self.maskShapeConfig.createPath(inRect: nextFrame);
               
             return maskPath.cgPath;
           }();
@@ -279,7 +279,7 @@ public class ShapeView: UIView {
         };
         
         let shapePathMask =
-          self.layerMaskShape.createPath(inRect: self.bounds);
+          self.maskShapeConfig.createPath(inRect: self.bounds);
         
         let maskShape = CAShapeLayer();
         maskShape.path = shapePathMask.cgPath;
@@ -313,15 +313,15 @@ public class ShapeView: UIView {
   };
   
   private func updateBorderLayer(){
-    let borderStyleCurrent = self._layerBorderStyleCurrent;
+    let borderStyleCurrent = self._borderStyleCurrent;
     
     let borderStylePending =
-         self._layerBorderStylePending
+         self._borderStylePending
       ?? borderStyleCurrent;
         
     defer {
-      self._layerBorderStyleCurrent = borderStylePending;
-      self._layerBorderStylePending = nil;
+      self._borderStyleCurrent = borderStylePending;
+      self._borderStylePending = nil;
     };
     
     
