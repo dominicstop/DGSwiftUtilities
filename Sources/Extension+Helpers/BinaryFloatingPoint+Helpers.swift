@@ -32,4 +32,37 @@ public extension BinaryFloatingPoint {
     
     return (self * divisor).rounded(.towardZero) / divisor;
   };
+  
+  /// - Returns: `true` if the absolute difference between the two values is
+  ///   within the tolerance, otherwise `false`.
+  ///
+  func isApproximatelyEqual(
+    toOtherValue otherValue: Self,
+    withTolerance tolerance: Self
+  ) -> Bool {
+   let delta = abs(self - otherValue);
+   return delta <= tolerance;
+  };
+  
+  func isApproximatelyEqual(
+    toOtherValue otherValue: Self,
+    numberOfPlaces: Int
+  ) -> Bool {
+    let lhs = self.cutOffDecimalsAfter(numberOfPlaces);
+    let rhs = otherValue.cutOffDecimalsAfter(numberOfPlaces);
+    return lhs == rhs;
+  };
+  
+  func isApproximatelyEqual(
+    toOtherValue otherValue: Self,
+    withRangeDelta rangeDelta: Self
+  ) -> Bool {
+    let rangeMin = otherValue - rangeDelta;
+    let rangeMax = otherValue + rangeDelta;
+    
+    let isWithinMinRange = self >= rangeMin;
+    let isWithinMaxRange = self <= rangeMax;
+    
+    return isWithinMinRange && isWithinMaxRange;
+  };
 };
