@@ -64,11 +64,14 @@ public enum PolygonPreset {
     let pointsTransformed =
       pointAdjustments.applyPointTransform(toPoints: points);
     
-    return pointConnectionStrategy.createPath(
+    let path =  pointConnectionStrategy.createPath(
       forPoints: pointsTransformed,
       inRect: targetRect,
       pointAdjustments: pointAdjustments
     );
+    
+    pointAdjustments.applyPathTransform(toPath: path);
+    return path;
   };
   
   public func createShape(
@@ -82,13 +85,6 @@ public enum PolygonPreset {
       pointAdjustments: pointAdjustments,
       pointConnectionStrategy: pointConnectionStrategy
     );
-    
-    pointAdjustments.apply(
-      toPath: path,
-      forRect: targetRect
-    );
-    
-    pointAdjustments.applyPathTransform(toPath: path);
     
     // assign the path to the shape
     let shapeLayer = CAShapeLayer();
