@@ -130,6 +130,11 @@ public class ShapeView: UIView {
         return;
       };
       
+      let newValue = self.maskShapeConfig;
+      guard newValue != oldValue else {
+        return;
+      };
+      
       self.updateLayers();
     }
   };
@@ -144,6 +149,11 @@ public class ShapeView: UIView {
       return self._borderStyleCurrent;
     }
     set {
+      let oldValue = self.borderStyle;
+      guard newValue != oldValue else {
+        return;
+      };
+      
       self._borderStylePending = newValue;
       if !self.isAnimating {
         self.updateBorderLayer();
@@ -221,6 +231,9 @@ public class ShapeView: UIView {
       switch animationStateCurrent {
         case .noAnimation:
           let nextFrame = self.bounds;
+          defer {
+            self.prevFrame = nextFrame;
+          };
           
           let currentFrame =
                self.layer.presentation()?.bounds
@@ -274,9 +287,14 @@ public class ShapeView: UIView {
       };
     }();
         
-    self.animationState = animationStateNext
+    self.animationState = animationStateNext;
+    
     self.updateLayerMask();
     self.updateBorderLayer();
+    
+    if !animationStateNext.isAnimating {
+      self.prevFrame = self.frame;
+    };
   };
   
   private func updateLayerMask(){
