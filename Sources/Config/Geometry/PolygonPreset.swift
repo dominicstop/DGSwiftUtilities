@@ -8,7 +8,7 @@
 import UIKit
 
 
-public enum PolygonPreset {
+public enum PolygonPreset: Equatable {
   case regularPolygon(numberOfSides: Int);
   
   case regularStarPolygon(

@@ -8,7 +8,7 @@
 import UIKit
 
 
-public enum ShapePreset {
+public enum ShapePreset: Equatable {
   
   case regularPolygon(
     polygonPreset: PolygonPreset,

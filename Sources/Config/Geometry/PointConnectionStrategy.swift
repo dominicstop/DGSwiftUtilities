@@ -9,7 +9,7 @@ import UIKit
 
 
 public enum PointConnectionStrategy {
-
+  
   case straight;
   
   case roundedCornersUniform(cornerRadius: CGFloat);
@@ -276,5 +276,39 @@ public extension PointConnectionStrategy {
     
     pathOperations.append(.close);
     return pathOperations;
+  };
+};
+
+extension PointConnectionStrategy: Equatable {
+
+  public static func == (lhs: Self, rhs: Self) -> Bool {
+    switch (lhs, rhs) {
+      case (.straight, .straight):
+        return true;
+        
+      case let (
+        .roundedCornersUniform(lhsCornerRadius),
+        .roundedCornersUniform(rhsCornerRadius)
+      ):
+        return lhsCornerRadius == rhsCornerRadius;
+        
+      case let (
+        .roundedCornersVariadic(lhsCornerRadiusList),
+        .roundedCornersVariadic(rhsCornerRadiusList)
+      ):
+        return lhsCornerRadiusList == rhsCornerRadiusList;
+        
+      case let (
+        .continuousCurvedCorners(lhsCurvinessAmount, lhsCurveHeightOffset),
+        .continuousCurvedCorners(rhsCurvinessAmount, rhsCurveHeightOffset)
+      ):
+        return (
+             lhsCurvinessAmount == rhsCurvinessAmount
+          && lhsCurveHeightOffset == rhsCurveHeightOffset
+        );
+        
+      default:
+        return false;
+    };
   };
 };

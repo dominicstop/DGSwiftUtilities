@@ -8,7 +8,7 @@
 import UIKit
 
 
-public struct PointGroupAdjustment {
+public struct PointGroupAdjustment: Equatable {
 
   public var shouldScaleToFitTargetRect: Bool;
   public var shouldPreserveAspectRatioWhenScaling: Bool;
