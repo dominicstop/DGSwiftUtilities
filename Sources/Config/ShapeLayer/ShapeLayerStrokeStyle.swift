@@ -8,7 +8,7 @@
 import UIKit
 
 
-public struct ShapeLayerStrokeStyle {
+public struct ShapeLayerStrokeStyle: Equatable {
   
   public var lineWidth: CGFloat;
   public var strokeColor: UIColor?;
