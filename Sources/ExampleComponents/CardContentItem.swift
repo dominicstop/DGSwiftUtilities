@@ -62,7 +62,12 @@ public enum CardContentItem {
   );
   
   case label(
-    id: String?,
+    id: String? = nil,
+    items: [AttributedStringConfig]
+  );
+  
+  case labelSubHeading(
+    id: String? = nil,
     items: [AttributedStringConfig]
   );
   
@@ -101,6 +106,9 @@ public enum CardContentItem {
         return id;
         
       case let .label(id, _):
+        return id;
+      
+      case let .labelSubHeading(id, _):
         return id;
         
       case let .multiLineLabel(id, _):
@@ -418,6 +426,23 @@ public enum CardContentItem {
         label.font = nil;
         label.textColor = nil;
         label.attributedText = configs.makeAttributedString();
+        
+        return label;
+        
+      case let .labelSubHeading(_, items):
+        let label = UILabel();
+        
+        let items = items.map {
+          var copy = $0;
+          copy.fontConfig.weight = .bold;
+          copy.foregroundColor = themeColorConfig.colorTextDark;
+     
+          return copy;
+        };
+        
+        label.font = nil;
+        label.textColor = nil;
+        label.attributedText = items.makeAttributedString();
         
         return label;
         
