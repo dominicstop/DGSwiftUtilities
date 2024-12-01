@@ -11,10 +11,13 @@ import DGSwiftUtilities
 
 enum Route: String, CaseIterable {
   case routeList;
-  case test01;
-  case test02;
+
   case interpolationTest01;
   case imageConfigTest01;
+  case shapeViewTest01;
+  
+  case test01;
+  case test02;
   
   // MARK: - Computed Properties
   // ---------------------------
@@ -35,6 +38,9 @@ enum Route: String, CaseIterable {
         
       case .imageConfigTest01:
         return ImageConfigTest01ViewController();
+        
+      case .shapeViewTest01:
+        return ShapeViewTest01ViewController();
     };
   };
   
@@ -57,6 +63,9 @@ enum Route: String, CaseIterable {
         
       case .imageConfigTest01:
         return "Tests for ImageConfig";
+        
+      case .shapeViewTest01:
+        return "Tests for ShapeView";
     };
   };
   
@@ -116,6 +125,17 @@ enum Route: String, CaseIterable {
           .init(text: "Misc. test create image logic for `ImageConfig` types."),
           .init(text: "\n"),
           .init(text: "Tests for image loading logic via `ImageConfigLoader`")
+        ];
+        
+      case .shapeViewTest01:
+        return [
+          .init(text: "ShapeView tests"),
+          .newLines(2),
+          .init(text: "PolygonPreset + LineConnectionStrategy + ShapePreset"),
+          .newLine,
+          .init(text: "shape borders via ShapeLayerStrokeStyle"),
+          .newLine,
+          .init(text: "test animate view shape mask")
         ];
     };
   };

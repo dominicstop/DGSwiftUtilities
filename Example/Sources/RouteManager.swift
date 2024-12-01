@@ -21,6 +21,8 @@ class RouteManager {
   
   var routeCounter = Route.rootRouteIndex;
   
+  var rootRoute: Route = Route.routeList;
+  
   var currentRouteIndex: Int {
     self.routeCounter % self.routes.count;
   };
@@ -48,9 +50,19 @@ class RouteManager {
         return navController;
       };
       
-      let navVC = UINavigationController(
-        rootViewController: self.currentRoute.viewController
-      );
+      var routes = [self.rootRoute];
+      
+      let isCurrentRouteRootRoute = self.rootRoute == self.currentRoute;
+      if !isCurrentRouteRootRoute {
+        routes.append(self.currentRoute);
+      };
+      
+      let routeViewControllers = routes.map {
+        $0.viewController;
+      };
+      
+      let navVC = UINavigationController();
+      navVC.setViewControllers(routeViewControllers, animated: false);
       
       self.navController = navVC;
       return navVC;

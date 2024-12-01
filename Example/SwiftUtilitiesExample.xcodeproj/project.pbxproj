@@ -20,6 +20,7 @@
 		88A13DBA2CE908F300EE2F1D /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A13DB22CE908BC00EE2F1D /* LogViewController.swift */; };
 		88A13DBB2CE908F300EE2F1D /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A13DB32CE908BC00EE2F1D /* Route.swift */; };
 		88A13DBC2CE908F300EE2F1D /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A13DB42CE908BC00EE2F1D /* RouteManager.swift */; };
+		88F80B0A2CF8E1B600B22056 /* ShapeViewTest01ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F80B092CF8E1B600B22056 /* ShapeViewTest01ViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		88A13DB22CE908BC00EE2F1D /* LogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
 		88A13DB32CE908BC00EE2F1D /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		88A13DB42CE908BC00EE2F1D /* RouteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteManager.swift; sourceTree = "<group>"; };
+		88F80B092CF8E1B600B22056 /* ShapeViewTest01ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeViewTest01ViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 				88A13DAE2CE908BB00EE2F1D /* Test02ViewController.swift */,
 				88A13DAF2CE908BB00EE2F1D /* InterpolationTest01ViewController.swift */,
 				88A13DB02CE908BB00EE2F1D /* ImageConfigTest01ViewController.swift */,
+				88F80B092CF8E1B600B22056 /* ShapeViewTest01ViewController.swift */,
 			);
 			path = Routes;
 			sourceTree = "<group>";
@@ -189,6 +192,7 @@
 				88A13DB52CE908F300EE2F1D /* RouteListViewController.swift in Sources */,
 				88A13DB62CE908F300EE2F1D /* Test01ViewController.swift in Sources */,
 				88A13DB72CE908F300EE2F1D /* Test02ViewController.swift in Sources */,
+				88F80B0A2CF8E1B600B22056 /* ShapeViewTest01ViewController.swift in Sources */,
 				88A13DB82CE908F300EE2F1D /* InterpolationTest01ViewController.swift in Sources */,
 				88A13DB92CE908F300EE2F1D /* ImageConfigTest01ViewController.swift in Sources */,
 				88A13DBA2CE908F300EE2F1D /* LogViewController.swift in Sources */,
