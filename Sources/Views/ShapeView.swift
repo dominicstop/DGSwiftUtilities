@@ -178,7 +178,8 @@ public class ShapeView: UIView {
     borderLayer.fillColor = nil;
     
     self.borderLayer = borderLayer;
-    self.layer.addSublayer(borderLayer);
+    self.layer.insertSublayer(borderLayer, at: 0);
+    borderLayer.zPosition = .greatestFiniteMagnitude;
   };
   
   private func updateLayers(){
@@ -218,8 +219,10 @@ public class ShapeView: UIView {
             ?? self.prevFrame
             ?? .zero;
             
-          let currentShapeMask = self.layer.mask as! CAShapeLayer;
-        
+          guard let currentShapeMask = self.layer.mask as? CAShapeLayer else {
+            return .noAnimation;
+          };
+          
           let currentShapeMaskPath =
                currentShapeMask.presentation()?.path
             ?? currentShapeMask.path!;
