@@ -109,7 +109,17 @@ public class ShapeView: UIView {
   public var prevFrame: CGRect?;
   
   public var animationState: AnimationState = .noAnimation;
-  public var isExplicitlyBeingAnimated: Bool?;
+  public var isExplicitlyBeingAnimated: Bool? {
+    willSet {
+      let oldValue = self.isExplicitlyBeingAnimated;
+      
+      if oldValue == true,
+         newValue == false || newValue == nil
+      {
+        self.clearAnimations();
+      };
+    }
+  };
   
   // MARK: - Animatable Properties
   // -----------------------------
@@ -145,13 +155,11 @@ public class ShapeView: UIView {
   // ---------------------------
   
   public var isAnimating: Bool {
-    if UIView.inheritedAnimationDuration > 0 {
-      return true;
+    if let isExplicitlyBeingAnimated = self.isExplicitlyBeingAnimated {
+      return isExplicitlyBeingAnimated;
     };
     
-    if let isExplicitlyBeingAnimated = self.isExplicitlyBeingAnimated,
-       isExplicitlyBeingAnimated
-    {
+    if UIView.inheritedAnimationDuration > 0 {
       return true;
     };
     
@@ -302,8 +310,9 @@ public class ShapeView: UIView {
         
         pathAnimation.delegate = self;
         
-        currentShapeMask.add(pathAnimation, forKey: animationKay);
+        currentShapeMask.speed = 1;
         currentShapeMask.path = nextPath;
+        currentShapeMask.add(pathAnimation, forKey: animationKay);
         
         self.animationState.appendAnimations([pathAnimation]);
         
@@ -352,6 +361,7 @@ public class ShapeView: UIView {
           
           animation.delegate = self;
           
+          self.borderLayer.speed = 1;
           self.borderLayer.add(animation, forKey: animationKey);
           self.borderLayer.path = nextPath;
           
@@ -425,6 +435,14 @@ public class ShapeView: UIView {
   public func prepareForAnimation(){
     self.isExplicitlyBeingAnimated = true;
   };
+  
+  public func clearAnimations(){
+    if self.isExplicitlyBeingAnimated == true {
+      self.isExplicitlyBeingAnimated = nil;
+    };
+    
+    self.animationState = .noAnimation;
+  };
 };
 
 // MARK: - ViewKeyframeable+CAAnimationDelegate
@@ -457,12 +475,6 @@ extension ShapeView: CAAnimationDelegate {
   };
   
   public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-    switch self.animationState {
-      case .animating:
-        self.animationState = .noAnimation;
-        
-      default:
-        break;
-    };
+    self.clearAnimations();
   };
 };
