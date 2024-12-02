@@ -252,13 +252,7 @@ public class ShapeView: UIView {
         return nil;
       };
       
-      let animationBase = self.layer.recursivelyFindParentAnimation(
-        forKeys: CALayer.commonAnimationKeys,
-        shouldSkipCurrentLayer: false,
-        forType: CABasicAnimation.self
-      );
-      
-      return animationBase;
+      return self.layer.closestBasicAnimation;
     }();
     
     let animationStateNext: AnimationState = {
