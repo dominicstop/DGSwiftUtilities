@@ -529,7 +529,7 @@ public class ShapeView: UIView {
   };
   
   #if DEBUG
-  func debugLogViewInfo(
+  public func debugLogViewInfo(
     funcName: String = #function
   ){
     let animationBgColor = self.layer.recursivelyFindParentAnimation(
@@ -568,6 +568,9 @@ public class ShapeView: UIView {
       "\n - layer.actions.count:", self.layer.actions?.count ?? -1,
       "\n - inheritedAnimationDuration:", UIView.inheritedAnimationDuration,
       "\n - CATransaction.animationDuration:", CATransaction.animationDuration(),
+      "\n - currentAnimations:", self.layer.animations,
+      "\n - all child animations:", self.layer.recursivelyGetAllChildAnimations(shouldSkipCurrentLayer: true),
+      "\n - all parent animations:", self.layer.recursivelyGetAllParentAnimations(shouldSkipCurrentLayer: true),
       "\n"
     );
   };
