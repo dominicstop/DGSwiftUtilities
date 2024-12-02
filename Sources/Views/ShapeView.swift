@@ -105,6 +105,8 @@ public class ShapeView: UIView {
   // MARK: - Properties
   // ------------------
   
+  private var _didSetupLayers = false;
+  
   public var borderLayer: CAShapeLayer!;
   public var prevFrame: CGRect?;
   
@@ -161,6 +163,28 @@ public class ShapeView: UIView {
     }
   };
   
+  private var _maskTransformCurrent: Transform3D?;
+  private var _maskTransformPending: Transform3D?;
+  public var maskTransform: Transform3D? {
+    get {
+      if let pendingValue = self._maskTransformPending {
+        return pendingValue;
+      };
+      return self._maskTransformCurrent;
+    }
+    set {
+      let oldValue = self.maskTransform;
+      guard newValue != oldValue else {
+        return;
+      };
+      
+      self._maskTransformPending = newValue;
+      if !self.isAnimating {
+        self.updateMaskTransform();
+      };
+    }
+  };
+  
   // MARK: - Computed Properties
   // ---------------------------
   
@@ -180,12 +204,26 @@ public class ShapeView: UIView {
   // ----------------------
   
   public override func layoutSubviews() {
+    self.setupLayersIfNeeded();
+    
     super.layoutSubviews();
     self.updateLayers();
   };
   
   // MARK: - Methods (Private)
   // -------------------------
+  
+  private func setupLayersIfNeeded(){
+    guard !self._didSetupLayers else {
+      return;
+    };
+    
+    // debug
+    // self.layer.backgroundColor = UIColor.orange.cgColor
+    
+    self._didSetupLayers = true;
+    // self.layer.masksToBounds = true;
+  };
   
   private func setupBorderLayerIfNeeded(){
     guard self.borderLayer == nil else {
@@ -291,6 +329,7 @@ public class ShapeView: UIView {
     
     self.updateLayerMask();
     self.updateBorderLayer();
+    self.updateMaskTransform();
     
     if !animationStateNext.isAnimating {
       self.prevFrame = self.frame;
@@ -301,7 +340,7 @@ public class ShapeView: UIView {
     switch self.animationState {
       case .noAnimation:
         guard !self.bounds.isEmpty else {
-          return;
+          break;
         };
         
         let shapePathMask =
@@ -309,14 +348,13 @@ public class ShapeView: UIView {
         
         let maskShape = CAShapeLayer();
         maskShape.path = shapePathMask.cgPath;
-        
         self.layer.mask = maskShape;
           
       case let .pendingAnimation(animationBase, _, _, _, currentPath, nextPath):
-        let animationKay = "pathAnimation";
+        let animationKey = #keyPath(CAShapeLayer.path);
         let currentShapeMask = self.layer.mask as! CAShapeLayer;
         
-        guard currentShapeMask.animation(forKey: animationKay) == nil else {
+        guard currentShapeMask.animation(forKey: animationKey) == nil else {
           break;
         };
         
@@ -325,12 +363,12 @@ public class ShapeView: UIView {
         
         pathAnimation.fromValue = currentPath;
         pathAnimation.toValue = nextPath;
+        currentShapeMask.path = nextPath;
         
         pathAnimation.delegate = self;
         
         currentShapeMask.speed = 1;
-        currentShapeMask.path = nextPath;
-        currentShapeMask.add(pathAnimation, forKey: animationKay);
+        currentShapeMask.add(pathAnimation, forKey: animationKey);
         
         self.animationState.appendAnimations([pathAnimation]);
         
@@ -395,6 +433,94 @@ public class ShapeView: UIView {
           usingBaseAnimation: animationBase
         );
         
+        self.animationState.appendAnimations(animations);
+        
+      case .animating:
+        break;
+    };
+  };
+  
+  private func updateMaskTransform(){
+    let maskTransformCurrent = self._maskTransformCurrent;
+    
+    let maskTransformPending =
+         self._maskTransformPending
+      ?? maskTransformCurrent
+      ?? .default;
+        
+    defer {
+      self._maskTransformCurrent = maskTransformPending;
+      self._maskTransformPending = nil;
+    };
+
+    switch self.animationState {
+      case .noAnimation:
+        guard !self.bounds.isEmpty else {
+          return;
+        };
+        
+        let transform = maskTransformPending.transform;
+        self.layer.mask?.transform = transform;
+        self.borderLayer?.transform = transform;
+        
+      case let .pendingAnimation(animationBase, _, _, _, _, _):
+        let animationKey = #keyPath(CAShapeLayer.transform);
+        let transformNext = maskTransformPending.transform;
+        
+        let animationLayerMaskTransform: CABasicAnimation? = {
+          guard let maskLayer = self.layer.mask,
+                maskLayer.animation(forKey: animationKey) == nil
+          else {
+            return nil;
+          };
+          
+          let transformPrev =
+               maskTransformCurrent?.transform
+            ?? maskLayer.transform;
+          
+          let animation = animationBase.copy() as! CABasicAnimation;
+          animation.keyPath = animationKey;
+          animation.fromValue = transformPrev;
+          animation.toValue = transformNext;
+          
+          animation.delegate = self;
+          
+          maskLayer.speed = 1;
+          maskLayer.add(animation, forKey: animationKey);
+          maskLayer.transform = transformNext;
+          
+          return animation;
+        }();
+        
+        let animationBorderLayerTransform: CABasicAnimation? = {
+          guard let borderLayer = self.borderLayer,
+                borderLayer.animation(forKey: animationKey) == nil
+          else {
+            return nil;
+          };
+          
+          let transformPrev =
+               maskTransformCurrent?.transform
+            ?? borderLayer.transform;
+          
+          let animation = animationBase.copy() as! CABasicAnimation;
+          animation.keyPath = animationKey;
+          animation.fromValue = transformPrev;
+          animation.toValue = transformNext;
+          
+          animation.delegate = self;
+          
+          borderLayer.speed = 1;
+          borderLayer.add(animation, forKey: animationKey);
+          borderLayer.transform = transformNext;
+          
+          return animation;
+        }();
+      
+        var animations: [CABasicAnimation] = [];
+        animations.unwrapThenAppend(animationLayerMaskTransform);
+        animations.unwrapThenAppend(animationBorderLayerTransform);
+
         self.animationState.appendAnimations(animations);
         
       case .animating:
