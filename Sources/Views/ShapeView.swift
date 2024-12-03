@@ -111,17 +111,7 @@ public class ShapeView: UIView {
   public var prevFrame: CGRect?;
   
   public var animationState: AnimationState = .noAnimation;
-  public var isExplicitlyBeingAnimated: Bool? {
-    willSet {
-      let oldValue = self.isExplicitlyBeingAnimated;
-      
-      if oldValue == true,
-         newValue == false || newValue == nil
-      {
-        self.clearAnimations();
-      };
-    }
-  };
+  public var isExplicitlyBeingAnimated: Bool?;
   
   // MARK: - Animatable Properties
   // -----------------------------
@@ -574,6 +564,7 @@ public class ShapeView: UIView {
   // ------------------------
   
   public func prepareForAnimation(){
+    self.clearAnimations();
     self.isExplicitlyBeingAnimated = true;
   };
   
