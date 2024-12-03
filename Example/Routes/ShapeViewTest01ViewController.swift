@@ -96,7 +96,7 @@ class ShapeViewTest01ViewController: UIViewController {
   func setupCardItems(){
     var cardControllers: [CardViewController] = [];
     
-    /// regular polygon (`roundedCornersUniform`)
+    // MARK: regular polygon (`roundedCornersUniform`)
     cardControllers.append({
       let shapeSize: CGFloat = 100;
       
@@ -301,6 +301,58 @@ class ShapeViewTest01ViewController: UIViewController {
           }
         )
       );
+      
+      cardContentItems.append(
+        .filledButton(
+          title: [.init(text: "Animation Test")],
+          handler: { _, _ in
+            let cornerRadiusAmount: CGFloat = cardVC.getInjectedValue(
+              forKey: "cornerRadiusAmount",
+              fallbackValue: 0.0
+            );
+            
+            let shapeTransformRotate: CGFloat = cardVC.getInjectedValue(
+              forKey: "shapeTransformRotate",
+              fallbackValue: 0.0
+            );
+            
+            let numberOfSidesCount: Int = cardVC.getInjectedValue(
+              forKey: "numberOfSidesCount",
+              fallbackValue: 3
+            );
+            
+            let shapeAnimationController = ShapeAnimationTestController();
+            
+            shapeAnimationController.maskShapeConfigStart = .regularPolygon(
+              numberOfSides: numberOfSidesCount,
+              pointConnectionStrategy: .roundedCornersUniform(
+                cornerRadius: 0.01
+              ),
+              pointAdjustments: .scaleToFit
+            );
+            
+            shapeAnimationController.maskShapeConfigEnd = .regularPolygon(
+              numberOfSides: numberOfSidesCount,
+              pointConnectionStrategy: .roundedCornersUniform(
+                cornerRadius: cornerRadiusAmount
+              ),
+              pointAdjustments: .init(
+                shouldScaleToFitTargetRect: true,
+                shouldPreserveAspectRatioWhenScaling: true,
+                pathTransform: .init(
+                  rotateZ: .degrees(shapeTransformRotate)
+                )
+              )
+            );
+            
+            shapeAnimationController.endTransform = .init(
+              rotateZ: .degrees(shapeTransformRotate)
+            );
+            
+            self.present(shapeAnimationController, animated: true);
+          }
+        )
+      );
     
       cardVC.cardConfig = .init(
         title: "Regular Polygon",
@@ -313,7 +365,7 @@ class ShapeViewTest01ViewController: UIViewController {
       return cardVC;
     }());
     
-    /// regular star polygon (`roundedCornersUniform`)
+    // MARK: regular star polygon (`roundedCornersUniform`)
     cardControllers.append({
       let shapeSize: CGFloat = 100;
       let spaceBetweenControls: CGFloat = 6;
@@ -681,6 +733,75 @@ class ShapeViewTest01ViewController: UIViewController {
           }
         )
       );
+      
+      cardContentItems.append(
+        .filledButton(
+          title: [.init(text: "Animation Test")],
+          handler: { _, _ in
+            
+            let shapeTransformRotate: CGFloat = cardVC.getInjectedValue(
+              forKey: "shapeTransformRotate",
+              fallbackValue: 0.0
+            );
+            
+            let starInnerRadius: CGFloat = cardVC.getInjectedValue(
+              forKey: "starInnerRadius",
+              fallbackValue: starInnerRadiusDefault
+            );
+            
+            let innerCornerRadius: CGFloat = cardVC.getInjectedValue(
+              forKey: "innerCornerRadius",
+              fallbackValue: 0.0
+            );
+            
+            let spikeCornerRadius: CGFloat = cardVC.getInjectedValue(
+              forKey: "spikeCornerRadius",
+              fallbackValue: 0.0
+            );
+            
+            let numberOfSidesCount: Int = cardVC.getInjectedValue(
+              forKey: "numberOfSidesCount",
+              fallbackValue: 3
+            );
+          
+            let shapeAnimationController = ShapeAnimationTestController();
+            
+            let startSize =
+              shapeAnimationController.startSize.smallestDimension;
+              
+            let startRadius: CGFloat = startSize / 2;
+            let minCornerRadius: CGFloat = 0.01;
+            
+            shapeAnimationController.maskShapeConfigStart = .regularStarPolygonWithRoundedCorners(
+              numberOfSpikes: numberOfSidesCount,
+              innerRadius: startRadius / 2.5,
+              spikeRadius: startRadius,
+              innerCornerRadius: minCornerRadius,
+              spikeCornerRadius: minCornerRadius,
+              pointAdjustments: .scaleToFit
+            );
+            
+            let endSize = shapeAnimationController.endSize.smallestDimension;
+            let endRadius = endSize / 2;
+            let scaleMultiplier = endSize / startSize;
+            
+            shapeAnimationController.maskShapeConfigEnd = .regularStarPolygonWithRoundedCorners(
+              numberOfSpikes: numberOfSidesCount,
+              innerRadius: starInnerRadius * scaleMultiplier,
+              spikeRadius: endRadius,
+              innerCornerRadius: innerCornerRadius * scaleMultiplier,
+              spikeCornerRadius: spikeCornerRadius * scaleMultiplier,
+              pointAdjustments: .scaleToFit
+            );
+            
+            shapeAnimationController.endTransform = .init(
+              rotateZ: .degrees(shapeTransformRotate)
+            );
+            
+            self.present(shapeAnimationController, animated: true);
+          }
+        )
+      );
     
       cardVC.cardConfig = .init(
         title: "Regular Star Polygon",
@@ -693,7 +814,7 @@ class ShapeViewTest01ViewController: UIViewController {
       return cardVC;
     }());
     
-    /// regular polygon (`continuousCurvedCorners`)
+    // MARK: regular polygon (`continuousCurvedCorners`)
     cardControllers.append({
       let shapeSize: CGFloat = 100;
       let spaceBetweenControls: CGFloat = 6;
@@ -935,5 +1056,128 @@ class ShapeViewTest01ViewController: UIViewController {
     
     guard let match = match else { return };
     match.applyCardConfig();
+  };
+};
+
+fileprivate class ShapeAnimationTestController: UIViewController {
+  
+  var boxWrapperView: UIView!;
+  var boxView: ShapeView!;
+  
+  var maskShapeConfigStart: ShapePreset!;
+  var maskShapeConfigEnd: ShapePreset!;
+  
+  var startSize = CGSize(width: 75, height: 75);
+  var startFrame: CGRect!;
+  
+  var endSize = CGSize(width: 250, height: 250);
+  var endFrame: CGRect!;
+  
+  var endTransform: Transform3D!;
+  
+  override func viewDidLoad() {
+    super.viewDidLoad();
+    self.view.backgroundColor = .white;
+      
+    
+    var startFrame = CGRect(origin: .zero, size: self.startSize);
+    startFrame.setPoint(midX: self.view.bounds.midX);
+    startFrame.setPoint(minY: 10);
+    
+    self.startFrame = startFrame;
+    
+    var endFrame = CGRect(origin: .zero, size: self.endSize);
+    endFrame.setPoint(midX: self.view.bounds.midX);
+    endFrame.setPoint(maxY: self.view.bounds.height - 100);
+    
+    self.endFrame = endFrame;
+    
+    let boxWrapperView = {
+      let view = UIView();
+      view.backgroundColor = .clear;
+      view.frame = startFrame;
+      view.backgroundColor = .black.withAlphaComponent(0.1);
+      
+      self.boxWrapperView = view;
+      return view;
+    }();
+  
+    let boxView: ShapeView = {
+      let view = ShapeView();
+      view.backgroundColor = .red;
+      view.isExplicitlyBeingAnimated = false;
+      
+      view.maskShapeConfig = self.maskShapeConfigStart;
+      
+      view.borderStyle = .init(
+        lineWidth: 6,
+        strokeColor: .blue,
+        linePattern:  .uniform(dashLength: 3, spacing: 0)
+      );
+      
+      self.boxView = view;
+      return view;
+    }();
+    
+    boxWrapperView.addSubview(boxView);
+    boxView.translatesAutoresizingMaskIntoConstraints = false;
+  
+    NSLayoutConstraint.activate([
+      boxView.leadingAnchor.constraint(
+        equalTo: boxWrapperView.leadingAnchor
+      ),
+      boxView.trailingAnchor.constraint(
+        equalTo: boxWrapperView.trailingAnchor
+      ),
+      boxView.topAnchor.constraint(
+        equalTo: boxWrapperView.topAnchor
+      ),
+      boxView.bottomAnchor.constraint(
+        equalTo: boxWrapperView.bottomAnchor
+      ),
+    ]);
+    
+    self.view.addSubview(boxWrapperView);
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+      self.beginAnimation();
+    };
+  };
+  
+  func beginAnimation(){
+    boxWrapperView.layoutIfNeeded();
+    boxView.layoutIfNeeded();
+    
+    print("Animation start\n");
+    boxView.prepareForAnimation();
+    
+    UIView.animate(withDuration: 3, delay: 0) {
+      self.boxView.backgroundColor = .yellow;
+      self.boxView.maskShapeConfig = self.maskShapeConfigEnd;
+      self.boxWrapperView.transform3D = self.endTransform.transform;
+      
+      self.boxView.borderStyle = .init(
+        lineWidth: 8,
+        strokeColor: .green,
+        linePattern: .uniform(dashLength: 3, spacing: 4)
+      );
+      
+      self.boxWrapperView.frame = self.endFrame;
+      #if DEBUG
+      self.boxView.debugLogViewInfo();
+      #endif
+      
+    } completion: { _ in
+      print("Animation end\n");
+      
+      self.view.setNeedsLayout();
+      self.boxView.setNeedsLayout();
+      self.boxWrapperView.setNeedsLayout();
+      
+      self.view.layoutIfNeeded();
+      #if DEBUG
+      self.boxView.debugLogViewInfo();
+      #endif
+    };
   };
 };
