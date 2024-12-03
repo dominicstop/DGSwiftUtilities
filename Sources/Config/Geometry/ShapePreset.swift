@@ -178,7 +178,7 @@ public extension ShapePreset {
   static func regularStarPolygonWithRoundedCorners(
     numberOfSpikes: Int,
     innerRadius: CGFloat? = nil,
-    spikeRadius: CGFloat,
+    spikeRadius: CGFloat? = nil,
     innerCornerRadius: CGFloat,
     spikeCornerRadius: CGFloat,
     pointAdjustments: PointGroupAdjustment

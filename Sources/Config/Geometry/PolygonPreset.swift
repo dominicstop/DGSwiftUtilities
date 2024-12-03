@@ -14,7 +14,7 @@ public enum PolygonPreset: Equatable {
   case regularStarPolygon(
     numberOfSpikes: Int,
     innerRadius: CGFloat? = nil,
-    spikeRadius: CGFloat
+    spikeRadius: CGFloat? = nil
   );
   
   // MARK: - Functions
@@ -32,6 +32,9 @@ public enum PolygonPreset: Equatable {
         );
         
       case let .regularStarPolygon(numberOfSpikes, innerRadius, outerRadius):
+        let outerRadius =
+          outerRadius ?? targetRect.size.smallestDimension / 2;
+          
         return Self.createPointsForStar(
           center: targetRect.centerPoint,
           outerRadius: outerRadius,
