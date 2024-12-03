@@ -112,6 +112,7 @@ public class ShapeView: UIView {
   
   public var animationState: AnimationState = .noAnimation;
   public var isExplicitlyBeingAnimated: Bool?;
+  public weak var rootAnimationSource: CALayer?;
   
   // MARK: - Animatable Properties
   // -----------------------------
@@ -240,6 +241,13 @@ public class ShapeView: UIView {
          !isExplicitlyBeingAnimated
       {
         return nil;
+      };
+      
+      if let rootAnimationSource = self.rootAnimationSource {
+        return rootAnimationSource.recursivelyFindChildAnimation(
+          forType: CABasicAnimation.self,
+          shouldSkipCurrentLayer: false
+        );
       };
       
       return self.layer.closestBasicAnimation;
