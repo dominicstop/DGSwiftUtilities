@@ -17,7 +17,7 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
   // ---------------------------
   
   public var radians: T {
-    guard !self.rawValue.isZero else {
+    guard !self.isZero else {
       return 0;
     };
   
@@ -31,7 +31,7 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
   };
   
   public var degrees: T {
-    guard !self.rawValue.isZero else {
+    guard !self.isZero else {
       return 0;
     };
     
@@ -93,7 +93,7 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
   };
   
   public var isZero: Bool {
-    self.degrees == 0;
+    self.rawValue.isZero;
   };
   
   // MARK: - Functions
