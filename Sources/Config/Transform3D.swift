@@ -485,4 +485,53 @@ public struct Transform3D: Equatable {
   };
 };
 
+// MARK: Transform3D+StaticAlias
+// -----------------------------
+
+public extension Transform3D {
+
+  static func translateX(_ value: CGFloat) -> Self {
+    .init(translateX: value);
+  };
+  
+  static func translateY(_ value: CGFloat) -> Self {
+    .init(translateY: value);
+  };
+  
+  static func translateZ(_ value: CGFloat) -> Self {
+    .init(translateZ: value);
+  };
+  
+  static func scaleX(_ value: CGFloat) -> Self {
+    .init(scaleX: value);
+  };
+  
+  static func scaleY(_ value: CGFloat) -> Self {
+    .init(scaleY: value);
+  };
+  
+  static func rotateX(_ angle: Angle<CGFloat>) -> Self {
+    .init(rotateX: angle);
+  };
+  
+  static func rotateY(_ angle: Angle<CGFloat>) -> Self {
+    .init(rotateY: angle);
+  };
+  
+  static func rotateZ(_ angle: Angle<CGFloat>) -> Self {
+    .init(rotateZ: angle);
+  };
+  
+  static func perspective(_ value: CGFloat) -> Self {
+    .init(perspective: value);
+  };
+  
+  static func skewX(_ value: CGFloat) -> Self {
+    .init(skewX: value);
+  };
+  
+  static func skewY(_ value: CGFloat) -> Self {
+    .init(skewY: value);
+  };
+};
 };
