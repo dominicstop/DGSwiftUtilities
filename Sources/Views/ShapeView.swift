@@ -451,13 +451,13 @@ public class ShapeView: UIView {
           return;
         };
         
-        let transform = maskTransformPending.transform;
+        let transform = maskTransformPending.transform3D;
         self.layer.mask?.transform = transform;
         self.borderLayer?.transform = transform;
         
       case let .pendingAnimation(animationBase, _, _, _, _, _):
         let animationKey = #keyPath(CAShapeLayer.transform);
-        let transformNext = maskTransformPending.transform;
+        let transformNext = maskTransformPending.transform3D;
         
         let animationLayerMaskTransform: CABasicAnimation? = {
           guard let maskLayer = self.layer.mask,
@@ -467,7 +467,7 @@ public class ShapeView: UIView {
           };
           
           let transformPrev =
-               maskTransformCurrent?.transform
+               maskTransformCurrent?.transform3D
             ?? maskLayer.transform;
           
           let animation = animationBase.copy() as! CABasicAnimation;
@@ -492,7 +492,7 @@ public class ShapeView: UIView {
           };
           
           let transformPrev =
-               maskTransformCurrent?.transform
+               maskTransformCurrent?.transform3D
             ?? borderLayer.transform;
           
           let animation = animationBase.copy() as! CABasicAnimation;

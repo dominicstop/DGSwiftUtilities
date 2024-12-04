@@ -211,7 +211,7 @@ public struct Transform3D: Equatable {
   // MARK: - Computed Properties
   // ---------------------------
   
-  public var transform: CATransform3D {
+  public var transform3D: CATransform3D {
     var transform = CATransform3DIdentity;
     
     transform.m34 = self.perspective;
@@ -260,7 +260,7 @@ public struct Transform3D: Equatable {
   };
   
   public var affineTransform: CGAffineTransform {
-    CATransform3DGetAffineTransform(self.transform);
+    CATransform3DGetAffineTransform(self.transform3D);
   };
   
   public var isAllValueSet: Bool {
