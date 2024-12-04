@@ -404,4 +404,85 @@ public struct Transform3D: Equatable {
       };
     };
   };
+  // MARK: - Chain Functions
+  // -----------------------
+  
+  @discardableResult
+  public func withTranslateX(_ value: CGFloat) -> Self {
+    var copy = self;
+    copy.translateX = value;
+    return copy;
+  };
+  
+  @discardableResult
+  public func withTranslateY(_ value: CGFloat) -> Self {
+    var copy = self;
+    copy.translateY = value;
+    return copy;
+  };
+  
+  @discardableResult
+  public func withTranslateZ(_ value: CGFloat) -> Self {
+    var copy = self;
+    copy.translateZ = value;
+    return copy;
+  };
+  
+  @discardableResult
+  public func withScaleX(_ value: CGFloat) -> Self {
+    var copy = self;
+    copy.scaleX = value;
+    return copy;
+  };
+  
+  @discardableResult
+  public func withScaleY(_ value: CGFloat) -> Self {
+    var copy = self;
+    copy.scaleY = value;
+    return copy;
+  };
+  
+  @discardableResult
+  public func withRotateX(_ angle: Angle<CGFloat>) -> Self {
+    var copy = self;
+    copy.rotateX = angle;
+    return copy;
+  };
+  
+  @discardableResult
+  public func withRotateY(_ angle: Angle<CGFloat>) -> Self {
+    var copy = self;
+    copy.rotateY = angle;
+    return copy;
+  };
+  
+  @discardableResult
+  public func withRotateZ(_ angle: Angle<CGFloat>) -> Self {
+    var copy = self;
+    copy.rotateZ = angle;
+    return copy;
+  };
+  
+  @discardableResult
+  public func withPerspective(_ value: CGFloat) -> Self {
+    var copy = self;
+    copy.perspective = value;
+    return copy;
+  };
+  
+  @discardableResult
+  public func withSkewX(_ value: CGFloat) -> Self {
+    var copy = self;
+    copy.skewX = value;
+    return copy;
+  };
+  
+  @discardableResult
+  public func withSkewY(_ value: CGFloat) -> Self {
+    var copy = self;
+    copy.skewY = value;
+    return copy;
+  };
+};
+
 };
