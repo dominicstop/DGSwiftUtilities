@@ -46,7 +46,7 @@ import QuartzCore
 /// m44 - ?
 
 
-public struct Transform3D: Equatable, MutableCopy {
+public struct Transform3D: Equatable, MutableReference {
   
   static let keys: [PartialKeyPath<Self>] = [
     \._translateX,
@@ -565,7 +565,7 @@ public extension Transform3D {
 /// ```
 /// var trans: Transform3D = .init();
 ///
-/// trans.mutableCopy()
+/// trans.mutableRef()
 ///   .withTranslateX(90)
 ///   .withScaleY(3);
 /// ```

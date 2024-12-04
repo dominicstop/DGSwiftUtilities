@@ -1,5 +1,5 @@
 //
-//  MutableCopy.swift
+//  MutableReference.swift
 //  
 //
 //  Created by Dominic Go on 12/4/24.
@@ -7,25 +7,25 @@
 
 import Foundation
 
-public protocol MutableCopy {
+public protocol MutableReference {
   
-  mutating func mutableCopy() -> UnsafeMutablePointer<Self>;
+  mutating func mutableRef() -> UnsafeMutablePointer<Self>;
 };
 
 // MARK: - MutableCopy+Default
 // ---------------------------
 
-public extension MutableCopy {
+public extension MutableReference {
   
   /// Example usage:
   /// ```
   /// var transform: Transform3D = .init();
   ///
-  /// transform.mutableCopy()
+  /// transform.mutableRef()
   ///   .withTranslateX(90)
   ///   .withScaleY(3);
   /// ```
-  mutating func mutableCopy() -> UnsafeMutablePointer<Self> {
+  mutating func mutableRef() -> UnsafeMutablePointer<Self> {
     withUnsafeMutablePointer(to: &self) {
       $0;
     };
