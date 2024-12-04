@@ -92,6 +92,10 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
     return .degrees(normalizedDegreesAdj);
   };
   
+  public var isZero: Bool {
+    self.degrees == 0;
+  };
+  
   // MARK: - Functions
   // -----------------
   
