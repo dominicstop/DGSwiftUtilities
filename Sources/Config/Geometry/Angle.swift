@@ -109,6 +109,22 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
     };
   };
   
+  public func asSameUnit(otherAngle: Self) -> Self {
+    switch (self, otherAngle) {
+      case (.radians, .radians):
+        return .radians(otherAngle.rawValue);
+        
+      case (.degrees, .degrees):
+        return .degrees(otherAngle.rawValue);
+        
+      case (.degrees, .radians):
+        return .degrees(otherAngle.degrees);
+        
+      case (.radians, .degrees):
+        return .radians(otherAngle.radians);
+    };
+  };
+  
   public func computeMidAngle(
     otherAngle: Self,
     isClockwise: Bool = true
