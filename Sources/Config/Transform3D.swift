@@ -197,6 +197,14 @@ public struct Transform3D: Equatable, MutableCopy {
   // MARK: - Computed Properties
   // ---------------------------
   
+  public var isIdentity: Bool {
+    CATransform3DIsIdentity(self.transform3D);
+  };
+  
+  public var isAffine: Bool {
+    CATransform3DIsAffine(self.transform3D);
+  };
+  
   public var transform3D: CATransform3D {
     var transform = CATransform3DIdentity;
     
@@ -243,6 +251,10 @@ public struct Transform3D: Equatable, MutableCopy {
     );
     
     return transform;
+  };
+  
+  public var invertedTransform3D: CATransform3D {
+    CATransform3DInvert(self.transform3D);
   };
   
   public var affineTransform: CGAffineTransform {
@@ -539,6 +551,9 @@ public extension Transform3D {
 // MARK: - UnsafeMutablePointer+Transform3D
 // ----------------------------------------
 
+/// for adj. values w/o making temp in-between copies
+///
+/// example usage:
 /// ```
 /// var trans: Transform3D = .init();
 ///
