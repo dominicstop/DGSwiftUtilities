@@ -221,11 +221,18 @@ public extension Angle {
   };
   
   static func normalizeToRadians(_ a: Self, _ b: Self) -> (a: Self, b: Self){
-    let (normalizedA, normalizedB) = Self.normalizeToDegrees(a, b);
-    
-    return (
-      .radians(normalizedA.radians),
-      .radians(normalizedB.radians)
-    );
+    switch (a, b){
+      case (.degrees, .radians):
+        return (.degrees(a.radians), b);
+        
+      case (.radians, .degrees):
+        return (a, .radians(a.radians));
+        
+      case (.radians, .radians):
+        return (a, b);
+        
+      case (.degrees, .degrees):
+        return (.radians(a.radians), .radians(b.radians));
+    };
   };
 };
