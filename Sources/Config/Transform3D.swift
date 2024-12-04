@@ -365,7 +365,7 @@ public struct Transform3D: Equatable, MutableCopy {
     Self.keys.forEach {
       let value = self[keyPath: $0];
       
-      let isValueNil: Bool = {
+      let isCurrentValueNil: Bool = {
         guard value is ExpressibleByNilLiteral,
             let optionalValue = value as? OptionalUnwrappable,
             !optionalValue.isSome()
@@ -378,24 +378,32 @@ public struct Transform3D: Equatable, MutableCopy {
       
       switch $0 {
         case let key as WritableKeyPath<Self, CGFloat>:
-          guard !isValueNil else {
-            self[keyPath: key] = otherTransform[keyPath: key];
+          let otherValue = otherTransform[keyPath: key];
+          
+          guard !isCurrentValueNil else {
+            self[keyPath: key] = otherValue;
             break;
           };
           
           let currentValue = self[keyPath: key];
-          let otherValue = otherTransform[keyPath: key];
           self[keyPath: key] = currentValue + otherValue;
           
         case let key as WritableKeyPath<Self, Angle<CGFloat>>:
-          guard !isValueNil else {
-            self[keyPath: key] = otherTransform[keyPath: key];
+          let otherValueRaw = otherTransform[keyPath: key];
+          
+          guard !isCurrentValueNil else {
+            self[keyPath: key] = otherValueRaw;
             break;
           };
           
-          let currentValue = self[keyPath: key].degrees;
-          let otherValue = otherTransform[keyPath: key].degrees;
-          self[keyPath: key] = .degrees(currentValue + otherValue);
+          let currentValue = self[keyPath: key];
+          
+          /// preserve/respect current angle unit
+          let otherValue = currentValue.asSameUnit(otherAngle: otherValueRaw);
+          let newValueRaw = currentValue.rawValue + otherValue.rawValue;
+          let newValue = currentValue.wrap(otherValue: newValueRaw);
+          
+          self[keyPath: key] = newValue;
           
         default:
           break;
