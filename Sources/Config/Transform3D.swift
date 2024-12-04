@@ -47,20 +47,6 @@ import QuartzCore
 
 
 public struct Transform3D: Equatable, MutableCopy {
-
-  public static let `default`: Self = .init(
-    translateX: 0,
-    translateY: 0,
-    translateZ: 0,
-    scaleX: 1,
-    scaleY: 1,
-    rotateX: .zero,
-    rotateY: .zero,
-    rotateZ: .zero,
-    perspective: 0,
-    skewX: 0,
-    skewY: 0
-  );
   
   static let keys: [PartialKeyPath<Self>] = [
     \._translateX,
@@ -101,7 +87,7 @@ public struct Transform3D: Equatable, MutableCopy {
   public var translateX: CGFloat {
     get {
       self._translateX
-        ?? Self.default.translateX;
+        ?? Self.identity.translateX;
     }
     set {
       self._translateX = newValue;
@@ -111,7 +97,7 @@ public struct Transform3D: Equatable, MutableCopy {
   public var translateY: CGFloat {
     get {
       self._translateY
-        ?? Self.default.translateY;
+        ?? Self.identity.translateY;
     }
     set {
       self._translateY = newValue;
@@ -121,7 +107,7 @@ public struct Transform3D: Equatable, MutableCopy {
   public var translateZ: CGFloat {
     get {
       self._translateZ
-        ?? Self.default.translateZ;
+        ?? Self.identity.translateZ;
     }
     set {
       self._translateZ = newValue;
@@ -131,7 +117,7 @@ public struct Transform3D: Equatable, MutableCopy {
   public var scaleX: CGFloat {
     get {
       self._scaleX
-        ?? Self.default.scaleX;
+        ?? Self.identity.scaleX;
     }
     set {
       self._scaleX = newValue;
@@ -141,7 +127,7 @@ public struct Transform3D: Equatable, MutableCopy {
   public var scaleY: CGFloat {
     get {
       self._scaleY
-        ?? Self.default.scaleY;
+        ?? Self.identity.scaleY;
     }
     set {
       self._scaleY = newValue;
@@ -151,7 +137,7 @@ public struct Transform3D: Equatable, MutableCopy {
   public var rotateX: Angle<CGFloat> {
     get {
       self._rotateX ??
-        Self.default.rotateX;
+        Self.identity.rotateX;
     }
     set {
       self._rotateX = newValue;
@@ -161,7 +147,7 @@ public struct Transform3D: Equatable, MutableCopy {
   public var rotateY: Angle<CGFloat> {
     get {
       self._rotateY ??
-        Self.default.rotateY;
+        Self.identity.rotateY;
     }
     set {
       self._rotateY = newValue;
@@ -171,7 +157,7 @@ public struct Transform3D: Equatable, MutableCopy {
   public var rotateZ: Angle<CGFloat> {
     get {
       self._rotateZ ??
-        Self.default.rotateZ;
+        Self.identity.rotateZ;
     }
     set {
       self._rotateZ = newValue;
@@ -181,7 +167,7 @@ public struct Transform3D: Equatable, MutableCopy {
   public var perspective: CGFloat {
     get {
       self._perspective
-        ?? Self.default.perspective;
+        ?? Self.identity.perspective;
     }
     set {
       self._perspective = newValue;
@@ -191,7 +177,7 @@ public struct Transform3D: Equatable, MutableCopy {
   public var skewX: CGFloat {
     get {
       self._skewX
-        ?? Self.default.skewX;
+        ?? Self.identity.skewX;
     }
     set {
       self._skewX = newValue;
@@ -201,7 +187,7 @@ public struct Transform3D: Equatable, MutableCopy {
   public var skewY: CGFloat {
     get {
       self._skewY
-        ?? Self.default.skewY;
+        ?? Self.identity.skewY;
     }
     set {
       self._skewY = newValue;
@@ -490,6 +476,20 @@ public struct Transform3D: Equatable, MutableCopy {
 // -----------------------------
 
 public extension Transform3D {
+  
+  static let identity: Self = .init(
+    translateX: 0,
+    translateY: 0,
+    translateZ: 0,
+    scaleX: 1,
+    scaleY: 1,
+    rotateX: .zero,
+    rotateY: .zero,
+    rotateZ: .zero,
+    perspective: 0,
+    skewX: 0,
+    skewY: 0
+  );
 
   static func translateX(_ value: CGFloat) -> Self {
     .init(translateX: value);

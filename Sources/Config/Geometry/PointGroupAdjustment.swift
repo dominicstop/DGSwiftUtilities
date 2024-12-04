@@ -181,7 +181,7 @@ public struct PointGroupAdjustment: Equatable {
   
   public func applyPointTransform(toPoints points: [CGPoint]) -> [CGPoint] {
     guard let pointTransform = self.pointTransform,
-          pointTransform != .default
+          pointTransform != .identity
     else {
       return points;
     };

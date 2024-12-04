@@ -14,4 +14,9 @@ public extension Transform3D {
   var transform: CATransform3D {
     self.transform3D;
   };
+  
+  @available(*, deprecated, renamed: "identity")
+  static var `default`: Self {
+    .identity;
+  };
 };

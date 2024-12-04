@@ -438,7 +438,7 @@ public class ShapeView: UIView {
     let maskTransformPending =
          self._maskTransformPending
       ?? maskTransformCurrent
-      ?? .default;
+      ?? .identity;
         
     defer {
       self._maskTransformCurrent = maskTransformPending;

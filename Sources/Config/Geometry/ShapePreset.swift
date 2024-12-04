@@ -219,7 +219,7 @@ public extension ShapePreset {
   };
   
   static func regularSquare(pointAdjustments: PointGroupAdjustment) -> Self {
-    var pointTransform = pointAdjustments.pointTransform ?? .default;
+    var pointTransform = pointAdjustments.pointTransform ?? .identity;
     
     pointTransform.append(
       otherTransform: .init(rotateZ: .degrees(45))
@@ -296,7 +296,7 @@ public extension ShapePreset {
     cornerRadius: CGFloat,
     pointAdjustments: PointGroupAdjustment
   ) -> Self {
-    var pointTransform = pointAdjustments.pointTransform ?? .default;
+    var pointTransform = pointAdjustments.pointTransform ?? .identity;
     
     pointTransform.append(
       otherTransform: .init(rotateZ: .degrees(45))
@@ -394,7 +394,7 @@ public extension ShapePreset {
     curveHeightOffset: CGFloat = 0,
     pointAdjustments: PointGroupAdjustment
   ) -> Self {
-    var pointTransform = pointAdjustments.pointTransform ?? .default;
+    var pointTransform = pointAdjustments.pointTransform ?? .identity;
     
     pointTransform.append(
       otherTransform: .init(rotateZ: .degrees(45))
