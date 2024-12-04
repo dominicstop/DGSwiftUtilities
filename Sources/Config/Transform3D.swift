@@ -46,7 +46,7 @@ import QuartzCore
 /// m44 - ?
 
 
-public struct Transform3D: Equatable {
+public struct Transform3D: Equatable, MutableCopy {
 
   public static let `default`: Self = .init(
     translateX: 0,
@@ -404,6 +404,7 @@ public struct Transform3D: Equatable {
       };
     };
   };
+  
   // MARK: - Chain Functions
   // -----------------------
   
@@ -534,4 +535,82 @@ public extension Transform3D {
     .init(skewY: value);
   };
 };
+
+// MARK: - UnsafeMutablePointer+Transform3D
+// ----------------------------------------
+
+/// ```
+/// var trans: Transform3D = .init();
+///
+/// trans.mutableCopy()
+///   .withTranslateX(90)
+///   .withScaleY(3);
+/// ```
+public extension UnsafeMutablePointer<Transform3D> {
+  
+  @discardableResult
+  func withTranslateX(_ value: CGFloat) -> Self {
+    self.pointee.translateX = value;
+    return self;
+  };
+  
+  @discardableResult
+  func withTranslateY(_ value: CGFloat) -> Self {
+    self.pointee.translateY = value;
+    return self;
+  };
+  
+  @discardableResult
+  func withTranslateZ(_ value: CGFloat) -> Self {
+    self.pointee.translateZ = value;
+    return self;
+  };
+  
+  @discardableResult
+  func withScaleX(_ value: CGFloat) -> Self {
+    self.pointee.scaleX = value;
+    return self;
+  };
+  
+  @discardableResult
+  func withScaleY(_ value: CGFloat) -> Self {
+    self.pointee.scaleY = value;
+    return self;
+  };
+  
+  @discardableResult
+  func withRotateX(_ angle: Angle<CGFloat>) -> Self {
+    self.pointee.rotateX = angle;
+    return self;
+  };
+  
+  @discardableResult
+  func withRotateY(_ angle: Angle<CGFloat>) -> Self {
+    self.pointee.rotateY = angle;
+    return self;
+  };
+  
+  @discardableResult
+  func withRotateZ(_ angle: Angle<CGFloat>) -> Self {
+    self.pointee.rotateZ = angle;
+    return self;
+  };
+  
+  @discardableResult
+  func withPerspective(_ value: CGFloat) -> Self {
+    self.pointee.perspective = value;
+    return self;
+  };
+  
+  @discardableResult
+  func withSkewX(_ value: CGFloat) -> Self {
+    self.pointee.skewX = value;
+    return self;
+  };
+  
+  @discardableResult
+  func withSkewY(_ value: CGFloat) -> Self {
+    self.pointee.skewY = value;
+    return self;
+  };
 };
