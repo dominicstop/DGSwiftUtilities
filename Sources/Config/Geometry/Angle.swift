@@ -236,3 +236,41 @@ public extension Angle {
     };
   };
 };
+
+// MARK: - Angle+CustomOperators
+// -----------------------------
+
+public extension Angle {
+
+  static func +(lhs: Self, rhs: Self) -> Self {
+    switch (lhs, rhs){
+      case (.radians, .radians):
+        return .radians(lhs.rawValue + rhs.rawValue);
+        
+      case (.degrees, .degrees):
+        return .degrees(lhs.rawValue + rhs.rawValue);
+        
+      case (.degrees, .radians):
+        return .degrees(lhs.rawValue + rhs.degrees);
+        
+      case (.radians, .degrees):
+        return .radians(lhs.rawValue + rhs.radians);
+    };
+  };
+  
+  static func -(lhs: Self, rhs: Self) -> Self {
+    switch (lhs, rhs){
+      case (.radians, .radians):
+        return .radians(lhs.rawValue - rhs.rawValue);
+        
+      case (.degrees, .degrees):
+        return .degrees(lhs.rawValue - rhs.rawValue);
+        
+      case (.degrees, .radians):
+        return .degrees(lhs.rawValue - rhs.degrees);
+        
+      case (.radians, .degrees):
+        return .radians(lhs.rawValue - rhs.radians);
+    };
+  };
+};
