@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Line {
+public struct Line: Equatable {
 
   // MARK: - Properties
   // ------------------

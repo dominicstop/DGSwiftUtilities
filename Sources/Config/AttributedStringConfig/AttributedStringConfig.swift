@@ -8,7 +8,7 @@
 import UIKit
 
 // TODO: Move to `SwiftUtilities`
-public struct AttributedStringConfig {
+public struct AttributedStringConfig: Equatable {
 
   public static let newLine: Self = .init(text: "\n");
   

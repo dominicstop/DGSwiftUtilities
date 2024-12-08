@@ -9,7 +9,7 @@ import UIKit
 
 
 // TODO: Move to `SwiftUtilities`
-public struct FontConfig {
+public struct FontConfig: Equatable {
 
   // MARK: - Embedded Types
   //-----------------------

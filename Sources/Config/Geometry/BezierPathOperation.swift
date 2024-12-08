@@ -8,7 +8,7 @@
 import UIKit
 
 
-public enum BezierPathOperation {
+public enum BezierPathOperation: Equatable {
 
   case moveTo(point: CGPoint);
   

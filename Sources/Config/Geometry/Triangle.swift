@@ -20,7 +20,7 @@ import Foundation
 ///              side
 /// ```
 ///
-public struct Triangle {
+public struct Triangle: Equatable {
 
   // MARK: - Properties
   // ------------------
