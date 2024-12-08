@@ -87,6 +87,68 @@ class Test02ViewController: UIViewController {
     );
   };
 
+  static func testTransforms(){
+    var trans: Transform3D = .init();
+    trans.mutableRef()
+      .withTranslateX(90)
+      .withScaleY(3);
+    
+    print(
+      "testTransforms",
+      "\n - transform rotate 90 deg:", {
+        let angle = Angle<CGFloat>.degrees(90.0);
+        let transformRotate = Transform3D(rotateZ: angle);
+        
+        let transformMatrix = CATransform3DMakeRotation(angle.radians, 0, 0, 1);
+        let isEqual = transformRotate.transform3D == transformMatrix;
+        
+        return isEqual.description;
+      }(),
+      "\n - point in 100 radius circle: 0deg, expect (100, 0), result:", {
+        let angle: Angle<CGFloat> = .degrees(0);
+
+        let result = angle.getPointAlongCircle(
+          withRadius: 100,
+          usingCenter: .init(x: 0, y: 0)
+        );
+        
+        return result.debugDescription;
+      }(),
+      "\n - point in 100 radius circle: 90deg, expect (0, 100), result:", {
+        let angle: Angle<CGFloat> = .degrees(90);
+
+        let result = angle.getPointAlongCircle(
+          withRadius: 100,
+          usingCenter: .zero
+        );
+        
+        return result.debugDescription;
+      }(),
+      "\n - point in 100 radius circle: 180deg, expect (-100, 0), result:", {
+        let angle: Angle<CGFloat> = .degrees(180);
+
+        let result = angle.getPointAlongCircle(
+          withRadius: 100,
+          usingCenter: .zero
+        );
+        
+        return result.debugDescription;
+      }(),
+      "\n - point in 100 radius circle: 270deg, expect (0, -100), result:", {
+        let angle: Angle<CGFloat> = .degrees(270);
+
+        let result = angle.getPointAlongCircle(
+          withRadius: 100,
+          usingCenter: .zero
+        );
+        
+        return result.debugDescription;
+      }(),
+      "\n"
+    );
+    
+  };
+  
   override func loadView() {
     let view = UIView();
     view.backgroundColor = .white;
@@ -94,6 +156,7 @@ class Test02ViewController: UIViewController {
     self.view = view;
     // Self.testForComputeMidAngle();
     // Self.testTriangle();
+    Self.testTransforms();
   };
   
   override func viewDidLoad() {
@@ -106,6 +169,7 @@ class Test02ViewController: UIViewController {
       let view = UIView();
       view.backgroundColor = .gray;
       view.frame = initialFrame;
+      view.clipsToBounds = true;
       
       return view;
     }();
@@ -165,7 +229,6 @@ class Test02ViewController: UIViewController {
       rotateZ: .degrees(90)
     );
     
-    
     UIView.animate(withDuration: 3, delay: 1) {
       boxView.backgroundColor = .yellow;
       boxView.maskShapeConfig = .regularPentagonRoundedUniform(cornerRadius: 25, pointAdjustments: .scaleToFit)
@@ -176,11 +239,14 @@ class Test02ViewController: UIViewController {
         linePattern: .uniform(dashLength: 3, spacing: 4)
       );
       
-      boxWrapperView.transform3D = transform.transform;
+      boxView.maskTransform = .init(rotateZ: .degrees(45));
+      boxWrapperView.transform3D = transform.transform3D;
       
       boxWrapperView.frame = nextFrame;
       
-      // boxWrapperView.layoutIfNeeded();
+      #if DEBUG
+      boxView.debugLogViewInfo();
+      #endif
 
       
     } completion: { _ in
@@ -191,6 +257,9 @@ class Test02ViewController: UIViewController {
       boxWrapperView.setNeedsLayout();
       
       self.view.layoutIfNeeded();
+      #if DEBUG
+      boxView.debugLogViewInfo();
+      #endif
     }
     
     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

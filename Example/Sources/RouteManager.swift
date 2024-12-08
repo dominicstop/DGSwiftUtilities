@@ -22,6 +22,7 @@ class RouteManager {
   var routeCounter = Route.rootRouteIndex;
   
   var rootRoute: Route = Route.routeList;
+  var initialRoute: Route?;
   
   var currentRouteIndex: Int {
     self.routeCounter % self.routes.count;
@@ -51,10 +52,8 @@ class RouteManager {
       };
       
       var routes = [self.rootRoute];
-      
-      let isCurrentRouteRootRoute = self.rootRoute == self.currentRoute;
-      if !isCurrentRouteRootRoute {
-        routes.append(self.currentRoute);
+      if let initialRoute = self.initialRoute {
+        routes.append(initialRoute);
       };
       
       let routeViewControllers = routes.map {

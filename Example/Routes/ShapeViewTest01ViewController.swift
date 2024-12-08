@@ -336,13 +336,7 @@ class ShapeViewTest01ViewController: UIViewController {
               pointConnectionStrategy: .roundedCornersUniform(
                 cornerRadius: cornerRadiusAmount
               ),
-              pointAdjustments: .init(
-                shouldScaleToFitTargetRect: true,
-                shouldPreserveAspectRatioWhenScaling: true,
-                pathTransform: .init(
-                  rotateZ: .degrees(shapeTransformRotate)
-                )
-              )
+              pointAdjustments: .scaleToFit
             );
             
             shapeAnimationController.endTransform = .init(
@@ -1154,7 +1148,7 @@ fileprivate class ShapeAnimationTestController: UIViewController {
     UIView.animate(withDuration: 3, delay: 0) {
       self.boxView.backgroundColor = .yellow;
       self.boxView.maskShapeConfig = self.maskShapeConfigEnd;
-      self.boxWrapperView.transform3D = self.endTransform.transform;
+      self.boxWrapperView.layer.transform = self.endTransform.transform3D;
       
       self.boxView.borderStyle = .init(
         lineWidth: 8,

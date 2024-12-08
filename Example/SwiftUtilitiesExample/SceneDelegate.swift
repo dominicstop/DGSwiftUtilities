@@ -233,6 +233,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   // -------------
   
   func testClassRegistry(){
+    #if DEBUG
     for index in 0..<100 {
       ClassRegistry.shared.loadClasses() { sender, allClasses in
         print(
@@ -244,5 +245,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         );
       };
     };
+    #endif
   };
 };
