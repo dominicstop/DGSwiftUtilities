@@ -17,10 +17,6 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
   // ---------------------------
   
   public var radians: T {
-    guard !self.isZero else {
-      return 0;
-    };
-  
     switch self {
       case let .degrees(value):
         return value * (T.pi / 180);
@@ -30,11 +26,7 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
     };
   };
   
-  public var degrees: T {
-    guard !self.isZero else {
-      return 0;
-    };
-    
+  public var degrees: T {    
     switch self {
       case let .degrees(value):
         return value;
