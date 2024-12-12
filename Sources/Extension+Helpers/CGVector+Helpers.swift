@@ -35,4 +35,17 @@ public extension CGVector {
       y: self.dy
     );
   };
+
+  func clamped(minMaxVelocity: CGFloat) -> Self {
+    return .init(
+      dx: self.dx.clamped(
+        min: -minMaxVelocity,
+        max:  minMaxVelocity
+      ),
+      dy: self.dy.clamped(
+        min: -minMaxVelocity,
+        max:  minMaxVelocity
+      )
+    );
+  };
 };
