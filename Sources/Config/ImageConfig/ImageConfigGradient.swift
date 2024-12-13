@@ -11,8 +11,8 @@ public struct ImageConfigGradient: ImageConfig {
   
   public static let imageType = "imageGradient";
 
-  // MARK: Properties
-  // ----------------
+  // MARK: - Properties
+  // ------------------
   
   public var type: CAGradientLayerType;
   
@@ -192,5 +192,21 @@ extension ImageConfigGradient {
       cornerRadius: cornerRadius,
       size: size
     );
+  };
+};
+
+// MARK: - ImageConfigGradient+Equatable
+// -------------------------------------
+
+extension ImageConfigGradient: Equatable {
+  
+  public static func ==(lhs: Self, rhs: Self) -> Bool {
+       lhs.type         == rhs.type
+    && lhs.colors       == rhs.colors
+    && lhs.locations    == rhs.locations
+    && lhs.startPoint   == rhs.startPoint
+    && lhs.endPoint     == rhs.endPoint
+    && lhs.size         == rhs.size
+    && lhs.cornerRadius == rhs.cornerRadius;
   };
 };

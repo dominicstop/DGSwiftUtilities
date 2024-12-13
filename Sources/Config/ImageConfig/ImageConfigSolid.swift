@@ -7,7 +7,7 @@
 
 import UIKit
 
-  
+
 public struct ImageConfigSolid: ImageConfig {
   
   public static let imageType = "imageSolid";
@@ -58,5 +58,17 @@ public struct ImageConfigSolid: ImageConfig {
       
       context.fill(rect);
     };
+  };
+};
+
+// MARK: - ImageConfigSolid+Equatable
+// ----------------------------------
+
+extension ImageConfigSolid: Equatable {
+  
+  public static func ==(lhs: Self, rhs: Self) -> Bool {
+       lhs.size         == rhs.size
+    && lhs.fillColor    == rhs.fillColor
+    && lhs.borderRadius == rhs.borderRadius;
   };
 };

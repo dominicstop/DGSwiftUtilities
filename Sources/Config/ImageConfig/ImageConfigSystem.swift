@@ -13,11 +13,14 @@ public struct ImageConfigSystem: ImageConfig {
 
   public static let imageType = "imageSystem";
 
-  public enum ColorType {
+  public enum ColorType: Equatable {
     case hierarchicalColor(UIColor);
     case paletteColors([UIColor]);
     case tintColor(UIColor);
   };
+  
+  // MARK: - Properties
+  // ------------------
 
   public var systemName: String;
   
@@ -129,4 +132,19 @@ public struct ImageConfigSystem: ImageConfig {
         return image;
     };
   }
+};
+
+// MARK: - ImageConfigSystem+Equatable
+// -----------------------------------
+
+@available(iOS 13.0, *)
+extension ImageConfigSystem: Equatable {
+  
+  public static func ==(lhs: Self, rhs: Self) -> Bool {
+       lhs.systemName == rhs.systemName
+    && lhs.pointSize  == rhs.pointSize
+    && lhs.weight     == rhs.weight
+    && lhs.scale      == rhs.scale
+    && lhs.color      == rhs.color;
+  };
 };
