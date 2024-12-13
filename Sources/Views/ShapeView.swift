@@ -54,11 +54,11 @@ public class ShapeView: UIView {
       };
     };
     
-    var isAnimatingOrAboutToBeAnimated: Bool {
+    public var isAnimatingOrAboutToBeAnimated: Bool {
       self.isAnimating || self.isAboutToBeAnimated;
     };
     
-    var isAnimatingFrame: Bool {
+    public var isAnimatingFrame: Bool {
       switch self {
         case let .pendingAnimation(_, _, currentFrame, nextFrame, _, _):
           return currentFrame != nextFrame;
@@ -71,7 +71,7 @@ public class ShapeView: UIView {
       };
     };
     
-    var animationBase: CABasicAnimation? {
+    public var animationBase: CABasicAnimation? {
       switch self {
         case let .pendingAnimation(animationBase, _, _, _, _, _):
           return animationBase;
