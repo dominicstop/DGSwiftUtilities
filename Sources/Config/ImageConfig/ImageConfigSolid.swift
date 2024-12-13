@@ -8,7 +8,7 @@
 import UIKit
 
 
-public struct ImageConfigSolid: ImageConfig {
+public struct ImageConfigSolid: ImageConfigWithSize {
   
   public static let imageType = "imageSolid";
 

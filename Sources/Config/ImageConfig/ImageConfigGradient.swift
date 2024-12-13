@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct ImageConfigGradient: ImageConfig {
+public struct ImageConfigGradient: ImageConfigWithSize {
   
   public static let imageType = "imageGradient";
 
@@ -90,18 +90,6 @@ public struct ImageConfigGradient: ImageConfig {
   
   // MARK: - Functions
   // -----------------
-  
-  public mutating func setSizeIfNotSet(_ newSize: CGSize){
-    let nextWidth = self.size.width  <= 0
-      ? newSize.width
-      : self.size.width;
-      
-    let nextHeight = self.size.height <= 0
-      ? newSize.height
-      : self.size.height;
-  
-    self.size = CGSize(width : nextWidth, height: nextHeight);
-  };
   
   public func makeImage() throws -> UIImage {
     return UIGraphicsImageRenderer(size: self.size).image { context in
