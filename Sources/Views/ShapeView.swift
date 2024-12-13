@@ -34,14 +34,28 @@ public class ShapeView: UIView {
       nextPath: CGPath
     );
     
-    var isAnimating: Bool {
+    var isAboutToBeAnimated: Bool {
       switch self {
-        case .pendingAnimation, .animating:
+        case .pendingAnimation:
           return true;
           
         default:
           return false;
       };
+    };
+    
+    var isAnimating: Bool {
+      switch self {
+        case .animating:
+          return true;
+          
+        default:
+          return false;
+      };
+    };
+    
+    var isAnimatingOrAboutToBeAnimated: Bool {
+      self.isAnimating || self.isAboutToBeAnimated;
     };
     
     var isAnimatingFrame: Bool {
@@ -111,8 +125,15 @@ public class ShapeView: UIView {
   public var prevFrame: CGRect?;
   
   public var animationState: AnimationState = .noAnimation;
-  public var isExplicitlyBeingAnimated: Bool?;
   public weak var rootAnimationSource: CALayer?;
+  
+  /// * When set to `true`, it means this view is part of some animation, and
+  ///   will always try to find an animator before applying the configs.
+  ///
+  /// * When set to `false`, it means do not animate ever.
+  ///
+  ///
+  public var isExplicitlyBeingAnimated: Bool?;
   
   // MARK: - Animatable Properties
   // -----------------------------
@@ -154,6 +175,8 @@ public class ShapeView: UIView {
     }
   };
   
+  
+  // TODO: Currently not impl. properly when used w/ animations
   private var _maskTransformCurrent: Transform3D?;
   private var _maskTransformPending: Transform3D?;
   public var maskTransform: Transform3D? {
@@ -323,7 +346,7 @@ public class ShapeView: UIView {
     self.updateBorderLayer();
     self.updateMaskTransform();
     
-    if !animationStateNext.isAnimating {
+    if !animationStateNext.isAnimatingOrAboutToBeAnimated {
       self.prevFrame = self.frame;
     };
   };
