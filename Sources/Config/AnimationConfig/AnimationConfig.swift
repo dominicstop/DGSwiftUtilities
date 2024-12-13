@@ -87,27 +87,8 @@ public enum AnimationConfig: Equatable {
   // -----------------
   
   public func createAnimator(
-    gestureInitialVelocity: CGVector
+    gestureInitialVelocity: CGVector = .zero
   ) -> UIViewPropertyAnimator {
-    
-    func initialVelocityClamped(
-      _ initialVelocity: CGVector?,
-      _ maxVelocity: CGFloat?
-    ) -> CGVector {
-      let velocity = initialVelocity ?? gestureInitialVelocity;
-      guard let maxVelocity = maxVelocity else { return velocity };
-      
-      return .init(
-        dx: velocity.dx.clamped(
-          min: -maxVelocity,
-          max:  maxVelocity
-        ),
-        dy: velocity.dy.clamped(
-          min: -maxVelocity,
-          max:  maxVelocity
-        )
-      );
-    };
     
     switch self {
       case let .animator(animator):
@@ -127,8 +108,11 @@ public enum AnimationConfig: Equatable {
         );
         
       case let .springDamping(duration, dampingRatio, initialVelocity, maxVelocity):
-        let initialVelocity =
-          initialVelocityClamped(initialVelocity, maxVelocity);
+        var initialVelocity = initialVelocity ?? gestureInitialVelocity;
+        
+        if let maxVelocity = maxVelocity {
+          initialVelocity = initialVelocity.clamped(minMaxVelocity: maxVelocity);
+        };
       
         let timingParams = UISpringTimingParameters(
           dampingRatio: dampingRatio,
@@ -138,8 +122,11 @@ public enum AnimationConfig: Equatable {
         return .init(duration: duration, timingParameters: timingParams);
         
       case let .springPhysics(duration, mass, stiffness, damping, initialVelocity, maxVelocity):
-        let initialVelocity =
-          initialVelocityClamped(initialVelocity, maxVelocity);
+        var initialVelocity = initialVelocity ?? gestureInitialVelocity;
+        
+        if let maxVelocity = maxVelocity {
+          initialVelocity = initialVelocity.clamped(minMaxVelocity: maxVelocity);
+        };
       
         let timingParams = UISpringTimingParameters(
           mass: mass,
@@ -151,8 +138,9 @@ public enum AnimationConfig: Equatable {
         return .init(duration: duration, timingParameters: timingParams);
         
       case let .springGesture(duration, dampingRatio, maxGestureVelocity):
-        let initialVelocity =
-          initialVelocityClamped(gestureInitialVelocity, maxGestureVelocity);
+        let initialVelocity = gestureInitialVelocity.clamped(
+          minMaxVelocity: maxGestureVelocity
+        );
       
         let timingParams = UISpringTimingParameters(
           dampingRatio: dampingRatio,
