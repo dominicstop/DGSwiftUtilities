@@ -150,4 +150,75 @@ public enum AnimationConfig: Equatable {
         return .init(duration: duration, timingParameters: timingParams);
     };
   };
+ 
+  /// Note: for actual use, make a copy of the animations.
+  ///
+  /// Usually generates `CABasicAnimation`, you'll need to add keyframes
+  /// in the animation blocks to make `CAKeyframeAnimation`
+  ///
+  public func createCAAnimations<T: CAAnimation>(
+    gestureInitialVelocity: CGVector = .zero,
+    withType type: T.Type = T.self,
+    usingDummyView dummyView: UIView? = nil,
+    withDummyAnimation dummyAnimationBlock: Optional<
+      (_ view: UIView) -> Void
+    > = nil
+  ) -> [T] {
+    let dummyView = dummyView ?? UIView();
+    
+    let dummyAnimator =
+      self.createAnimator(gestureInitialVelocity: gestureInitialVelocity);
+      
+    let dummyAnimationBlock = dummyAnimationBlock ?? {
+      $0.backgroundColor = .red;
+      $0.bounds = .init(
+        origin: .zero,
+        size: .init(width: 100, height: 100)
+      );
+      $0.alpha = 0.5;
+      $0.isHidden = false;
+      $0.backgroundColor = .red;
+      $0.transform = .init(
+        translationX: 1,
+        y: 1
+      );
+    };
+        
+    dummyAnimator.addAnimations {
+      dummyAnimationBlock(dummyView);
+    };
+        
+    dummyAnimator.startAnimation();
+    let dummyAnimations = dummyView.layer.recursivelyGetAllChildAnimations();
+
+    return dummyAnimations.compactMap {
+      $0.animation as? T;
+    };
+  };
+  
+  /// No need to copy, but animation values have been reset, e.g.:
+  /// `keyPath`, `fromValue`, `toValue`, etc.
+  ///
+  public func createBasicAnimation(
+    gestureInitialVelocity: CGVector = .zero
+  ) -> CABasicAnimation? {
+  
+    let animations = self.createCAAnimations(
+      gestureInitialVelocity: gestureInitialVelocity,
+      withType: CABasicAnimation.self
+    );
+    
+    guard let animation = animations.first,
+          let animationCopy = animation.copy() as? CABasicAnimation
+    else {
+      return nil;
+    };
+    
+    animationCopy.keyPath = nil;
+    animationCopy.fromValue = nil;
+    animationCopy.toValue = nil;
+    animationCopy.byValue = nil;
+    
+    return animationCopy;
+  };
 };
