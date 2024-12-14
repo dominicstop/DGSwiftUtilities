@@ -51,6 +51,10 @@ public extension ImageConfigLoader {
        self.imageLoadMaxAttemptsOverride
     ?? Self.imageLoadMaxAttemptsDefault;
   };
+  
+  var hasRemainingAttemptsToLoadImage: Bool {
+    self.imageLoadAttemptCount < self.imageLoadMaxAttempts;
+  };
 };
 
 // MARK: - ImageConfigLoader+PublicMethods
@@ -65,10 +69,27 @@ public extension ImageConfigLoader {
   
   func loadImageIfNeeded(
     dispatchQos dispatchQosOverride: DispatchQoS.QoSClass? = nil,
+    shouldAlwaysInvokeCompletion: Bool = false,
     completion: CompletionHandler? = nil
     // useSharedQueue: Bool = false
   ) {
-    guard !self.imageConfig.isImageLoaded else { return };
+  
+    func invokeCompletionIfNeeded(didLoad: Bool = false){
+      guard let completion = completion,
+            shouldAlwaysInvokeCompletion || didLoad
+      else {
+        return;
+      };
+      
+      completion(self);
+    };
+    
+    guard !self.imageConfig.isImageLoaded,
+          self.hasRemainingAttemptsToLoadImage
+    else {
+      invokeCompletionIfNeeded();
+      return;
+    };
     
     self.imageConfig.isImageLoading = true;
     self.imageLoadAttemptCount += 1;
@@ -87,6 +108,14 @@ public extension ImageConfigLoader {
       imageConfigCopy.isImageLoading = false;
       
       DispatchQueue.main.async {
+        let imageTypeOld = type(of: self.imageConfig).imageType;
+        let imageTypeNew = type(of: imageConfigCopy).imageType;
+      
+        guard imageTypeNew == imageTypeOld else {
+          invokeCompletionIfNeeded();
+          return;
+        };
+        
         self.imageConfig = imageConfigCopy;
         
         completion?(self);
