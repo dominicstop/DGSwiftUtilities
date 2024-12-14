@@ -74,13 +74,3 @@ public extension ImageConfig {
     };
   };
 };
-
-// MARK: - ImageConfig+Equatable
-// -----------------------------
-
-extension ImageConfig {
-  
-  public static func ==(lhs: Self, rhs: Self) -> Bool {
-    type(of: lhs).imageType == type(of: rhs).imageType;
-  };
-};
