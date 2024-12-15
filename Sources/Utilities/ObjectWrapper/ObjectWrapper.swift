@@ -89,6 +89,10 @@ open class ObjectWrapper<
     else { return nil };
     
     let value = wrappedObject.value(forKey: key);
+    guard let value = value else {
+      return nil;
+    };
+    
     return value as? T;
   };
   
