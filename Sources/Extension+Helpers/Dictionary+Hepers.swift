@@ -11,7 +11,7 @@ import UIKit
 
 public extension Dictionary where Key == String {
   
-  func getValueFromDictionary<T>(
+  func getValue<T>(
     forKey key: String,
     type: T.Type = T.self
   ) throws -> T {
@@ -44,12 +44,12 @@ public extension Dictionary where Key == String {
     return value;
   };
   
-  func getValueFromDictionary<T: InitializableFromDictionary>(
+  func getValue<T: InitializableFromDictionary>(
     forKey key: String,
     type: T.Type = T.self
   ) throws -> T {
   
-    let dictValue = try self.getValueFromDictionary(
+    let dictValue = try self.getValue(
       forKey: key,
       type: Dictionary<String, Any>.self
     );
@@ -57,12 +57,12 @@ public extension Dictionary where Key == String {
     return try T.init(fromDict: dictValue);
   };
   
-  func getValueFromDictionary<T: CreatableFromDictionary>(
+  func getValue<T: CreatableFromDictionary>(
     forKey key: String,
     type: T.Type = T.self
   ) throws -> T {
   
-    let dictValue = try self.getValueFromDictionary(
+    let dictValue = try self.getValue(
       forKey: key,
       type: Dictionary<String, Any>.self
     );
@@ -70,12 +70,12 @@ public extension Dictionary where Key == String {
     return try T.create(fromDict: dictValue);
   };
   
-  func getValueFromDictionary<T: InitializableFromString>(
+  func getValue<T: InitializableFromString>(
     forKey key: String,
     type: T.Type = T.self
   ) throws -> T {
   
-    let dictValue = try self.getValueFromDictionary(
+    let dictValue = try self.getValue(
       forKey: key,
       type: String.self
     );
@@ -83,12 +83,12 @@ public extension Dictionary where Key == String {
     return try T.init(fromString: dictValue);
   };
   
-  func getValueFromDictionary<T: OptionSet & InitializableFromString>(
+  func getValue<T: OptionSet & InitializableFromString>(
     forKey key: String,
     type: T.Type = T.self
   ) throws -> T {
   
-    let stringValues = try self.getValueFromDictionary(
+    let stringValues = try self.getValue(
       forKey: key,
       type: [String].self
     );
@@ -113,7 +113,7 @@ public extension Dictionary where Key == String {
     };
   };
   
-  func getColorFromDictionary(forKey key: String) throws -> UIColor {
+  func getColor(forKey key: String) throws -> UIColor {
     guard let colorValue = self[key] else {
       throw GenericError(
         errorCode: .unexpectedNilValue,
@@ -142,12 +142,12 @@ public extension Dictionary where Key == String {
     return color;
   };
   
-  func getEnumFromDictionary<T: RawRepresentable<String>>(
+  func getEnum<T: RawRepresentable<String>>(
     forKey key: String,
     type: T.Type = T.self
   ) throws -> T {
   
-    let dictValue: String = try self.getValueFromDictionary(forKey: key);
+    let dictValue: String = try self.getValue(forKey: key);
     
     guard let value = T(rawValue: dictValue) else {
       throw GenericError(
@@ -164,14 +164,12 @@ public extension Dictionary where Key == String {
     return value;
   };
   
-  func getEnumFromDictionary<
-    T: EnumCaseStringRepresentable & CaseIterable
-  >(
+  func getEnum<T: EnumCaseStringRepresentable & CaseIterable>(
     forKey key: String,
     type: T.Type = T.self
   ) throws -> T {
   
-    let dictValue: String = try self.getValueFromDictionary(forKey: key);
+    let dictValue: String = try self.getValue(forKey: key);
     
     guard let value = T(fromString: dictValue) else {
       throw GenericError(
@@ -191,7 +189,7 @@ public extension Dictionary where Key == String {
     return value;
   };
   
-  func getKeyPathFromDictionary<
+  func getKeyPath<
     KeyPathRoot: StringKeyPathMapping,
     KeyPathValue
   >(
@@ -200,7 +198,7 @@ public extension Dictionary where Key == String {
     valueType: KeyPathValue.Type
   ) throws -> KeyPath<KeyPathRoot, KeyPathValue> {
   
-    let dictValue: String = try self.getValueFromDictionary(forKey: key);
+    let dictValue: String = try self.getValue(forKey: key);
     
     return try KeyPathRoot.getKeyPath(
       forKey: dictValue,
@@ -208,13 +206,13 @@ public extension Dictionary where Key == String {
     );
   };
   
-  func getValueFromDictionary<T>(
+  func getValue<T>(
     forKey key: String,
     type: T.Type = T.self,
     fallbackValue: T
   ) -> T {
   
-    let value = try? self.getValueFromDictionary(
+    let value = try? self.getValue(
       forKey: key,
       type: type
     );
@@ -222,13 +220,13 @@ public extension Dictionary where Key == String {
     return  value ?? fallbackValue;
   };
   
-  func getValueFromDictionary<T: RawRepresentable, U>(
+  func getValue<T: RawRepresentable, U>(
     forKey key: String,
     type: T.Type = T.self,
     rawValueType: U.Type = T.RawValue.self
   ) throws -> T where T: RawRepresentable<U> {
   
-    let rawValue = try? self.getValueFromDictionary(
+    let rawValue = try? self.getValue(
       forKey: key,
       type: U.self
     );
@@ -261,14 +259,14 @@ public extension Dictionary where Key == String {
     return value;
   };
   
-  func getValueFromDictionary<T: RawRepresentable, U>(
+  func getValue<T: RawRepresentable, U>(
     forKey key: String,
     type: T.Type = T.self,
     rawValueType: U.Type = T.RawValue.self,
     fallbackValue: T
   ) -> T where T: RawRepresentable<U> {
   
-    let enumValue = try? self.getValueFromDictionary(
+    let enumValue = try? self.getValue(
       forKey: key,
       type: T.self,
       rawValueType: U.self

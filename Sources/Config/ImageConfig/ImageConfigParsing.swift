@@ -53,7 +53,7 @@ public extension ImageConfigParsing {
     fromDict dict: Dictionary<String, Any>
   ) throws -> ParsableImageConfig {
     
-    let imageType: String = try dict.getValueFromDictionary(forKey: "imageType");
+    let imageType: String = try dict.getValue(forKey: "imageType");
     
     let imageConfigType = Self.configTypeMap[imageType];
     guard let imageConfigType = imageConfigType else {
