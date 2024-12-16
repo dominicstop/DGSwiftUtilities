@@ -124,6 +124,10 @@ public extension Dictionary where Key == String {
       );
     };
     
+    if let colorValue = colorValue as? UIColor {
+      return colorValue;
+    };
+    
     guard let color = UIColor.parseColor(value: colorValue) else {
       throw GenericError(
         errorCode: .invalidValue,
@@ -176,7 +180,10 @@ public extension Dictionary where Key == String {
         extraDebugValues: [
           "key": key,
           "dictValue": dictValue,
-          "type": type.self
+          "type": type.self,
+          "validValues": T.allCases.reduce(into: "") {
+            $0 += $1.caseString + ", ";
+          }
         ]
       );
     };
