@@ -278,6 +278,108 @@ public extension Dictionary where Key == String {
     
     return enumValue;
   };
+  
+  func getArray<T>(
+    forKey key: String,
+    elementType: T.Type = T.self,
+    transform transformBlock: (Any) throws -> T?
+  ) throws -> Array<T> {
+  
+    let dictValue = self[key];
+    
+    guard let dictValue = dictValue else {
+      throw GenericError(
+        errorCode: .unexpectedNilValue,
+        description: "Unable to get array from dictionary for key",
+        extraDebugValues: [
+          "key": key,
+          "elementType": elementType.self
+        ]
+      );
+    };
+    
+    if let array = dictValue as? Array<T> {
+      return array;
+    };
+    
+    guard let rawArray = dictValue as? Array<Any> else {
+      throw GenericError(
+        errorCode: .typeCastFailed,
+        description: "Unable to parse array from dictionary for key",
+        extraDebugValues: [
+          "key": key,
+          "dictValue": dictValue,
+          "type": elementType.self
+        ]
+      );
+    };
+
+    return try rawArray.compactMap {
+      try transformBlock($0);
+    };
+  };
+  
+  func getArray<T>(
+    forKey key: String,
+    elementType: T.Type = T.self,
+    allowMissingValues: Bool = false
+  ) throws -> Array<T> {
+  
+    let dictValue = self[key];
+    
+    guard let dictValue = dictValue else {
+      throw GenericError(
+        errorCode: .unexpectedNilValue,
+        description: "Unable to get array from dictionary for key",
+        extraDebugValues: [
+          "key": key,
+          "elementType": elementType.self
+        ]
+      );
+    };
+    
+    if let array = dictValue as? Array<T> {
+      return array;
+    };
+    
+    guard let rawArray = dictValue as? Array<Any> else {
+      throw GenericError(
+        errorCode: .typeCastFailed,
+        description: "Unable to parse array from dictionary for key",
+        extraDebugValues: [
+          "key": key,
+          "dictValue": dictValue,
+          "type": elementType.self
+        ]
+      );
+    };
+    
+    if allowMissingValues {
+      return rawArray.compactMap {
+        $0 as? T;
+      };
+    };
+    
+    return try rawArray.enumerated().map {
+      guard let value = $0.element as? T else {
+        throw GenericError(
+          errorCode: .typeCastFailed,
+          description: "Unable to parse element from array",
+          extraDebugValues: [
+            "key": key,
+            "dictValue": dictValue,
+            "type": elementType.self,
+            "element": $0,
+            "index": $0.offset,
+            "rawArray": rawArray,
+            "rawArrayCount": rawArray.count,
+          ]
+        );
+      };
+      
+      return value;
+    };
+  };
 };
 
 
