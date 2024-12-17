@@ -186,6 +186,121 @@ public extension Dictionary where Key == String {
     return enumValue;
   };
   
+  func getNumber<T: BinaryInteger>(
+    forKey key: String,
+    type: T.Type = T.self
+  ) throws -> T {
+  
+    let dictValue = self[key];
+    guard let dictValue = dictValue else {
+      throw GenericError(
+        errorCode: .unexpectedNilValue,
+        description: "corresponding key in dict has no value",
+        extraDebugValues: [
+          "key": key,
+          "type": type.self,
+        ]
+      );
+    };
+    
+    switch dictValue {
+      case let number as NSNumber:
+        return .init(number.intValue);
+        
+      case let number as any BinaryInteger:
+        return .init(number);
+    
+      case let number as any BinaryFloatingPoint:
+        return .init(number);
+      
+      default:
+        throw GenericError(
+          errorCode: .invalidValue,
+          description: "Unable to convert dictValue to number",
+          extraDebugValues: [
+            "key": key,
+            "dictValue": dictValue,
+            "type": type.self,
+          ]
+        );
+    };
+  };
+  
+  func getNumber<T: BinaryFloatingPoint>(
+    forKey key: String,
+    type: T.Type = T.self
+  ) throws -> T {
+  
+    let dictValue = self[key];
+    guard let dictValue = dictValue else {
+      throw GenericError(
+        errorCode: .unexpectedNilValue,
+        description: "corresponding key in dict has no value",
+        extraDebugValues: [
+          "key": key,
+          "type": type.self,
+        ]
+      );
+    };
+    
+    switch dictValue {
+      case let number as NSNumber:
+        return .init(number.doubleValue);
+    
+      case let number as any BinaryFloatingPoint:
+        return .init(number);
+        
+      case let number as any BinaryInteger:
+        return .init(number);
+      
+      default:
+        throw GenericError(
+          errorCode: .invalidValue,
+          description: "Unable to convert dictValue to number",
+          extraDebugValues: [
+            "key": key,
+            "dictValue": dictValue,
+            "type": type.self,
+          ]
+        );
+    };
+  };
+  
+  func getInt(forKey key: String) throws -> Int {
+    let dictValue = self[key];
+    
+    guard let dictValue = dictValue else {
+      throw GenericError(
+        errorCode: .unexpectedNilValue,
+        description: "corresponding key in dict has no value",
+        extraDebugValues: [
+          "key": key
+        ]
+      );
+    };
+    
+    switch dictValue {
+      case let number as NSNumber:
+        return number.intValue;
+        
+      case let number as any BinaryInteger:
+        return .init(number);
+    
+      case let number as any BinaryFloatingPoint:
+        return .init(number);
+      
+      default:
+        throw GenericError(
+          errorCode: .invalidValue,
+          description: "Unable to convert dictValue to number",
+          extraDebugValues: [
+            "key": key,
+            "dictValue": dictValue,
+          ]
+        );
+    };
+  };
+  
   func getColor(forKey key: String) throws -> UIColor {
     guard let colorValue = self[key] else {
       throw GenericError(
@@ -379,6 +494,62 @@ public extension Dictionary where Key == String {
       
       return value;
     };
+  };
+  
+  func getDict<T: Hashable, U>(
+    forKey key: String,
+    keyType: T.Type = T.self,
+    valueType: U.Type
+  ) throws -> Dictionary<T, U> {
+  
+    let dictValue = self[key];
+    
+    guard let dictValue = dictValue else {
+      throw GenericError(
+        errorCode: .unexpectedNilValue,
+        description: "Unable to get dict from dictionary for key",
+        extraDebugValues: [
+          "key": key,
+          "keyType": keyType.self,
+          "valueType": valueType.self
+        ]
+      );
+    };
+    
+    switch dictValue {
+      case let objcDict as NSDictionary:
+        guard let dict = objcDict as? Dictionary<T, U> else {
+          throw GenericError(
+            errorCode: .unexpectedNilValue,
+            description: "Unable to convert objc dict to target type",
+            extraDebugValues: [
+              "key": key,
+              "keyType": keyType.self,
+              "valueType": valueType.self,
+              "objcDict": objcDict,
+            ]
+          );
+        };
+        
+        return dict;
+    
+      case let dict as Dictionary<T, U>:
+        return dict;
+        
+      default:
+        break;
+    };
+    
+    throw GenericError(
+      errorCode: .invalidValue,
+      description: "Unable to convert dict to target type",
+      extraDebugValues: [
+        "key": key,
+        "keyType": keyType.self,
+        "valueType": valueType.self,
+        "dictValue": dictValue,
+      ]
+    );
   };
 };
 
