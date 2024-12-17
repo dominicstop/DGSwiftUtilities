@@ -226,6 +226,20 @@ public extension Dictionary where Key == String {
     };
   };
   
+  func getNumber<T: BinaryInteger>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+  
+    let value = try? self.getNumber(
+      forKey: key,
+      type: type
+    );
+    
+    return value ?? fallbackValue;
+  };
+  
   func getNumber<T: BinaryFloatingPoint>(
     forKey key: String,
     type: T.Type = T.self
@@ -266,6 +280,20 @@ public extension Dictionary where Key == String {
     };
   };
   
+  func getNumber<T: BinaryFloatingPoint>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+  
+    let value = try? self.getNumber(
+      forKey: key,
+      type: type
+    );
+    
+    return value ?? fallbackValue;
+  };
+  
   func getInt(forKey key: String) throws -> Int {
     let dictValue = self[key];
     
@@ -301,6 +329,15 @@ public extension Dictionary where Key == String {
     };
   };
   
+  func getInt(
+    forKey key: String,
+    fallbackValue: Int
+  ) -> Int {
+    
+    let value = try? self.getInt(forKey: key);
+    return value ?? fallbackValue;
+  };
+  
   func getColor(forKey key: String) throws -> UIColor {
     guard let colorValue = self[key] else {
       throw GenericError(
@@ -328,6 +365,15 @@ public extension Dictionary where Key == String {
     };
     
     return color;
+  };
+  
+  func getColor(
+    forKey key: String,
+    fallbackValue: UIColor
+  ) -> UIColor {
+    
+    let value = try? self.getColor(forKey: key);
+    return value ?? fallbackValue;
   };
   
   func getEnum<T: RawRepresentable<String>>(
@@ -495,11 +541,27 @@ public extension Dictionary where Key == String {
       return value;
     };
   };
+
+  func getArray<T>(
+    forKey key: String,
+    elementType: T.Type = T.self,
+    allowMissingValues: Bool = false,
+    fallbackValue: Array<T>
+  ) -> Array<T> {
+  
+    let value = try? self.getArray(
+      forKey: key,
+      elementType: elementType,
+      allowMissingValues: allowMissingValues
+    );
+    
+    return value ?? fallbackValue;
+  };
   
   func getDict<T: Hashable, U>(
     forKey key: String,
-    keyType: T.Type = T.self,
-    valueType: U.Type
+    keyType: T.Type = String.self,
+    valueType: U.Type = Any.self
   ) throws -> Dictionary<T, U> {
   
     let dictValue = self[key];
@@ -550,6 +612,23 @@ public extension Dictionary where Key == String {
         "dictValue": dictValue,
       ]
     );
+  };
+  
+  
+  func getDict<T: Hashable, U>(
+    forKey key: String,
+    keyType: T.Type = String.self,
+    valueType: U.Type = Any.self,
+    fallbackValue: Dictionary<T, U>
+  ) -> Dictionary<T, U> {
+  
+    let value = try? self.getDict(
+      forKey: key,
+      keyType: keyType,
+      valueType: valueType
+    );
+    
+    return value ?? fallbackValue;
   };
 };
 
