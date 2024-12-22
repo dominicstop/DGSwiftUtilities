@@ -65,4 +65,8 @@ public extension BinaryFloatingPoint {
     
     return isWithinMinRange && isWithinMaxRange;
   };
+  
+  static func percent<T: BinaryInteger>(index: T, count: T) -> Self {
+    .init(index + 1) / .init(count);
+  };
 };
