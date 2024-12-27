@@ -75,7 +75,7 @@ public class InLineDisplayLink {
     runLoopMode: RunLoop.Mode = .common,
     shouldRetain: Bool = false,
     shouldImmediatelyStart: Bool = true,
-    delegates initialDelegates: [InLineDisplayLinkDelegate]
+    delegates initialDelegates: [InLineDisplayLinkDelegate] = []
   ) {
   
     self.runloop = runloop;
