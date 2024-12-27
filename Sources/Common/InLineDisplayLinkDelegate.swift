@@ -18,7 +18,8 @@ public protocol InLineDisplayLinkDelegate: AnyObject {
   
   func notifyOnDisplayLinkStarted(
     sender: InLineDisplayLink,
-    displayLink: CADisplayLink
+    displayLink: CADisplayLink,
+    didRestart: Bool
   );
   
   func notifyOnDisplayLinkStopped(

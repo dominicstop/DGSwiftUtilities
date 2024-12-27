@@ -26,25 +26,27 @@ public class InLineDisplayLink {
   
   private weak var displayLinkTarget: DisplayLinkTarget?;
   public private(set) var displayLink: CADisplayLink;
-  
-  public var delegates: MulticastDelegate<InLineDisplayLinkDelegate> = .init();
+
+  public private(set) var delegates: MulticastDelegate<InLineDisplayLinkDelegate> = .init();
   
   public var updateBlock: UpdateBlock?;
   public var startBlock: UpdateBlock?;
   public var endBlock: UpdateBlock?;
   
-  public var isRunning: Bool = false;
-  public var isExplicitlyPaused: Bool = false;
+  private var pendingRestart = false;
   
-  public var timestampStart: CFTimeInterval;
-  public var timestampFirstFrame: CFTimeInterval?;
+  public fileprivate(set) var isRunning: Bool = false;
+  public fileprivate(set) var isExplicitlyPaused: Bool = false;
   
-  public var timestampPrevFrame: CFTimeInterval?;
-  public var timestampLastFrame: CFTimeInterval?;
+  public fileprivate(set) var timestampStart: CFTimeInterval?;
+  public fileprivate(set) var timestampFirstFrame: CFTimeInterval?;
   
-  public var frameCounter = 0;
-  public var elapsedTime: TimeInterval = 0;
-  public var frameDuration: TimeInterval = 0;
+  public fileprivate(set) var timestampPrevFrame: CFTimeInterval?;
+  public fileprivate(set) var timestampLastFrame: CFTimeInterval?;
+  
+  public fileprivate(set) var frameCounter = 0;
+  public fileprivate(set) var elapsedTime: TimeInterval = 0;
+  public fileprivate(set) var frameDuration: TimeInterval = 0;
   
   public var shouldPauseUntilUpdateFinishes: Bool = false;
   
@@ -86,8 +88,6 @@ public class InLineDisplayLink {
       target: target,
       selector: #selector(DisplayLinkTarget._updateBlock(_:))
     );
-    
-    self.timestampStart = CACurrentMediaTime();
     
     self.displayLink = displayLink;
     target.parent = self;
@@ -137,7 +137,15 @@ public class InLineDisplayLink {
       return;
     };
     
-    self.timestampStart = CACurrentMediaTime();
+    self.isExplicitlyPaused = false;
+    self.displayLink.isPaused = false;
+    
+    let didRestart = self.pendingRestart;
+    self.pendingRestart = false;
+    
+    if self.timestampStart == nil {
+      self.timestampStart = CACurrentMediaTime();
+    };
     
     self.displayLink.add(
       to: self.runloop,
@@ -150,7 +158,8 @@ public class InLineDisplayLink {
     self.delegates.invoke {
       $0.notifyOnDisplayLinkStarted(
         sender: self,
-        displayLink: self.displayLink
+        displayLink: self.displayLink,
+        didRestart: didRestart
       );
     };
   };
@@ -163,7 +172,8 @@ public class InLineDisplayLink {
   
   public func restart(){
     self.stop();
-
+    
+    self.timestampStart = nil;
     self.timestampFirstFrame = nil;
     self.timestampPrevFrame = nil;
     self.timestampLastFrame = nil;
@@ -172,6 +182,7 @@ public class InLineDisplayLink {
     self.elapsedTime = 0;
     self.frameDuration = 0;
     
+    self.pendingRestart = true;
     self.startIfNeeded();
   };
   
