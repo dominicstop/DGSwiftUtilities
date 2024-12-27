@@ -18,11 +18,16 @@ public class InLineDisplayLink {
 
   public typealias UpdateBlock = (_ context: Context) -> Void;
   
+  // MARK: - Properties
+  // ------------------
+  
   public var runloop: RunLoop;
   public var runloopMode: RunLoop.Mode;
   
   private weak var displayLinkTarget: DisplayLinkTarget?;
   public private(set) var displayLink: CADisplayLink;
+  
+  public var delegates: MulticastDelegate<InLineDisplayLinkDelegate> = .init();
   
   public var updateBlock: UpdateBlock?;
   public var startBlock: UpdateBlock?;
@@ -42,6 +47,10 @@ public class InLineDisplayLink {
   public var frameDuration: TimeInterval = 0;
   
   public var shouldPauseUntilUpdateFinishes: Bool = false;
+  
+  // MARK: - Computed Properties
+  // ---------------------------
+  
   public var frameTimestampDelta: TimeInterval {
     guard let timestampLastFrame = self.timestampLastFrame,
           let timestampPrevFrame = self.timestampPrevFrame
@@ -56,11 +65,15 @@ public class InLineDisplayLink {
     self.displayLink.isPaused || self.isExplicitlyPaused;
   };
   
+  // MARK: - Init
+  // ------------
+  
   public init(
     withRunloop runloop: RunLoop = .main,
     runLoopMode: RunLoop.Mode = .common,
     shouldRetain: Bool = false,
     shouldImmediatelyStart: Bool = true,
+    delegates initialDelegates: [InLineDisplayLinkDelegate]
   ) {
   
     self.runloop = runloop;
@@ -78,6 +91,10 @@ public class InLineDisplayLink {
     
     self.displayLink = displayLink;
     target.parent = self;
+    
+    initialDelegates.forEach {
+      self.delegates.add($0);
+    };
     
     if shouldImmediatelyStart {
       self.startIfNeeded();
@@ -99,6 +116,7 @@ public class InLineDisplayLink {
       runLoopMode: runLoopMode,
       shouldRetain: shouldRetain,
       shouldImmediatelyStart: false,
+      delegates: []
     );
     
     self.updateBlock = updateBlock;
@@ -112,7 +130,8 @@ public class InLineDisplayLink {
   
   deinit {
     self.stop();
-  }
+  };
+  
   public func startIfNeeded(){
     guard !self.isRunning else {
       return;
@@ -127,6 +146,13 @@ public class InLineDisplayLink {
     
     self.isRunning = true;
     self.startBlock?((self, displayLink));
+    
+    self.delegates.invoke {
+      $0.notifyOnDisplayLinkStarted(
+        sender: self,
+        displayLink: self.displayLink
+      );
+    };
   };
   
   public func stop(){
@@ -150,13 +176,32 @@ public class InLineDisplayLink {
   };
   
   public func pause() {
+    self.isExplicitlyPaused = true;
     self.displayLink.isPaused = true;
-  }
+    
+    self.delegates.invoke {
+      $0.notifyOnDisplayLinkPaused(
+        sender: self,
+        displayLink: self.displayLink
+      );
+    };
+  };
   
   public func resume() {
+    self.isExplicitlyPaused = false;
     self.displayLink.isPaused = false;
-  }
+    
+    self.delegates.invoke {
+      $0.notifyOnDisplayLinkStarted(
+        sender: self,
+        displayLink: self.displayLink
+      );
+    };
+  };
 }
+
+// MARK: - DisplayLinkTarget
+// -------------------------
 
 /// Retained by CADisplayLink.
 fileprivate class DisplayLinkTarget {
@@ -236,4 +281,4 @@ fileprivate class DisplayLinkTarget {
       sender.isPaused = false;
     };
   };
-}
+};
