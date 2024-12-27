@@ -13,6 +13,17 @@ import ObjectiveC.runtime
 /// 
 public final class ClassRegistry {
 
+  public enum ClassListRetrievalMode: String {
+    
+    /// Use: `objc_getClassList`
+    case classList;
+    
+    /// Use: `objc_copyClassList`
+    case copyClassList;
+    
+    case custom;
+  };
+
   public typealias CompletionHandler = (
     _ sender: ClassRegistry,
     _ allClasses: [AnyClass]
@@ -32,9 +43,13 @@ public final class ClassRegistry {
   // MARK: - Public Properties
   // -------------------------
   
+  public var classListRetrievalMode: ClassListRetrievalMode = .classList;
+  
   public var allClassesCached: [AnyClass]?;
   
   public var loadingState: LoadingState = .notLoaded;
+  
+  var customClassListGetter: Optional<() -> [AnyClass]> = nil;
   
   // MARK: -
   // -------
@@ -51,7 +66,10 @@ public final class ClassRegistry {
     self._completionBlockQueue = [];
   };
   
-  public func loadClasses(completion completionBlock: CompletionHandler?){
+  public func loadClasses(
+    preferredQos: DispatchQoS.QoSClass = .background,
+    completion completionBlock: CompletionHandler?
+  ){
     if let completionBlock = completionBlock {
       self._completionBlockQueue.append(completionBlock);
     };
@@ -67,17 +85,31 @@ public final class ClassRegistry {
     self.allClassesCached = nil;
     self.loadingState = .loading;
     
-    DispatchQueue.global(qos: .background).async {
-      let classes = Self.getAllClassesSync();
-      
-      self.allClassesCached = classes;
-      self.loadingState = .loaded;
-      
-      #if DEBUG
-      self._debugTimesLoaded += 1;
-      #endif
-      
+    DispatchQueue.global(qos: preferredQos).async {
+      let classes: [AnyClass];
+    
+      switch self.classListRetrievalMode {
+        case .custom:
+          guard let customClassListGetter = self.customClassListGetter else {
+            fallthrough;
+          };
+          classes = customClassListGetter();
+          
+        case .classList:
+          classes = Self.getAllClassesSync();
+          
+        case .copyClassList:
+          classes = Self.getCopyOfClassesSync();
+      };
+    
       DispatchQueue.main.async {
+        self.allClassesCached = classes;
+        self.loadingState = .loaded;
+        
+        #if DEBUG
+        self._debugTimesLoaded += 1;
+        #endif
+        
         self._notifyForCompletion(allClasses: classes);
       }
     };
@@ -134,26 +166,21 @@ public extension ClassRegistry {
     return classes;
   };
   
-  static func getCopyOfClassesSync() -> [ClassMetadata] {
+  static func getCopyOfClassesSync() -> [AnyClass] {
     var classListCountRaw = UInt32(0);
     
     guard let classListPointer = objc_copyClassList(&classListCountRaw) else {
       return [];
     };
     
-    var classMetadataList: [ClassMetadata] = [];
+    var classList: [AnyClass] = [];
     let classListCount = Int(classListCountRaw);
     
     for classIndex in 0 ..< classListCount {
       let classObject: AnyClass = classListPointer[classIndex];
-      
-      guard let classMetadata = ClassMetadata(classObject) else {
-        continue;
-      };
-      
-      classMetadataList.append(classMetadata);
+      classList.append(classObject);
     };
     
-    return classMetadataList;
+    return classList;
   };
 };
