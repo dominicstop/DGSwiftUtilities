@@ -247,4 +247,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     };
     #endif
   };
+  
+  func testClassRegistry2(){
+    ClassRegistry.shared.classListRetrievalMode = .copyClassList;
+    for index in 0..<100 {
+      ClassRegistry.shared.loadClasses() { sender, allClasses in
+        print(
+          "SceneDelegate.testClassRegistry2",
+          "\n - classListRetrievalMode:", sender.classListRetrievalMode,
+          "\n - invocationCount:", index + 1,
+          "\n - _debugTimesLoaded:", sender._debugTimesLoaded,
+          "\n - allClasses count:", allClasses.count,
+          "\n"
+        );
+      };
+    };
+  };
 };
