@@ -18,13 +18,14 @@ public class InLineDisplayLink {
 
   public typealias UpdateBlock = (_ context: Context) -> Void;
   
+  public var runloop: RunLoop;
+  public var runloopMode: RunLoop.Mode;
   private weak var displayLinkTarget: DisplayLinkTarget?;
+  public private(set) var displayLink: CADisplayLink;
   
   public var updateBlock: UpdateBlock?;
   public var startBlock: UpdateBlock?;
   public var endBlock: UpdateBlock?;
-  
-  public private(set) var displayLink: CADisplayLink;
   
   public var isRunning: Bool = false;
   public var frameCounter = 0;
@@ -56,12 +57,14 @@ public class InLineDisplayLink {
   public init(
     withRunloop runloop: RunLoop = .main,
     runLoopMode: RunLoop.Mode = .common,
-    shouldRetain: Bool = false
+    shouldRetain: Bool = false,
+    shouldImmediatelyStart: Bool = true,
   ) {
-    let target = DisplayLinkTarget(
-      shouldRetainParent: shouldRetain
-    );
-    
+  
+    self.runloop = runloop;
+    self.runloopMode = runLoopMode;
+  
+    let target = DisplayLinkTarget(shouldRetainParent: shouldRetain);
     self.displayLinkTarget = target;
   
     let displayLink = CADisplayLink(
@@ -74,48 +77,65 @@ public class InLineDisplayLink {
     self.displayLink = displayLink;
     target.parent = self;
     
-    displayLink.add(to: runloop, forMode: runLoopMode);
+    if shouldImmediatelyStart {
+      self.startIfNeeded();
+    };
   };
   
   public convenience init(
     withRunloop runloop: RunLoop = .main,
     runLoopMode: RunLoop.Mode = .common,
     shouldRetain: Bool = false,
+    shouldImmediatelyStart: Bool = true,
     updateBlock: @escaping UpdateBlock,
     startBlock: Optional<UpdateBlock> = nil,
     endBlock: Optional<UpdateBlock> = nil
   ) {
+  
     self.init(
       withRunloop: runloop,
       runLoopMode: runLoopMode,
-      shouldRetain: shouldRetain
+      shouldRetain: shouldRetain,
+      shouldImmediatelyStart: false,
     );
-  
-    self.displayLink = displayLink;
+    
     self.updateBlock = updateBlock;
     self.startBlock = startBlock;
     self.endBlock = endBlock;
     
-    startBlock?((self, displayLink));
+    if shouldImmediatelyStart {
+      self.startIfNeeded();
+    };
   };
   
   deinit {
     self.stop();
   }
+  public func startIfNeeded(){
+    guard !self.isRunning else {
+      return;
+    };
+    
+    self.timestampStart = CACurrentMediaTime();
+    
+    self.displayLink.add(
+      to: self.runloop,
+      forMode: self.runloopMode
+    );
+    
+    self.isRunning = true;
+    self.startBlock?((self, displayLink));
+  };
   
   public func stop(){
-    self.displayLink.invalidate();
     self.isRunning = false;
+    self.displayLink.invalidate();
     self.endBlock?((self, self.displayLink));
   };
   
-  public func restart(
-    withRunloop runloop: RunLoop = .main,
-    runLoopMode: RunLoop.Mode = .common
-  ){
+  public func restart(){
     self.stop();
-    
-    self.timestampStart = CACurrentMediaTime();
+
     self.timestampFirstFrame = nil;
     self.timestampPrevFrame = nil;
     self.timestampLastFrame = nil;
@@ -124,8 +144,7 @@ public class InLineDisplayLink {
     self.elapsedTime = 0;
     self.frameDuration = 0;
     
-    self.startBlock?((self, self.displayLink));
-    self.displayLink.add(to: runloop, forMode: runLoopMode);
+    self.startIfNeeded();
   };
   
   public func pause() {
