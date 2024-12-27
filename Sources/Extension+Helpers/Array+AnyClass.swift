@@ -8,9 +8,15 @@
 import Foundation
 
 
-extension Array where Element == AnyClass {
+public extension Array where Element == AnyClass {
 
-  public func getClasses(descendantOfClass someClass: AnyClass) -> [AnyClass] {
+  var asClassMetadata: [ClassMetadata] {
+    self.compactMap {
+      .init($0);
+    };
+  };
+
+  func getClasses(descendantOfClass someClass: AnyClass) -> [AnyClass] {
     self.filter {
 			var ancestor: AnyClass? = $0;
       
@@ -26,7 +32,7 @@ extension Array where Element == AnyClass {
 		};
 	};
  
-  public func getClasses(
+  func getClasses(
     conformingToProtocol someProtocol: Protocol
   ) -> [AnyClass] {
 		self.filter {
@@ -44,7 +50,7 @@ extension Array where Element == AnyClass {
 		};
 	};
   
-  public func getClasses<T>(ofType someType: T.Type) -> [AnyClass] {
+  func getClasses<T>(ofType someType: T.Type) -> [AnyClass] {
 		return self.filter { $0 is T };
 	};
 };
