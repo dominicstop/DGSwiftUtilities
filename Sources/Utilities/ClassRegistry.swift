@@ -6,13 +6,16 @@
 //
 
 import Foundation
+import ObjectiveC.runtime
 
 
+/// Should only be used for debugging...
+/// 
 public final class ClassRegistry {
 
   public typealias CompletionHandler = (
     _ sender: ClassRegistry,
-    _ allClasses:  [AnyClass]
+    _ allClasses: [AnyClass]
   ) -> Void;
   
   public static var shared: ClassRegistry = .init();
@@ -97,8 +100,17 @@ public final class ClassRegistry {
 public extension ClassRegistry {
 
   static func getAllClassesSync() -> [AnyClass] {
-    let numberOfClasses = Int(objc_getClassList(nil, 0));
-    guard numberOfClasses > 0 else { return [] };
+  
+    let numberOfClassesRaw = objc_getClassList(
+      /* buffer:       */ nil,
+      /* buffer count: */ 0
+    );
+
+    guard numberOfClassesRaw > 0 else {
+      return [];
+    };
+    
+    let numberOfClasses = Int(numberOfClassesRaw);
 
     let classesPtr =
       UnsafeMutablePointer<AnyClass>.allocate(capacity: numberOfClasses);
@@ -120,5 +132,28 @@ public extension ClassRegistry {
     };
 
     return classes;
+  };
+  
+  static func getCopyOfClassesSync() -> [ClassMetadata] {
+    var classListCountRaw = UInt32(0);
+    
+    guard let classListPointer = objc_copyClassList(&classListCountRaw) else {
+      return [];
+    };
+    
+    var classMetadataList: [ClassMetadata] = [];
+    let classListCount = Int(classListCountRaw);
+    
+    for classIndex in 0 ..< classListCount {
+      let classObject: AnyClass = classListPointer[classIndex];
+      
+      guard let classMetadata = ClassMetadata(classObject) else {
+        continue;
+      };
+      
+      classMetadataList.append(classMetadata);
+    };
+    
+    return classMetadataList;
   };
 };
