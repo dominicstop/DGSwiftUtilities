@@ -20,6 +20,7 @@ public class InLineDisplayLink {
   
   public var runloop: RunLoop;
   public var runloopMode: RunLoop.Mode;
+  
   private weak var displayLinkTarget: DisplayLinkTarget?;
   public private(set) var displayLink: CADisplayLink;
   
@@ -28,7 +29,7 @@ public class InLineDisplayLink {
   public var endBlock: UpdateBlock?;
   
   public var isRunning: Bool = false;
-  public var frameCounter = 0;
+  public var isExplicitlyPaused: Bool = false;
   
   public var timestampStart: CFTimeInterval;
   public var timestampFirstFrame: CFTimeInterval?;
@@ -36,6 +37,7 @@ public class InLineDisplayLink {
   public var timestampPrevFrame: CFTimeInterval?;
   public var timestampLastFrame: CFTimeInterval?;
   
+  public var frameCounter = 0;
   public var elapsedTime: TimeInterval = 0;
   public var frameDuration: TimeInterval = 0;
   
@@ -51,7 +53,7 @@ public class InLineDisplayLink {
   };
   
   public var isPaused: Bool {
-    self.displayLink.isPaused;
+    self.displayLink.isPaused || self.isExplicitlyPaused;
   };
   
   public init(
@@ -210,6 +212,7 @@ fileprivate class DisplayLinkTarget {
     let frameDuration = sender.targetTimestamp - sender.timestamp;
     parent.frameDuration = frameDuration;
     
+    // temp. pause timer
     if parent.shouldPauseUntilUpdateFinishes {
       sender.isPaused = true;
     };
@@ -219,7 +222,17 @@ fileprivate class DisplayLinkTarget {
       displayLink: sender
     ));
     
-    if parent.shouldPauseUntilUpdateFinishes {
+    parent.delegates.invoke {
+      $0.notifyOnDisplayLinkTick(
+        sender: parent,
+        displayLink: sender
+      );
+    };
+    
+    // undo temp. pause (if not paused externally)
+    if parent.shouldPauseUntilUpdateFinishes,
+      !parent.isExplicitlyPaused
+    {
       sender.isPaused = false;
     };
   };
