@@ -38,6 +38,7 @@ public class InLineDisplayLink {
   public var elapsedTime: TimeInterval = 0;
   public var frameDuration: TimeInterval = 0;
   
+  public var shouldPauseUntilUpdateFinishes: Bool = false;
   public var frameTimestampDelta: TimeInterval {
     guard let timestampLastFrame = self.timestampLastFrame,
           let timestampPrevFrame = self.timestampPrevFrame
@@ -190,9 +191,17 @@ fileprivate class DisplayLinkTarget {
     let frameDuration = sender.targetTimestamp - sender.timestamp;
     parent.frameDuration = frameDuration;
     
+    if parent.shouldPauseUntilUpdateFinishes {
+      sender.isPaused = true;
+    };
+    
     parent.updateBlock?((
       sender: parent,
       displayLink: sender
     ));
+    
+    if parent.shouldPauseUntilUpdateFinishes {
+      sender.isPaused = false;
+    };
   };
 }
