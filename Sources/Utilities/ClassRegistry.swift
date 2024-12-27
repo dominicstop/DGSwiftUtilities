@@ -173,11 +173,18 @@ public extension ClassRegistry {
       return [];
     };
     
-    var classList: [AnyClass] = [];
-    let classListCount = Int(classListCountRaw);
+    defer {
+      free(UnsafeMutableRawPointer(classListPointer));
+    };
     
-    for classIndex in 0 ..< classListCount {
-      let classObject: AnyClass = classListPointer[classIndex];
+    let classListCount = Int(classListCountRaw);
+    let classListBuffer = UnsafeBufferPointer(
+      start: classListPointer,
+      count: classListCount
+    );
+    
+    var classList: [AnyClass] = [];
+    for classObject in classListBuffer {
       classList.append(classObject);
     };
     
