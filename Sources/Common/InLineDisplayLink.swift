@@ -170,7 +170,7 @@ public class InLineDisplayLink {
     self.endBlock?((self, self.displayLink));
   };
   
-  public func restart(){
+  public func resetAndRestart(){
     self.stop();
     
     self.timestampStart = nil;
