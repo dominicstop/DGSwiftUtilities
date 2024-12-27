@@ -20,7 +20,7 @@ public class InLineDisplayLink {
   
   private weak var displayLinkTarget: DisplayLinkTarget?;
   
-  public var updateBlock: UpdateBlock;
+  public var updateBlock: UpdateBlock?;
   public var startBlock: UpdateBlock?;
   public var endBlock: UpdateBlock?;
   
@@ -55,12 +55,8 @@ public class InLineDisplayLink {
   public init(
     withRunloop runloop: RunLoop = .main,
     runLoopMode: RunLoop.Mode = .common,
-    shouldRetain: Bool = false,
-    updateBlock: @escaping UpdateBlock,
-    startBlock: Optional<UpdateBlock> = nil,
-    endBlock: Optional<UpdateBlock> = nil
+    shouldRetain: Bool = false
   ) {
-  
     let target = DisplayLinkTarget(
       shouldRetainParent: shouldRetain
     );
@@ -75,15 +71,32 @@ public class InLineDisplayLink {
     self.timestampStart = CACurrentMediaTime();
     
     self.displayLink = displayLink;
+    target.parent = self;
+    
+    displayLink.add(to: runloop, forMode: runLoopMode);
+  };
+  
+  public convenience init(
+    withRunloop runloop: RunLoop = .main,
+    runLoopMode: RunLoop.Mode = .common,
+    shouldRetain: Bool = false,
+    updateBlock: @escaping UpdateBlock,
+    startBlock: Optional<UpdateBlock> = nil,
+    endBlock: Optional<UpdateBlock> = nil
+  ) {
+    self.init(
+      withRunloop: runloop,
+      runLoopMode: runLoopMode,
+      shouldRetain: shouldRetain
+    );
+  
+    self.displayLink = displayLink;
     self.updateBlock = updateBlock;
     self.startBlock = startBlock;
     self.endBlock = endBlock;
     
-    target.parent = self;
-    
     startBlock?((self, displayLink));
-    displayLink.add(to: runloop, forMode: runLoopMode);
-  }
+  };
   
   deinit {
     self.stop();
@@ -177,7 +190,7 @@ fileprivate class DisplayLinkTarget {
     let frameDuration = sender.targetTimestamp - sender.timestamp;
     parent.frameDuration = frameDuration;
     
-    parent.updateBlock((
+    parent.updateBlock?((
       sender: parent,
       displayLink: sender
     ));
