@@ -76,6 +76,10 @@ public extension Dictionary where Key == String {
     try self.getNumber(forKey: key);
   };
   
+  func getValue(forKey key: String) throws -> Bool {
+    try self.getBool(forKey: key);
+  };
+  
   // MARK: - Get Value (Explicit Primitives w/ Fallback)
   // ---------------------------------------------------
   
@@ -105,6 +109,13 @@ public extension Dictionary where Key == String {
     fallbackValue: Float
   ) -> Float {
     (try? self.getNumber(forKey: key)) ?? fallbackValue;
+  };
+  
+  func getValue(
+    forKey key: String,
+    fallbackValue: Bool
+  ) -> Bool {
+    (try? self.getBool(forKey: key)) ?? fallbackValue;
   };
   
   // MARK: - Get Value (Container Types)
@@ -514,6 +525,41 @@ public extension Dictionary where Key == String {
     };
   };
   
+  func getBool(forKey key: String) throws -> Bool {
+    let dictValue = self[key];
+    
+    guard let dictValue = dictValue else {
+      throw GenericError(
+        errorCode: .unexpectedNilValue,
+        description: "corresponding key in dict has no value",
+        extraDebugValues: [
+          "key": key
+        ]
+      );
+    };
+    
+    switch dictValue {
+      case let boolValue as Bool:
+        return boolValue;
+        
+      case let objcNumber as NSNumber:
+        return objcNumber.boolValue;
+        
+      case let intValue as Int:
+        return intValue > 0;
+    
+      default:
+        throw GenericError(
+          errorCode: .invalidValue,
+          description: "Unable to convert dictValue to string",
+          extraDebugValues: [
+            "key": key,
+            "dictValue": dictValue,
+          ]
+        );
+    };
+  };
+  
   func getColor(forKey key: String) throws -> UIColor {
     guard let colorValue = self[key] else {
       throw GenericError(
@@ -665,6 +711,15 @@ public extension Dictionary where Key == String {
   ) -> String {
     
     let value = try? self.getString(forKey: key);
+    return value ?? fallbackValue;
+  };
+  
+  func getBool(
+    forKey key: String,
+    fallbackValue: Bool
+  ) -> Bool {
+    
+    let value = try? self.getBool(forKey: key);
     return value ?? fallbackValue;
   };
   
