@@ -9,17 +9,40 @@ import UIKit
 
 
 public extension Dictionary where Key == String {
+
+  @available(*, deprecated, renamed: "getValueAndCast")
+  func getValue<T>(
+    forKey key: String,
+    type: T.Type = T.self
+  ) throws -> T {
+    
+    try self.getValueAndCast(forKey: key);
+  };
   
-  @available(*, deprecated, renamed: "getValueFromDictionary")
+  @available(*, deprecated, renamed: "getValueAndCast")
+  func getValue<T>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+  
+    self.getValueAndCast(
+      forKey: key,
+      type: type,
+      fallbackValue: fallbackValue
+    );
+  };
+  
+  @available(*, deprecated, renamed: "getValueAndCast")
   func getValueFromDictionary<T>(
     forKey key: String,
     type: T.Type = T.self
   ) throws -> T {
     
-    try self.getValue(forKey: key, type: type);
+    try self.getValueAndCast(forKey: key, type: type);
   };
   
-  @available(*, deprecated, renamed: "getValueFromDictionary")
+  @available(*, deprecated, renamed: "getValue")
   func getValueFromDictionary<T: InitializableFromDictionary>(
     forKey key: String,
     type: T.Type = T.self
@@ -28,7 +51,7 @@ public extension Dictionary where Key == String {
     try self.getValue(forKey: key, type: type);
   };
   
-  @available(*, deprecated, renamed: "getValueFromDictionary")
+  @available(*, deprecated, renamed: "getValue")
   func getValueFromDictionary<T: CreatableFromDictionary>(
     forKey key: String,
     type: T.Type = T.self
@@ -37,7 +60,7 @@ public extension Dictionary where Key == String {
     try self.getValue(forKey: key, type: type);
   };
   
-  @available(*, deprecated, renamed: "getValueFromDictionary")
+  @available(*, deprecated, renamed: "getValue")
   func getValueFromDictionary<T: InitializableFromString>(
     forKey key: String,
     type: T.Type = T.self
@@ -46,7 +69,7 @@ public extension Dictionary where Key == String {
     try self.getValue(forKey: key, type: type);
   }
   
-  @available(*, deprecated, renamed: "getValueFromDictionary")
+  @available(*, deprecated, renamed: "getValue")
   func getValueFromDictionary<T: OptionSet & InitializableFromString>(
     forKey key: String,
     type: T.Type = T.self
@@ -55,12 +78,12 @@ public extension Dictionary where Key == String {
     try self.getValue(forKey: key, type: type);
   }
   
-  @available(*, deprecated, renamed: "getColorFromDictionary")
+  @available(*, deprecated, renamed: "getValue")
   func getColorFromDictionary(forKey key: String) throws -> UIColor {
     try self.getColor(forKey: key);
   };
   
-  @available(*, deprecated, renamed: "xxx")
+  @available(*, deprecated, renamed: "getEnum")
   func getEnumFromDictionary<T: RawRepresentable<String>>(
     forKey key: String,
     type: T.Type = T.self
@@ -69,7 +92,7 @@ public extension Dictionary where Key == String {
     try self.getEnum(forKey: key, type: type);
   };
   
-  @available(*, deprecated, renamed: "getEnumFromDictionary")
+  @available(*, deprecated, renamed: "getEnum")
   func getEnumFromDictionary<
     T: EnumCaseStringRepresentable & CaseIterable
   >(
@@ -80,7 +103,7 @@ public extension Dictionary where Key == String {
     try self.getEnum(forKey: key, type: type);
   };
   
-  @available(*, deprecated, renamed: "getKeyPathFromDictionary")
+  @available(*, deprecated, renamed: "getKeyPath")
   func getKeyPathFromDictionary<
     KeyPathRoot: StringKeyPathMapping,
     KeyPathValue
@@ -97,7 +120,7 @@ public extension Dictionary where Key == String {
     );
   };
   
-  @available(*, deprecated, renamed: "getValueFromDictionary")
+  @available(*, deprecated, renamed: "getValue")
   func getValueFromDictionary<T: RawRepresentable, U>(
     forKey key: String,
     type: T.Type = T.self,
@@ -111,7 +134,7 @@ public extension Dictionary where Key == String {
     );
   };
   
-  @available(*, deprecated, renamed: "getValueFromDictionary")
+  @available(*, deprecated, renamed: "getValue")
   func getValueFromDictionary<T>(
     forKey key: String,
     type: T.Type = T.self,
@@ -125,7 +148,7 @@ public extension Dictionary where Key == String {
     );
   };
   
-  @available(*, deprecated, renamed: "getValueFromDictionary")
+  @available(*, deprecated, renamed: "getValue")
   func getValueFromDictionary<T: RawRepresentable, U>(
     forKey key: String,
     type: T.Type = T.self,

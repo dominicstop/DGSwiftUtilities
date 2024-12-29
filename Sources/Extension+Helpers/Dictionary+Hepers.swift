@@ -10,10 +10,13 @@ import UIKit
 
 
 public extension Dictionary where Key == String {
-  
-  func getValue<T>(
+
+  // MARK: - Get Value (Via Explicit Casting)
+  // ----------------------------------------
+
+  func getValueAndCast<T>(
     forKey key: String,
-    type: T.Type = T.self
+    type: T.Type  = T.self
   ) throws -> T {
   
     let dictValue = self[key];
@@ -44,16 +47,129 @@ public extension Dictionary where Key == String {
     return value;
   };
   
+  func getValueAndCast<T>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+  
+    let value = try? self.getValueAndCast(forKey: key, type: type);
+    return value ?? fallbackValue;
+  };
+  
+  // MARK: - Get Value (Explicit Primitives)
+  // ---------------------------------------
+  
+  func getValue(forKey key: String) throws -> String {
+    try self.getString(forKey: key);
+  };
+  
+  func getValue(forKey key: String) throws -> Int {
+    try self.getInt(forKey: key);
+  };
+  
+  func getValue(forKey key: String) throws -> Double {
+    try self.getNumber(forKey: key);
+  };
+  
+  func getValue(forKey key: String) throws -> Float {
+    try self.getNumber(forKey: key);
+  };
+  
+  // MARK: - Get Value (Explicit Primitives w/ Fallback)
+  // ---------------------------------------------------
+  
+  func getValue(
+    forKey key: String,
+    fallbackValue: String
+  ) -> String {
+    (try? self.getString(forKey: key)) ?? fallbackValue;
+  };
+  
+  func getValue(
+    forKey key: String,
+    fallbackValue: Int
+  ) -> Int {
+    (try? self.getInt(forKey: key)) ?? fallbackValue;
+  };
+  
+  func getValue(
+    forKey key: String,
+    fallbackValue: Double
+  ) -> Double {
+    (try? self.getNumber(forKey: key)) ?? fallbackValue;
+  };
+  
+  func getValue(
+    forKey key: String,
+    fallbackValue: Float
+  ) -> Float {
+    (try? self.getNumber(forKey: key)) ?? fallbackValue;
+  };
+  
+  // MARK: - Get Value (Container Types)
+  // -----------------------------------
+  
+  func getValue(
+    forKey key: String,
+    allowMissingValues: Bool = true
+  ) throws -> [String] {
+    try self.getArray(forKey: key, allowMissingValues: allowMissingValues);
+  };
+  
+  func getValue<T: BinaryInteger>(
+    forKey key: String,
+    elementType: T.Type = T.self,
+    allowMissingValues: Bool = true
+  ) throws -> [T] {
+    try self.getArray(forKey: key);
+  };
+  
+  func getValue<T: BinaryFloatingPoint>(
+    forKey key: String,
+    elementType: T.Type = T.self
+  ) throws -> [T] {
+    try self.getArray(forKey: key);
+  };
+  
+  func getValue<T: RawRepresentable<String>>(
+    forKey key: String,
+    elementType: T.Type = T.self
+  ) throws -> [T] {
+    try self.getArray(forKey: key);
+  };
+  
+  func getValue<T: InitializableFromString>(
+    forKey key: String,
+    elementType: T.Type = T.self
+  ) throws -> [T] {
+    try self.getArray(forKey: key);
+  };
+  
+  func getValue(forKey key: String) throws -> [String: Any] {
+    try self.getDict(forKey: key);
+  };
+  
+  // MARK: - Get Value (Explicit Non-Primitive Types)
+  // ------------------------------------------------
+  
+  func getValue(forKey key: String) throws -> UIColor {
+    try self.getColor(forKey: key);
+  };
+  
+  func getValue(forKey key: String) throws -> CGColor {
+    try self.getColor(forKey: key).cgColor;
+  };
+  
+  // MARK: - Get Value (Generics)
+  // ----------------------------
+  
   func getValue<T: InitializableFromDictionary>(
     forKey key: String,
     type: T.Type = T.self
   ) throws -> T {
-  
-    let dictValue = try self.getValue(
-      forKey: key,
-      type: Dictionary<String, Any>.self
-    );
     
+    let dictValue = try self.getDict(forKey: key);
     return try T.init(fromDict: dictValue);
   };
   
@@ -62,11 +178,7 @@ public extension Dictionary where Key == String {
     type: T.Type = T.self
   ) throws -> T {
   
-    let dictValue = try self.getValue(
-      forKey: key,
-      type: Dictionary<String, Any>.self
-    );
-    
+    let dictValue = try self.getDict(forKey: key);
     return try T.create(fromDict: dictValue);
   };
   
@@ -75,11 +187,7 @@ public extension Dictionary where Key == String {
     type: T.Type = T.self
   ) throws -> T {
   
-    let dictValue = try self.getValue(
-      forKey: key,
-      type: String.self
-    );
-    
+    let dictValue = try self.getString(forKey: key);
     return try T.init(fromString: dictValue);
   };
   
@@ -88,9 +196,9 @@ public extension Dictionary where Key == String {
     type: T.Type = T.self
   ) throws -> T {
   
-    let stringValues = try self.getValue(
+    let stringValues = try self.getArray(
       forKey: key,
-      type: [String].self
+      elementType: String.self
     );
     
     var optionSets = stringValues.compactMap {
@@ -113,27 +221,13 @@ public extension Dictionary where Key == String {
     };
   };
   
-  func getValue<T>(
-    forKey key: String,
-    type: T.Type = T.self,
-    fallbackValue: T
-  ) -> T {
-  
-    let value = try? self.getValue(
-      forKey: key,
-      type: type
-    );
-    
-    return  value ?? fallbackValue;
-  };
-  
   func getValue<T: RawRepresentable, U>(
     forKey key: String,
     type: T.Type = T.self,
     rawValueType: U.Type = T.RawValue.self
   ) throws -> T where T: RawRepresentable<U> {
   
-    let rawValue = try? self.getValue(
+    let rawValue = try? self.getValueAndCast(
       forKey: key,
       type: U.self
     );
@@ -166,6 +260,85 @@ public extension Dictionary where Key == String {
     return value;
   };
   
+  func getValue<T: BinaryInteger>(
+    forKey key: String,
+    type: T.Type = T.self
+  ) throws -> T {
+    
+    try self.getNumber(forKey: key, type: type);
+  };
+  
+  func getValue<T: BinaryFloatingPoint>(
+    forKey key: String,
+    type: T.Type = T.self
+  ) throws -> T {
+  
+    try self.getNumber(forKey: key, type: type);
+  };
+  
+  // MARK: - Get Value (Generics w/ Fallback)
+  // ----------------------------------------
+  
+  func getValue<T: InitializableFromDictionary>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+  
+    let value = try? self.getValue(forKey: key, type: T.self);
+    return value ?? fallbackValue;
+  };
+  
+  func getValue<T: CreatableFromDictionary>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+  
+    let value = try? self.getValue(forKey: key, type: T.self);
+    return value ?? fallbackValue;
+  };
+  
+  func getValue<T: InitializableFromString>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+  
+    let value = try? self.getValue(forKey: key, type: T.self);
+    return value ?? fallbackValue;
+  };
+  
+  func getValue<T: OptionSet & InitializableFromString>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+  
+    let value = try? self.getValue(forKey: key, type: T.self);
+    return value ?? fallbackValue;
+  };
+  
+  func getValue<T: BinaryInteger>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+  
+    let value = try? self.getValue(forKey: key, type: T.self);
+    return value ?? fallbackValue;
+  };
+  
+  func getValue<T: BinaryFloatingPoint>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+  
+    let value = try? self.getValue(forKey: key, type: T.self);
+    return value ?? fallbackValue;
+  };
+  
   func getValue<T: RawRepresentable, U>(
     forKey key: String,
     type: T.Type = T.self,
@@ -185,6 +358,9 @@ public extension Dictionary where Key == String {
     
     return enumValue;
   };
+  
+  // MARK: - Explicit Getters
+  // ------------------------
   
   func getNumber<T: BinaryInteger>(
     forKey key: String,
@@ -225,21 +401,7 @@ public extension Dictionary where Key == String {
         );
     };
   };
-  
-  func getNumber<T: BinaryInteger>(
-    forKey key: String,
-    type: T.Type = T.self,
-    fallbackValue: T
-  ) -> T {
-  
-    let value = try? self.getNumber(
-      forKey: key,
-      type: type
-    );
-    
-    return value ?? fallbackValue;
-  };
-  
+
   func getNumber<T: BinaryFloatingPoint>(
     forKey key: String,
     type: T.Type = T.self
@@ -280,21 +442,11 @@ public extension Dictionary where Key == String {
     };
   };
   
-  func getNumber<T: BinaryFloatingPoint>(
+  func getInt<T: BinaryInteger>(
     forKey key: String,
-    type: T.Type = T.self,
-    fallbackValue: T
-  ) -> T {
+    type: T.Type = T.self
+  ) throws -> T {
   
-    let value = try? self.getNumber(
-      forKey: key,
-      type: type
-    );
-    
-    return value ?? fallbackValue;
-  };
-  
-  func getInt(forKey key: String) throws -> Int {
     let dictValue = self[key];
     
     guard let dictValue = dictValue else {
@@ -302,14 +454,15 @@ public extension Dictionary where Key == String {
         errorCode: .unexpectedNilValue,
         description: "corresponding key in dict has no value",
         extraDebugValues: [
-          "key": key
+          "key": key,
+          "type": type,
         ]
       );
     };
     
     switch dictValue {
       case let number as NSNumber:
-        return number.intValue;
+        return .init(number.intValue);
         
       case let number as any BinaryInteger:
         return .init(number);
@@ -329,13 +482,36 @@ public extension Dictionary where Key == String {
     };
   };
   
-  func getInt(
-    forKey key: String,
-    fallbackValue: Int
-  ) -> Int {
+  func getString(forKey key: String) throws -> String {
+    let dictValue = self[key];
     
-    let value = try? self.getInt(forKey: key);
-    return value ?? fallbackValue;
+    guard let dictValue = dictValue else {
+      throw GenericError(
+        errorCode: .unexpectedNilValue,
+        description: "corresponding key in dict has no value",
+        extraDebugValues: [
+          "key": key
+        ]
+      );
+    };
+    
+    switch dictValue {
+      case let swiftString as String:
+        return swiftString;
+        
+      case let objcString as NSString:
+        return objcString as String;
+    
+      default:
+        throw GenericError(
+          errorCode: .invalidValue,
+          description: "Unable to convert dictValue to string",
+          extraDebugValues: [
+            "key": key,
+            "dictValue": dictValue,
+          ]
+        );
+    };
   };
   
   func getColor(forKey key: String) throws -> UIColor {
@@ -367,15 +543,6 @@ public extension Dictionary where Key == String {
     return color;
   };
   
-  func getColor(
-    forKey key: String,
-    fallbackValue: UIColor
-  ) -> UIColor {
-    
-    let value = try? self.getColor(forKey: key);
-    return value ?? fallbackValue;
-  };
-  
   func getEnum<T: RawRepresentable<String>>(
     forKey key: String,
     type: T.Type = T.self
@@ -394,6 +561,17 @@ public extension Dictionary where Key == String {
         ]
       );
     };
+    
+    return value;
+  };
+  
+  func getEnum<T: InitializableFromString>(
+    forKey key: String,
+    type: T.Type = T.self
+  ) throws -> T {
+  
+    let dictValue: String = try self.getValue(forKey: key);
+    let value = try T.init(fromString: dictValue)
     
     return value;
   };
@@ -440,6 +618,117 @@ public extension Dictionary where Key == String {
     );
   };
   
+  // MARK: - Explicit Getters (w/ Fallback)
+  // --------------------------------------
+  
+  func getNumber<T: BinaryInteger>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+  
+    let value = try? self.getNumber(
+      forKey: key,
+      type: type
+    );
+    
+    return value ?? fallbackValue;
+  };
+  
+  func getNumber<T: BinaryFloatingPoint>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+  
+    let value = try? self.getNumber(
+      forKey: key,
+      type: type
+    );
+    
+    return value ?? fallbackValue;
+  };
+  
+  func getInt<T: BinaryInteger>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) throws -> T {
+    
+    let value = try? self.getInt(forKey: key, type: type);
+    return value ?? fallbackValue;
+  };
+  
+  func getString(
+    forKey key: String,
+    fallbackValue: String
+  ) -> String {
+    
+    let value = try? self.getString(forKey: key);
+    return value ?? fallbackValue;
+  };
+  
+  func getColor(
+    forKey key: String,
+    fallbackValue: UIColor
+  ) -> UIColor {
+    
+    let value = try? self.getColor(forKey: key);
+    return value ?? fallbackValue;
+  };
+  
+  func getEnum<T: RawRepresentable<String>>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+    
+    let value = try? self.getEnum(forKey: key, type: type);
+    return value ?? fallbackValue;
+  };
+  
+  func getEnum<T: InitializableFromString>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+    
+    let value = try? self.getEnum(forKey: key, type: type);
+    return value ?? fallbackValue;
+  };
+  
+  func getEnum<T: EnumCaseStringRepresentable & CaseIterable>(
+    forKey key: String,
+    type: T.Type = T.self,
+    fallbackValue: T
+  ) -> T {
+    
+    let value = try? self.getEnum(forKey: key, type: type);
+    return value ?? fallbackValue;
+  };
+  
+  func getKeyPath<
+    KeyPathRoot: StringKeyPathMapping,
+    KeyPathValue
+  >(
+    forKey key: String,
+    rootType: KeyPathRoot.Type,
+    valueType: KeyPathValue.Type,
+    fallbackValue: KeyPath<KeyPathRoot, KeyPathValue>
+  ) -> KeyPath<KeyPathRoot, KeyPathValue> {
+    
+    let value = try? self.getKeyPath(
+      forKey: key,
+      rootType: rootType,
+      valueType: valueType
+    );
+    
+    return value ?? fallbackValue;
+  };
+  
+  // MARK: - Explicit Getters For Container Types
+  // --------------------------------------------
+  
   func getArray<T>(
     forKey key: String,
     elementType: T.Type = T.self,
@@ -475,54 +764,11 @@ public extension Dictionary where Key == String {
       );
     };
 
-    return try rawArray.compactMap {
-      try transformBlock($0);
-    };
-  };
-  
-  func getArray<T>(
-    forKey key: String,
-    elementType: T.Type = T.self,
-    allowMissingValues: Bool = false
-  ) throws -> Array<T> {
-  
-    let dictValue = self[key];
-    
-    guard let dictValue = dictValue else {
-      throw GenericError(
-        errorCode: .unexpectedNilValue,
-        description: "Unable to get array from dictionary for key",
-        extraDebugValues: [
-          "key": key,
-          "elementType": elementType.self
-        ]
-      );
-    };
-    
-    if let array = dictValue as? Array<T> {
-      return array;
-    };
-    
-    guard let rawArray = dictValue as? Array<Any> else {
-      throw GenericError(
-        errorCode: .typeCastFailed,
-        description: "Unable to parse array from dictionary for key",
-        extraDebugValues: [
-          "key": key,
-          "dictValue": dictValue,
-          "type": elementType.self
-        ]
-      );
-    };
-    
-    if allowMissingValues {
-      return rawArray.compactMap {
-        $0 as? T;
-      };
-    };
-    
-    return try rawArray.enumerated().map {
-      guard let value = $0.element as? T else {
+    return try rawArray.enumerated().compactMap {
+      do {
+        return try transformBlock($0.element);
+      
+      } catch {
         throw GenericError(
           errorCode: .typeCastFailed,
           description: "Unable to parse element from array",
@@ -534,30 +780,238 @@ public extension Dictionary where Key == String {
             "index": $0.offset,
             "rawArray": rawArray,
             "rawArrayCount": rawArray.count,
+            "innerError": error.localizedDescription,
           ]
         );
-      };
-      
-      return value;
+      }
     };
   };
-
+  
   func getArray<T>(
     forKey key: String,
     elementType: T.Type = T.self,
-    allowMissingValues: Bool = false,
-    fallbackValue: Array<T>
-  ) -> Array<T> {
+    allowMissingValues: Bool = true
+  ) throws -> Array<T> {
   
-    let value = try? self.getArray(
-      forKey: key,
-      elementType: elementType,
-      allowMissingValues: allowMissingValues
-    );
-    
-    return value ?? fallbackValue;
+    try self.getArray(forKey: key) {
+      switch ($0, allowMissingValues) {
+        case (let value as T, _):
+          return value;
+          
+        case (_, true):
+          return nil;
+        
+        default:
+          throw GenericError(
+            errorCode: .invalidValue,
+            description: "Unable to convert element",
+            extraDebugValues: [
+              "key": key,
+              "elementType": elementType,
+              "allowMissingValues": allowMissingValues,
+            ]
+          );
+      };
+    };
+  };
+
+  func getArray<T: BinaryInteger>(
+    forKey key: String,
+    elementType: T.Type = T.self,
+    allowMissingValues: Bool = true
+  ) throws -> Array<T> {
+  
+    try self.getArray(forKey: key) {
+      switch ($0, allowMissingValues) {
+        case (let number as NSNumber, _):
+          return .init(number.intValue);
+          
+        case (let number as any BinaryInteger, _):
+          return .init(number);
+      
+        case (let number as any BinaryFloatingPoint, _):
+          return .init(number);
+          
+        case (_, true):
+          return nil;
+        
+        default:
+          throw GenericError(
+            errorCode: .invalidValue,
+            description: "Unable to convert element to number",
+            extraDebugValues: [
+              "key": key,
+              "elementType": elementType,
+              "allowMissingValues": allowMissingValues,
+            ]
+          );
+      };
+    };
   };
   
+  func getArray<T: BinaryFloatingPoint>(
+    forKey key: String,
+    elementType: T.Type = T.self,
+    allowMissingValues: Bool = true
+  ) throws -> Array<T> {
+  
+    try self.getArray(forKey: key) {
+      switch ($0, allowMissingValues) {
+        case (let number as NSNumber, _):
+          return .init(number.doubleValue);
+          
+        case (let number as any BinaryInteger, _):
+          return .init(number);
+      
+        case (let number as any BinaryFloatingPoint, _):
+          return .init(number);
+          
+        case (_, true):
+          return nil;
+        
+        default:
+          throw GenericError(
+            errorCode: .invalidValue,
+            description: "Unable to convert element to number",
+            extraDebugValues: [
+              "key": key,
+              "elementType": elementType,
+              "allowMissingValues": allowMissingValues,
+            ]
+          );
+      };
+    };
+  };
+  
+  func getArray(
+    forKey key: String,
+    allowMissingValues: Bool = true
+  ) throws -> Array<String> {
+  
+    try self.getArray(forKey: key) {
+      switch ($0, allowMissingValues) {
+        case (let string as String, _):
+          return string;
+          
+        case (let objcString as NSString, _):
+          return objcString as String;
+
+        case (_, true):
+          return nil;
+        
+        default:
+          throw GenericError(
+            errorCode: .invalidValue,
+            description: "Unable to convert element to string",
+            extraDebugValues: [
+              "key": key,
+              "allowMissingValues": allowMissingValues,
+            ]
+          );
+      };
+    };
+  };
+  
+  func getArray<T: RawRepresentable<String>>(
+    forKey key: String,
+    elementType: T.Type = T.self,
+    allowMissingValues: Bool = true
+  ) throws -> Array<T> {
+  
+    try self.getArray(forKey: key) {
+      switch ($0, allowMissingValues) {
+        case (let string as String, _):
+          guard let value: T = .init(rawValue: string) else {
+            fallthrough;
+          };
+          return value;
+
+        case (_, true):
+          return nil;
+        
+        default:
+          throw GenericError(
+            errorCode: .invalidValue,
+            description: "Unable to convert element",
+            extraDebugValues: [
+              "key": key,
+              "elementType": elementType,
+              "allowMissingValues": allowMissingValues,
+            ]
+          );
+      };
+    };
+  };
+  
+  func getArray<T: InitializableFromString>(
+    forKey key: String,
+    elementType: T.Type = T.self,
+    allowMissingValues: Bool = true
+  ) throws -> Array<T> {
+  
+    try self.getArray(forKey: key) {
+      switch ($0, allowMissingValues) {
+        case (let string as String, _):
+          return allowMissingValues
+            ? try? .init(fromString: string)
+            : try  .init(fromString: string)
+          
+        case (_, true):
+          return nil;
+        
+        default:
+          throw GenericError(
+            errorCode: .invalidValue,
+            description: "Unable to convert element",
+            extraDebugValues: [
+              "key": key,
+              "elementType": elementType,
+              "allowMissingValues": allowMissingValues,
+            ]
+          );
+      };
+    };
+  };
+  
+  func getArray<T: InitializableFromDictionary>(
+    forKey key: String,
+    elementType: T.Type = T.self,
+    allowMissingValues: Bool = true
+  ) throws -> Array<T> {
+  
+    try self.getArray(forKey: key) {
+      switch ($0, allowMissingValues) {
+        case (let dict as Dictionary<String, Any>, _):
+          return allowMissingValues
+            ? try? .init(fromDict: dict)
+            : try  .init(fromDict: dict);
+          
+        case (let objcDict as NSDictionary, _):
+          guard let dict = objcDict as? Dictionary<String, Any> else {
+            fallthrough
+          };
+          
+          return allowMissingValues
+            ? try? .init(fromDict: dict)
+            : try  .init(fromDict: dict);
+          
+        case (_, true):
+          return nil;
+        
+        default:
+          throw GenericError(
+            errorCode: .invalidValue,
+            description: "Unable to convert element",
+            extraDebugValues: [
+              "key": key,
+              "elementType": elementType,
+              "allowMissingValues": allowMissingValues,
+            ]
+          );
+      };
+    };
+  };
+
   func getDict<T: Hashable, U>(
     forKey key: String,
     keyType: T.Type = String.self,
@@ -614,6 +1068,24 @@ public extension Dictionary where Key == String {
     );
   };
   
+  // MARK: - Explicit Getters For Container Types (w/ Fallback)
+  // ----------------------------------------------------------
+  
+  func getArray<T>(
+    forKey key: String,
+    elementType: T.Type = T.self,
+    allowMissingValues: Bool = true,
+    fallbackValue: Array<T>
+  ) -> Array<T> {
+  
+    let value = try? self.getArray(
+      forKey: key,
+      elementType: elementType,
+      allowMissingValues: allowMissingValues
+    );
+    
+    return value ?? fallbackValue;
+  };
   
   func getDict<T: Hashable, U>(
     forKey key: String,
@@ -631,7 +1103,6 @@ public extension Dictionary where Key == String {
     return value ?? fallbackValue;
   };
 };
-
 
 extension Dictionary {
 
