@@ -370,8 +370,8 @@ public extension Dictionary where Key == String {
     return enumValue;
   };
   
-  // MARK: - Explicit Getters
-  // ------------------------
+  // MARK: - Explicit Generic Getters
+  // --------------------------------
   
   func getNumber<T: BinaryInteger>(
     forKey key: String,
@@ -493,6 +493,96 @@ public extension Dictionary where Key == String {
     };
   };
   
+  func getEnum<T: RawRepresentable<String>>(
+    forKey key: String,
+    type: T.Type = T.self
+  ) throws -> T {
+  
+    let dictValue: String = try self.getValue(forKey: key);
+    
+    guard let value = T(rawValue: dictValue) else {
+      throw GenericError(
+        errorCode: .unexpectedNilValue,
+        description: "Unable to convert string from dictionary to enum",
+        extraDebugValues: [
+          "key": key,
+          "dictValue": dictValue,
+          "type": type.self,
+        ]
+      );
+    };
+    
+    return value;
+  };
+  
+  func getEnum<T: InitializableFromString>(
+    forKey key: String,
+    type: T.Type = T.self
+  ) throws -> T {
+  
+    let dictValue: String = try self.getValue(forKey: key);
+    let value = try T.init(fromString: dictValue)
+    
+    return value;
+  };
+  
+  func getEnum<T: EnumCaseStringRepresentable & CaseIterable>(
+    forKey key: String,
+    type: T.Type = T.self
+  ) throws -> T {
+  
+    let dictValue: String = try self.getValue(forKey: key);
+    
+    guard let value = T(fromString: dictValue) else {
+      throw GenericError(
+        errorCode: .unexpectedNilValue,
+        description: "Unable to convert string from dictionary to enum",
+        extraDebugValues: [
+          "key": key,
+          "dictValue": dictValue,
+          "type": type.self,
+          "validValues": T.allCases.reduce(into: "") {
+            $0 += $1.caseString + ", ";
+          }
+        ]
+      );
+    };
+    
+    return value;
+  };
+  
+  func getKeyPath<
+    KeyPathRoot: StringKeyPathMapping,
+    KeyPathValue
+  >(
+    forKey key: String,
+    rootType: KeyPathRoot.Type,
+    valueType: KeyPathValue.Type
+  ) throws -> KeyPath<KeyPathRoot, KeyPathValue> {
+  
+    let dictValue: String = try self.getValue(forKey: key);
+    
+    return try KeyPathRoot.getKeyPath(
+      forKey: dictValue,
+      valueType: KeyPathValue.self
+    );
+  };
+  
+  // MARK: - Explicit Concrete Getters
+  // ---------------------------------
+  
+  func getInt(forKey key: String) throws -> Int {
+    try self.getInt(forKey: key, type: Int.self);
+  };
+  
+  func getDouble(forKey key: String) throws -> Double {
+    try self.getNumber(forKey: key);
+  };
+  
+  func getFloat(forKey key: String) throws -> Float {
+    try self.getNumber(forKey: key);
+  };
+  
   func getString(forKey key: String) throws -> String {
     let dictValue = self[key];
     
@@ -587,81 +677,6 @@ public extension Dictionary where Key == String {
     };
     
     return color;
-  };
-  
-  func getEnum<T: RawRepresentable<String>>(
-    forKey key: String,
-    type: T.Type = T.self
-  ) throws -> T {
-  
-    let dictValue: String = try self.getValue(forKey: key);
-    
-    guard let value = T(rawValue: dictValue) else {
-      throw GenericError(
-        errorCode: .unexpectedNilValue,
-        description: "Unable to convert string from dictionary to enum",
-        extraDebugValues: [
-          "key": key,
-          "dictValue": dictValue,
-          "type": type.self,
-        ]
-      );
-    };
-    
-    return value;
-  };
-  
-  func getEnum<T: InitializableFromString>(
-    forKey key: String,
-    type: T.Type = T.self
-  ) throws -> T {
-  
-    let dictValue: String = try self.getValue(forKey: key);
-    let value = try T.init(fromString: dictValue)
-    
-    return value;
-  };
-  
-  func getEnum<T: EnumCaseStringRepresentable & CaseIterable>(
-    forKey key: String,
-    type: T.Type = T.self
-  ) throws -> T {
-  
-    let dictValue: String = try self.getValue(forKey: key);
-    
-    guard let value = T(fromString: dictValue) else {
-      throw GenericError(
-        errorCode: .unexpectedNilValue,
-        description: "Unable to convert string from dictionary to enum",
-        extraDebugValues: [
-          "key": key,
-          "dictValue": dictValue,
-          "type": type.self,
-          "validValues": T.allCases.reduce(into: "") {
-            $0 += $1.caseString + ", ";
-          }
-        ]
-      );
-    };
-    
-    return value;
-  };
-  
-  func getKeyPath<
-    KeyPathRoot: StringKeyPathMapping,
-    KeyPathValue
-  >(
-    forKey key: String,
-    rootType: KeyPathRoot.Type,
-    valueType: KeyPathValue.Type
-  ) throws -> KeyPath<KeyPathRoot, KeyPathValue> {
-  
-    let dictValue: String = try self.getValue(forKey: key);
-    
-    return try KeyPathRoot.getKeyPath(
-      forKey: dictValue,
-      valueType: KeyPathValue.self
-    );
   };
   
   // MARK: - Explicit Getters (w/ Fallback)
