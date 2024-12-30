@@ -22,6 +22,10 @@ public extension Array {
       self[self.index(forCyclicIndex: index)] = newValue;
     }
   }
+
+  var nilIfEmpty: Self? {
+    self.count > 0 ? self : nil;
+  };
   
   func index(forCyclicIndex cyclicIndex: Index) -> Index {
     if cyclicIndex >= 0 {

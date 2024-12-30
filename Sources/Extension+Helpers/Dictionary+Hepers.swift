@@ -11,6 +11,10 @@ import UIKit
 
 public extension Dictionary where Key == String {
 
+  var nilIfEmpty: Self? {
+    self.count > 0 ? self : nil;
+  };
+
   // MARK: - Get Value (Via Explicit Casting)
   // ----------------------------------------
 
