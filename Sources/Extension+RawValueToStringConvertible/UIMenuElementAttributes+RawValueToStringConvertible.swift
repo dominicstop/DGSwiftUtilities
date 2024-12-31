@@ -1,5 +1,5 @@
 //
-//  UIMenuElementAttributes+EnumCaseStringRepresentable.swift
+//  UIMenuElementAttributes+RawValueToStringConvertible.swift
 //
 //
 //  Created by Dominic Go on 12/18/23.
@@ -8,7 +8,31 @@
 import UIKit
 
 @available(iOS 13.0, *)
-extension UIMenuElement.Attributes: EnumCaseStringRepresentable, CustomStringConvertible {
+extension UIMenuElement.Attributes: RawValueToStringConvertible {
+
+  // MARK: - CaseIterable
+  // --------------------
+
+  public static var allCases: [Self] = {
+    var cases: [Self] = [
+      .hidden,
+      .disabled,
+      .destructive,
+    ];
+    
+    #if !targetEnvironment(macCatalyst)
+    #if swift(>=5.7)
+    if #available(iOS 16.0, *) {
+      cases.append(.keepsMenuPresented);
+    };
+    #endif
+    #endif
+    
+    return cases;
+  }();
+
+  // MARK: - StringMappedRawRepresentable
+  // ------------------------------------
 
   public var caseString: String {
   
@@ -40,4 +64,4 @@ extension UIMenuElement.Attributes: EnumCaseStringRepresentable, CustomStringCon
         return "";
     };
   };
-};
+}
