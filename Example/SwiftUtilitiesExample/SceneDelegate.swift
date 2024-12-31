@@ -35,6 +35,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     window.makeKeyAndVisible();
     
+    if true {
+      UIViewAnimatingPosition.allCases.enumerated().forEach {
+        print(
+          "UIViewAnimatingPosition - \($0.offset)",
+          "\n - caseString:", $0.element.caseString,
+          "\n - init: ", try! UIViewAnimatingPosition(fromString: $0.element.caseString).caseString,
+          "\n - rawValue: ", try! UIViewAnimatingPosition(fromString: $0.element.caseString).rawValue,
+          "\n"
+        );
+      };
+      
+      CACornerMask.allCases.enumerated().forEach {
+        print(
+          "CACornerMask - \($0.offset)",
+          "\n - caseString:", $0.element.caseString,
+          "\n - init: ", try! CACornerMask(fromString: $0.element.caseString).caseString,
+          "\n - rawValue: ", try! CACornerMask(fromString: $0.element.caseString).rawValue,
+          "\n"
+        );
+      };
+    };
+    
+    
+    
+    
     if false {
       let test01: CGRect.InterpolatableElements = [.height, .width, .x, .y];
     
