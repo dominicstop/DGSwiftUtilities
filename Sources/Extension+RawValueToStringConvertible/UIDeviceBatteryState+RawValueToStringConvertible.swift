@@ -1,5 +1,5 @@
 //
-//  UIDeviceBatteryState+EnumCaseStringRepresentable.swift
+//  UIDeviceBatteryState+RawValueToStringConvertible.swift
 //
 //
 //  Created by Dominic Go on 12/17/23.
@@ -8,7 +8,20 @@
 import UIKit
 
 
-extension UIDevice.BatteryState: EnumCaseStringRepresentable, CustomStringConvertible {
+extension UIDevice.BatteryState: RawValueToStringConvertible {
+  
+  // MARK: - CaseIterable
+  // --------------------
+  
+  public static var allCases: [Self] = [
+    .unknown,
+    .unplugged,
+    .charging,
+    .full,
+  ];
+  
+  // MARK: - StringMappedRawRepresentable
+  // ------------------------------------
   
   public var caseString: String {
     switch self {
