@@ -1,5 +1,5 @@
 //
-//  UIBlurEffectStyle+EnumCaseStringRepresentable.swift
+//  UIBlurEffectStyle+RawValueToStringConvertible.swift
 //  
 //
 //  Created by Dominic Go on 12/17/23.
@@ -7,8 +7,50 @@
 
 import UIKit
 
-extension UIBlurEffect.Style: EnumCaseStringRepresentable, CustomStringConvertible {
+extension UIBlurEffect.Style: RawValueToStringConvertible {
 
+  // MARK: - CaseIterable
+  // --------------------
+
+  public static var allCases: [Self] {
+    var blurEffects: [Self] = [];
+  
+    if #available(iOS 10.0, *) {
+      blurEffects += [
+        .regular,
+        .prominent,
+        .extraLight,
+        .light,
+        .dark,
+      ];
+    };
+    
+    if #available(iOS 13.0, *) {
+      blurEffects += [
+        .systemUltraThinMaterial,
+        .systemThinMaterial,
+        .systemMaterial,
+        .systemThickMaterial,
+        .systemChromeMaterial,
+        .systemUltraThinMaterialLight,
+        .systemThinMaterialLight,
+        .systemMaterialLight,
+        .systemThickMaterialLight,
+        .systemChromeMaterialLight,
+        .systemUltraThinMaterialDark,
+        .systemThinMaterialDark,
+        .systemMaterialDark,
+        .systemThickMaterialDark,
+        .systemChromeMaterialDark,
+      ];
+    };
+    
+    return blurEffects;
+  };
+  
+  // MARK: - StringMappedRawRepresentable
+  // ------------------------------------
+  
   public var caseString: String {
     switch self {
       case .extraLight:
