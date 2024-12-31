@@ -17,3 +17,24 @@ public protocol RawValueToStringConvertible:
 {
   // no-op
 };
+
+// MARK: - RawValueToStringConvertible+InitializableFromString (Default)
+//----------------------------------------------------------------------
+
+extension RawValueToStringConvertible {
+  public init(fromString string: String) throws {
+    guard let rawValue = Self.getRawValue(forCaseName: string),
+          let match: Self = .init(rawValue: rawValue)
+    else {
+      throw GenericError(
+        errorCode: .invalidArgument,
+        description: "Invalid string value",
+        extraDebugValues: [
+          "string": string,
+        ]
+      );
+    };
+    
+    self = match;
+  };
+};

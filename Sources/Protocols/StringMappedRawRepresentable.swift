@@ -132,24 +132,3 @@ public extension StringMappedRawRepresentable {
   };
 };
 
-// MARK: - InitializableFromString+StringMappedRawRepresentable
-// ------------------------------------------------------------
-
-extension InitializableFromString where Self: StringMappedRawRepresentable  {
-  
-  public init(fromString string: String) throws {
-    guard let rawValue = Self.getRawValue(forCaseName: string),
-          let match = Self.init(rawValue: rawValue)
-    else {
-      throw GenericError(
-        errorCode: .invalidArgument,
-        description: "Invalid string value",
-        extraDebugValues: [
-          "string": string,
-        ]
-      );
-    };
-    
-    self = match;
-  };
-};
