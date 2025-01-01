@@ -13,7 +13,8 @@ public protocol RawValueToStringConvertible:
   CaseIterable,
   // auto conformance created
   EnumCaseStringRepresentable,
-  InitializableFromString
+  InitializableFromString,
+  CustomStringConvertible
 {
   // no-op
 };
@@ -21,8 +22,9 @@ public protocol RawValueToStringConvertible:
 // MARK: - RawValueToStringConvertible+InitializableFromString (Default)
 //----------------------------------------------------------------------
 
-extension RawValueToStringConvertible {
-  public init(fromString string: String) throws {
+public extension RawValueToStringConvertible {
+
+  init(fromString string: String) throws {
     guard let rawValue = Self.getRawValue(forCaseName: string),
           let match: Self = .init(rawValue: rawValue)
     else {
@@ -37,5 +39,15 @@ extension RawValueToStringConvertible {
     };
     
     self = match;
+  };
+};
+
+// MARK: - RawValueToStringConvertible+RawValueToStringConvertible
+// ---------------------------------------------------------------
+
+public extension RawValueToStringConvertible {
+  
+  var description: String {
+    self.caseString;
   };
 };
