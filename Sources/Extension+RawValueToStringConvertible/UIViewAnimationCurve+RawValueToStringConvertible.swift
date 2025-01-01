@@ -37,11 +37,7 @@ extension UIView.AnimationCurve: RawValueToStringConvertible {
         return "linear";
 
       default:
-        #if DEBUG
-        fatalError("Not Implemented");
-        #else
-        return "unknown";
-        #endif
+        return String(describing: self);
     };
   };
 };

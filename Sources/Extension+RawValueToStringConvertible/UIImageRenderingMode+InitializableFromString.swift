@@ -33,11 +33,6 @@ extension UIImage.RenderingMode: RawValueToStringConvertible {
         return "alwaysTemplate";
 
       default:
-        #if DEBUG
-        fatalError("Not Implemented");
-        #else
-        return "unknown";
-        #endif
-    };
+        return String(describing: self);
   };
 };

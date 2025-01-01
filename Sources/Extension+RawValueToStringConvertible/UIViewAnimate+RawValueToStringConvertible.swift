@@ -117,11 +117,7 @@ extension UIView.AnimationOptions: RawValueToStringConvertible {
         return "preferredFramesPerSecond30";
 
       default:
-        #if DEBUG
-        fatalError("Not Implemented");
-        #else
-        return "unknown";
-        #endif
+        return String(describing: self);
     };
   };
 };

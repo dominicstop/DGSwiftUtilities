@@ -58,11 +58,7 @@ extension CACornerMask: RawValueToStringConvertible {
         return "rightCorners";
 
       default:
-        #if DEBUG
-        fatalError("not impl.");
-        #else
         return "unknown";
-        #endif
     };
   };
 };

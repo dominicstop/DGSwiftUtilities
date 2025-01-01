@@ -33,11 +33,7 @@ extension UIViewAnimatingPosition: RawValueToStringConvertible {
         return "current";
         
       @unknown default:
-        #if DEBUG
-        fatalError("not impl.");
-        #else
-        return "unknown";
-        #endif
+        return String(describing: self);
     };
   };
 };
