@@ -1,5 +1,5 @@
 //
-//  SymbolScale+RawValueToStringConvertible.swift
+//  UIImageSymbolScale+RawValueToStringConvertible.swift
 //  
 //
 //  Created by Dominic Go on 8/9/24.
