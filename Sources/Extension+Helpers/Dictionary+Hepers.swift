@@ -24,6 +24,31 @@ public extension Dictionary where Key == String {
       $0[newKey] = $1.value;
     };
   };
+  
+  mutating func merge(with otherDict: Self, shouldOverwrite: Bool = true){
+    self.merge(otherDict) { (current, new) in
+      shouldOverwrite ? new : current;
+    };
+  };
+
+  mutating func unwrapAndSet(forKey key: Key, with value: Value?){
+    guard let value = value else {
+      return;
+    };
+    
+    self[key] = value;
+  };
+  
+  mutating func unwrapAndMerge(
+    with otherDict: Self?,
+    shouldOverwrite: Bool = true
+  ){
+    guard let otherDict = otherDict else {
+      return;
+    };
+    
+    self.merge(with: otherDict, shouldOverwrite: shouldOverwrite);
+  };
 
   // MARK: - Get Value (Via Explicit Casting)
   // ----------------------------------------
