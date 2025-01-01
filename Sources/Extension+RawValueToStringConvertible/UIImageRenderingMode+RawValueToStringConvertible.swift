@@ -34,5 +34,6 @@ extension UIImage.RenderingMode: RawValueToStringConvertible {
 
       default:
         return String(describing: self);
+    };
   };
 };
