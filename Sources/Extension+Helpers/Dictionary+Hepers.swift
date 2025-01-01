@@ -14,6 +14,16 @@ public extension Dictionary where Key == String {
   var nilIfEmpty: Self? {
     self.count > 0 ? self : nil;
   };
+  
+  func compactMapKeys<T>(
+    _ transform: (Key) throws -> T?
+  ) rethrows -> Dictionary<T, Value> {
+    
+    try self.reduce(into: [:]){
+      guard let newKey = try transform($1.key) else { return };
+      $0[newKey] = $1.value;
+    };
+  };
 
   // MARK: - Get Value (Via Explicit Casting)
   // ----------------------------------------
@@ -1175,18 +1185,5 @@ public extension Dictionary where Key == String {
     );
     
     return value ?? fallbackValue;
-  };
-};
-
-extension Dictionary {
-
-  func compactMapKeys<T>(
-    _ transform: (Key) throws -> T?
-  ) rethrows -> Dictionary<T, Value> {
-    
-    try self.reduce(into: [:]){
-      guard let newKey = try transform($1.key) else { return };
-      $0[newKey] = $1.value;
-    };
   };
 };
