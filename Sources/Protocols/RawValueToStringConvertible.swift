@@ -31,6 +31,7 @@ extension RawValueToStringConvertible {
         description: "Invalid string value",
         extraDebugValues: [
           "string": string,
+          "type": String(describing: Self.self),
         ]
       );
     };

@@ -53,13 +53,6 @@ public extension StringMappedRawRepresentable where Self: CaseIterable & EnumCas
       
       return (cacheEntry.caseNameToRawValueMap as! CaseNameToRawValueMap);
     }
-    set {
-      guard let newValue = newValue else {
-        return;
-      };
-      
-      self.associatedCacheEntry?.caseNameToRawValueMap = newValue;
-    }
   };
   
   fileprivate static var cachedRawValueToCaseNameMap: RawValueToCaseNameMap? {
@@ -69,13 +62,6 @@ public extension StringMappedRawRepresentable where Self: CaseIterable & EnumCas
       };
       
       return (cacheEntry.rawValueToCaseNameMap as! RawValueToCaseNameMap);
-    }
-    set {
-      guard let newValue = newValue else {
-        return;
-      };
-      
-      self.associatedCacheEntry?.rawValueToCaseNameMap = newValue;
     }
   };
   
@@ -98,9 +84,7 @@ public extension StringMappedRawRepresentable where Self: CaseIterable & EnumCas
       rawValueToCaseNameMap[$0.rawValue] = $0.caseString;
     };
     
-    Self.cachedCaseNameToRawValueMap = caseNameToRawValueMap;
-    Self.cachedRawValueToCaseNameMap = rawValueToCaseNameMap;
-    
+    Self.associatedCacheEntry = (caseNameToRawValueMap, rawValueToCaseNameMap);
     return (caseNameToRawValueMap, rawValueToCaseNameMap);
   };
   
