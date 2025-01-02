@@ -33,7 +33,7 @@ extension UIImage.RenderingMode: RawValueToStringConvertible {
         return "alwaysTemplate";
 
       default:
-        return String(describing: self);
+        return "unknown";
     };
   };
 };

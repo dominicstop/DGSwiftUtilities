@@ -87,7 +87,7 @@ extension UIFont.TextStyle: RawValueToStringConvertible {
         return "title3"
         
       default:
-        return String(describing: self);
+        return "unknown";
     }
   }
 }

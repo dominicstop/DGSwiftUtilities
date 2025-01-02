@@ -33,7 +33,7 @@ extension UIViewAnimatingState: RawValueToStringConvertible {
         return "stopped";
 
       default:
-        return String(describing: self);
+        return "unknown";
     };
   };
 };

@@ -1,5 +1,5 @@
 //
-//  UIViewAnimationCurve+InitializableFromString.swift
+//  UIViewAnimationCurve+RawValueToStringConvertible.swift
 //  ReactNativeIosContextMenu
 //
 //  Created by Dominic Go on 11/22/23.
@@ -37,7 +37,7 @@ extension UIView.AnimationCurve: RawValueToStringConvertible {
         return "linear";
 
       default:
-        return String(describing: self);
+        return "unknown";
     };
   };
 };

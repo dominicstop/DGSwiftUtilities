@@ -42,7 +42,7 @@ extension CAGradientLayerType: RawValueToStringConvertible {
         return "radial";
         
       default:
-        return String(describing: self);
+        return "unknown";
     };
   };
 };

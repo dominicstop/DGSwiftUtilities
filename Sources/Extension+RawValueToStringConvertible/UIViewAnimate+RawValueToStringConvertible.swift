@@ -117,7 +117,7 @@ extension UIView.AnimationOptions: RawValueToStringConvertible {
         return "preferredFramesPerSecond30";
 
       default:
-        return String(describing: self);
+        return "unknown";
     };
   };
 };

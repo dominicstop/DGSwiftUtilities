@@ -33,7 +33,7 @@ extension UIViewAnimatingPosition: RawValueToStringConvertible {
         return "current";
         
       @unknown default:
-        return String(describing: self);
+        return "unknown";
     };
   };
 };
