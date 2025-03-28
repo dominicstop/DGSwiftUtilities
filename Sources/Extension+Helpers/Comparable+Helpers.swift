@@ -7,14 +7,60 @@
 
 import Foundation
 
+public extension Comparable where Self: BinaryInteger { 
+  
+  static func < <T: BinaryInteger>(lhs: Self, rhs: T) -> Bool {
+    return lhs < Self(rhs);
+  };
+  
+  static func < <T: BinaryFloatingPoint>(lhs: Self, rhs: T) -> Bool {
+    return lhs < Self(rhs);
+  };
+};
+
+public extension Comparable where Self: BinaryFloatingPoint { 
+  
+  static func < <T: BinaryInteger>(lhs: Self, rhs: T) -> Bool {
+    return lhs < Self(rhs);
+  };
+  
+  static func < <T: BinaryFloatingPoint>(lhs: Self, rhs: T) -> Bool {
+    return lhs < Self(rhs);
+  };
+};
 
 public extension Comparable {
   static func < <T: Comparable>(lhs: Self, rhs: T) -> Bool {
-    guard let lhs = lhs as? T else {
-      return false;
+    if let lhs = lhs as? T {
+      return lhs < rhs;
     };
     
-    return lhs < rhs;
+    #if DEBUG
+    print(
+      "Comparable - Warning implicit comparison failure",
+      "\n - will begin implicit casting...",
+      "\n - lhs: \(lhs), \(type(of: lhs))",
+      "\n - rhs: \(rhs), \(type(of: rhs))",
+      "\n"
+    );
+    #endif
+    
+    switch (lhs, rhs) {
+      case let (
+        lhsFloat as any BinaryFloatingPoint,
+        rhsFloat as any BinaryFloatingPoint
+      ):
+        return Double(lhsFloat) < rhsFloat;
+        
+      case let (
+        lhsInt as any BinaryInteger,
+        rhsInt as any BinaryInteger
+      ):
+        return Int(lhsInt) < rhsInt;
+
+    default:
+      return false;
+    };
   };
   
   func isLessThan<T: Comparable>(to other: T) -> Bool {
