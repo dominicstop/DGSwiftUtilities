@@ -218,6 +218,8 @@ public extension CompositeInterpolatable {
 
 public extension CompositeInterpolatable {
   
+  /// Get percent given start + end range, and interpolated value
+  ///
   static func inverseLerp<T: BinaryFloatingPoint>(
     valueStart: InterpolatableValue,
     valueEnd: InterpolatableValue,

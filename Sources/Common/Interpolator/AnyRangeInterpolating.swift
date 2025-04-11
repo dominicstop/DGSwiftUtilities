@@ -7,7 +7,8 @@
 
 import Foundation
 
-
+/// Defines a struct that allows for interpolating based on a range of input values
+///
 public protocol AnyRangeInterpolating {
 
   typealias RangeItem = IndexValuePair<CGFloat>;
