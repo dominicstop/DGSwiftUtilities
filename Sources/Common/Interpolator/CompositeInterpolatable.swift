@@ -96,12 +96,26 @@ public extension CompositeInterpolatable {
           
           newValue[keyPath: keyPath] = result;
           continue;
+        
+        case let keyPath as WritableKeyPath<InterpolatableValue, Double>:
+          let concreteValueStart = valueStart[keyPath: keyPath];
+          let concreteValueEnd   = valueEnd  [keyPath: keyPath];
           
+          let result = InterpolatorHelpers.lerp(
+            valueStart: concreteValueStart,
+            valueEnd: concreteValueEnd,
+            percent: percent,
+            easing: easing
+          );
+          
+          newValue[keyPath: keyPath] = result;
+          continue;
+            
         default:
           #if DEBUG
           let error = GenericError(
             errorCode: .runtimeError,
-            description: "Case not implemented, unable to lerp"
+            description: "Case not implemented for: \(partialKeyPath.valueTypeAsString), unable to lerp"
           );
           fatalError(error.errorDescription!);
           #endif
