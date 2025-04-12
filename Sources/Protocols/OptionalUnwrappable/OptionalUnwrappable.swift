@@ -11,3 +11,9 @@ public protocol OptionalUnwrappable {
   func isSome() -> Bool;
   func unwrap() -> Any;
 }
+
+public extension OptionalUnwrappable {
+  var isNil: Bool {
+    !self.isSome();
+  };
+};
