@@ -13,6 +13,10 @@ public extension BinaryFloatingPoint {
   var asWholeNumberExact: Int? {
     Int(exactly: self)
   };
+  
+  var asInt: Int {
+    .init(self);
+  };
 
   var isWholeNumber: Bool {
     self.asWholeNumberExact != nil;
