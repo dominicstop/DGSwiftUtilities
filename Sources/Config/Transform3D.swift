@@ -343,27 +343,7 @@ public struct Transform3D: Equatable, MutableReference {
   // MARK: - Functions
   // -----------------
   
-  public mutating func setNonNilValues(with otherValue: Self) {
-    Self.keys.forEach {
-      let value = self[keyPath: $0];
-      
-      guard value is ExpressibleByNilLiteral,
-            let optionalValue = value as? OptionalUnwrappable,
-            !optionalValue.isSome()
-      else { return };
-    
-      switch $0 {
-        case let key as WritableKeyPath<Self, CGFloat>:
-          self[keyPath: key] = otherValue[keyPath: key];
-          
-        case let key as WritableKeyPath<Self, Angle<CGFloat>>:
-         self[keyPath: key] = otherValue[keyPath: key];
-          
-        default:
-          break;
-      };
-    };
-  };
+
   
   public mutating func append(otherTransform: Self) {
     Self.keys.forEach {
@@ -639,5 +619,36 @@ public extension UnsafeMutablePointer<Transform3D> {
   func withSkewY(_ value: CGFloat) -> Self {
     self.pointee.skewY = value;
     return self;
+  };
+};
+
+// MARK: - Transform3D+Se
+// -----------------------------
+
+
+extension Transform3D: SettableNilValues {
+  
+  public mutating func setNilValues(with otherValue: Self) {
+    Self.keys.forEach {
+      let currentValue = self[keyPath: $0];
+      
+      guard currentValue is ExpressibleByNilLiteral,
+            let optionalValue = currentValue as? OptionalUnwrappable,
+            !optionalValue.isSome()
+      else {
+        return;
+      };
+    
+      switch $0 {
+        case let key as WritableKeyPath<Self, CGFloat?>:
+          self[keyPath: key] = otherValue[keyPath: key];
+          
+        case let key as WritableKeyPath<Self, Angle<CGFloat>?>:
+         self[keyPath: key] = otherValue[keyPath: key];
+          
+        default:
+          break;
+      };
+    };
   };
 };

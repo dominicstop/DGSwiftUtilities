@@ -19,4 +19,9 @@ public extension Transform3D {
   static var `default`: Self {
     .identity;
   };
+  
+  @available(*, deprecated, renamed: "setNilValues(with:)")
+  mutating func setNonNilValues(with otherValue: Self) {
+    self.setNilValues(with: otherValue);
+  };
 };
