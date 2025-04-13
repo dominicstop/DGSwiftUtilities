@@ -7,7 +7,7 @@
 
 public extension PartialKeyPath {
   
-  func asWrittableKePath<T>(
+  func asWritableKePath<T>(
     forType type: T.Type = T.self
   ) -> WritableKeyPath<Root, T>? {
     
@@ -20,11 +20,11 @@ public extension PartialKeyPath {
     with newValue: T
   ) throws {
     
-    if let writableKeyPath = self.asWrittableKePath(forType: T.self) {
+    if let writableKeyPath = self.asWritableKePath(forType: T.self) {
       target[keyPath: writableKeyPath] = newValue;
     };
     
-    if let writableKeyPath = self.asWrittableKePath(forType: Optional<T>.self) {
+    if let writableKeyPath = self.asWritableKePath(forType: Optional<T>.self) {
       target[keyPath: writableKeyPath] = newValue;
     };
     
