@@ -26,4 +26,17 @@ extension Optional: OptionalUnwrappable {
         return value;
     };
   };
+  
+  public func safeUnwrap() -> Any? {
+    switch self {
+      case let .some(wrappedValue as OptionalUnwrappable):
+        return wrappedValue.safeUnwrap();
+        
+      case let .some(wrappedValue):
+        return wrappedValue;
+        
+      case .none:
+        return nil;
+    };
+  };
 };
