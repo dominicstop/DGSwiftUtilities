@@ -56,6 +56,18 @@ public struct AnyWritableKeyPath<Root> {
     };
   };
   
+  public func asOptionalUnwrappable(target: Root) -> OptionalUnwrappable? {
+    let currentValue = target[keyPath: self.partialKeyPath];
+    
+    guard currentValue is ExpressibleByNilLiteral,
+          let optionalValue = currentValue as? OptionalUnwrappable
+    else {
+      return nil;
+    };
+    
+    return optionalValue;
+  };
+  
   public func setValue<T>(
     target: inout Root,
     valueType: T.Type = T.self,
@@ -70,11 +82,10 @@ public struct AnyWritableKeyPath<Root> {
     valueType: T.Type = T.self,
     withValue newValue: T
   ) throws {
-    let currentValue = target[keyPath: self.partialKeyPath];
     
-    guard currentValue is ExpressibleByNilLiteral,
-          let optionalValue = currentValue as? OptionalUnwrappable
-    else {
+    guard let optionalValue = self.asOptionalUnwrappable(target: target) else {
+      let currentValue = target[keyPath: self.partialKeyPath];
+      
       throw GenericError(
         errorCode: .guardCheckFailed,
         description:
