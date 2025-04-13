@@ -9,7 +9,10 @@ import Foundation
 
 public protocol OptionalUnwrappable {
   func isSome() -> Bool;
+  
   func unwrap() -> Any;
+  
+  func safeUnwrap() -> Any?;
 }
 
 public extension OptionalUnwrappable {
@@ -17,3 +20,4 @@ public extension OptionalUnwrappable {
     !self.isSome();
   };
 };
+
