@@ -48,20 +48,6 @@ import QuartzCore
 
 public struct Transform3D: Equatable, MutableReference {
   
-  static let keys: [PartialKeyPath<Self>] = [
-    \._translateX,
-    \._translateY,
-    \._translateZ,
-    \._scaleX,
-    \._scaleY,
-    \._rotateX,
-    \._rotateY,
-    \._rotateZ,
-    \._perspective,
-    \._skewX,
-    \._skewY,
-  ];
-  
   // MARK: - Properties
   // ------------------
   
@@ -343,11 +329,10 @@ public struct Transform3D: Equatable, MutableReference {
   // MARK: - Functions
   // -----------------
   
-
-  
   public mutating func append(otherTransform: Self) {
-    Self.keys.forEach {
-      let value = self[keyPath: $0];
+    Self.allNilValueKeyPaths.forEach {
+      let partialKeyPath = $0.partialKeyPath;
+      let value = self[keyPath: partialKeyPath];
       
       let isCurrentValueNil: Bool = {
         guard value is ExpressibleByNilLiteral,
@@ -360,7 +345,7 @@ public struct Transform3D: Equatable, MutableReference {
         return false;
       }();
       
-      switch $0 {
+      switch partialKeyPath {
         case let key as WritableKeyPath<Self, CGFloat>:
           let otherValue = otherTransform[keyPath: key];
           
@@ -622,33 +607,22 @@ public extension UnsafeMutablePointer<Transform3D> {
   };
 };
 
-// MARK: - Transform3D+Se
-// -----------------------------
+// MARK: - Transform3D+SettableNilValuesViaKeyPaths
+// ------------------------------------------------
 
-
-extension Transform3D: SettableNilValues {
+extension Transform3D: SettableNilValuesViaKeyPaths {
   
-  public mutating func setNilValues(with otherValue: Self) {
-    Self.keys.forEach {
-      let currentValue = self[keyPath: $0];
-      
-      guard currentValue is ExpressibleByNilLiteral,
-            let optionalValue = currentValue as? OptionalUnwrappable,
-            !optionalValue.isSome()
-      else {
-        return;
-      };
-    
-      switch $0 {
-        case let key as WritableKeyPath<Self, CGFloat?>:
-          self[keyPath: key] = otherValue[keyPath: key];
-          
-        case let key as WritableKeyPath<Self, Angle<CGFloat>?>:
-         self[keyPath: key] = otherValue[keyPath: key];
-          
-        default:
-          break;
-      };
-    };
-  };
+  public static let allNilValueKeyPaths: [AnyWritableKeyPath<Self>] = [
+    .init(keyPath: \._translateX),
+    .init(keyPath: \._translateY),
+    .init(keyPath: \._translateZ),
+    .init(keyPath: \._scaleX),
+    .init(keyPath: \._scaleY),
+    .init(keyPath: \._rotateX),
+    .init(keyPath: \._rotateY),
+    .init(keyPath: \._rotateZ),
+    .init(keyPath: \._perspective),
+    .init(keyPath: \._skewX),
+    .init(keyPath: \._skewY),
+  ];
 };
