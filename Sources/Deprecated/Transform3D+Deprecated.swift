@@ -15,6 +15,11 @@ public extension Transform3D {
     self.transform3D;
   };
   
+  @available(*, deprecated, renamed: "isAllValuesSet")
+  var isAllValueSet: Bool {
+    self.isAllValuesSet;
+  };
+  
   @available(*, deprecated, renamed: "identity")
   static var `default`: Self {
     .identity;

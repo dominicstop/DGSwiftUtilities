@@ -247,18 +247,6 @@ public struct Transform3D: Equatable, MutableReference {
     CATransform3DGetAffineTransform(self.transform3D);
   };
   
-  public var isAllValueSet: Bool {
-    Self.keys.allSatisfy {
-      let value = self[keyPath: $0];
-      
-      guard value is ExpressibleByNilLiteral,
-            let optionalValue = value as? OptionalUnwrappable
-      else { return false };
-      
-      return optionalValue.isSome();
-    };
-  };
-  
   // MARK: - Init
   // ------------
   
