@@ -11,6 +11,14 @@ import Foundation
 
 struct AnyWritableKeyPathTests {
   
+  @Test func test_isAllValuesSet() async throws {
+    let transform: Transform3D = .init();
+    #expect(!transform.isAllValuesSet);
+    
+    let transform2: Transform3D = .identity;
+    #expect(transform2.isAllValuesSet);
+  };
+  
   @Test func test_setValue() async throws {
     var transform: Transform3D = .init();
     
