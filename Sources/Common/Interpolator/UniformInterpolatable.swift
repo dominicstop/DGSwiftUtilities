@@ -8,7 +8,7 @@
 import Foundation
 
 
-public protocol UniformInterpolatable: Comparable {
+public protocol UniformInterpolatable {
 
   associatedtype InterpolatableValue: UniformInterpolatable = Self;
 
