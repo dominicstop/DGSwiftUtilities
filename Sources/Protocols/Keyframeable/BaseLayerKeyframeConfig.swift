@@ -76,36 +76,53 @@ public extension BaseLayerKeyframeConfig {
   
   // MARK: - Chain Setter Methods
   // ----------------------------
+
   
-  mutating func withBorderWidth(_ borderWidth: CGFloat) {
-    self.borderWidth = self.borderWidth;
+  func withBorderWidth(_ newValue: CGFloat) -> Self {
+    var copy = self;
+    copy.borderWidth = newValue;
+    return copy;
   };
   
-  mutating func withBorderColor(_ borderColor: UIColor) {
-    self.borderColor = self.borderColor;
+  func withBorderColor(_ newValue: UIColor) -> Self {
+    var copy = self;
+    copy.borderColor = newValue;
+    return copy;
   };
   
-  mutating func withShadowColor(_ shadowColor: UIColor) {
-    self.shadowColor = self.shadowColor;
+  func withShadowColor(_ newValue: UIColor) -> Self {
+    var copy = self;
+    copy.shadowColor = newValue;
+    return copy;
   };
   
-  mutating func withShadowOffset(_ shadowOffset: CGSize) {
-    self.shadowOffset = self.shadowOffset;
+  func withShadowOffset(_ newValue: CGSize) -> Self {
+    var copy = self;
+    copy.shadowOffset = newValue;
+    return copy;
   };
   
-  mutating func withShadowOpacity(_ shadowOpacity: CGFloat) {
-    self.shadowOpacity = self.shadowOpacity;
+  func withShadowOpacity(_ newValue: CGFloat) -> Self {
+    var copy = self;
+    copy.shadowOpacity = newValue;
+    return copy;
   };
   
-  mutating func withShadowRadius(_ shadowRadius: CGFloat) {
-    self.shadowRadius = self.shadowRadius;
+  func withShadowRadius(_ newValue: CGFloat) -> Self {
+    var copy = self;
+    copy.shadowRadius = newValue;
+    return copy;
   };
   
-  mutating func withCornerRadius(_ cornerRadius: CGFloat) {
-    self.cornerRadius = self.cornerRadius;
+  func withCornerRadius(_ newValue: CGFloat) -> Self {
+    var copy = self;
+    copy.cornerRadius = newValue;
+    return copy;
   };
   
-  mutating func withCornerMask(_ cornerMask: CACornerMask) {
-    self.cornerMask = self.cornerMask;
+  func withCornerMask(_ newValue: CACornerMask) -> Self {
+    var copy = self;
+    copy.cornerMask = newValue;
+    return copy;
   };
 };

@@ -49,16 +49,22 @@ public extension BaseViewKeyframeConfig {
   // MARK: - Chain Setter Methods
   // ----------------------------
   
-  mutating func withOpacity(_ opacity: CGFloat) {
-    self.opacity = opacity;
+  func withOpacity(_ opacity: CGFloat) -> Self {
+    var copy = self;
+    copy.opacity = opacity;
+    return copy;
   };
   
-  mutating func withTransform(_ transform: Transform3D) {
-    self.transform = transform;
+  func withTransform(_ transform: Transform3D) -> Self {
+    var copy = self;
+    copy.transform = transform;
+    return copy;
   };
   
-  mutating func withBackgroundColor(_ backgroundColor: UIColor) {
-    self.backgroundColor = backgroundColor;
+  func withBackgroundColor(_ backgroundColor: UIColor) -> Self {
+    var copy = self;
+    copy.backgroundColor = backgroundColor;
+    return copy;
   };
 };
 
