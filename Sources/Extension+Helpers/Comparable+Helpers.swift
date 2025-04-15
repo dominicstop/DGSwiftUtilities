@@ -30,7 +30,8 @@ public extension Comparable where Self: BinaryFloatingPoint {
 };
 
 public extension Comparable {
-  static func < <T: Comparable>(lhs: Self, rhs: T) -> Bool {
+  
+  static func approxLessThan<T: Comparable>(lhs: Self, rhs: T) -> Bool {
     if let lhs = lhs as? T {
       return lhs < rhs;
     };
@@ -64,10 +65,10 @@ public extension Comparable {
   };
   
   func isLessThan<T: Comparable>(to other: T) -> Bool {
-    return self < other;
+    Self.approxLessThan(lhs: self, rhs: other);
   };
   
   func isGreaterThan<T: Comparable>(to other: T) -> Bool {
-    return other < self;
+    !Self.approxLessThan(lhs: self, rhs: other);
   };
 };
