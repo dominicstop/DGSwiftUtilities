@@ -18,51 +18,33 @@ extension UIColor: UniformInterpolatable {
     easing: InterpolationEasing?
   ) -> InterpolatableValue {
     
-    var (
-      start_h,
-      start_s,
-      start_b,
-      start_a
-    ) = colorStart.hsba;
-    
-    var (
-      end_h,
-      end_s,
-      end_b,
-      end_a
-    ) = colorEnd.hsba;
-    
-    colorEnd.getHue(
-      &end_h,
-      saturation: &end_s,
-      brightness: &end_b,
-      alpha: &end_a
-    );
+    var colorStartHSBA = colorStart.hsba;
+    var colorEndHSBA = colorEnd.hsba;
     
     let result_h = InterpolatorHelpers.lerp(
-      valueStart: start_h,
-      valueEnd: end_h,
+      valueStart: colorStartHSBA.h,
+      valueEnd: colorEndHSBA.h,
       percent: percent,
       easing: easing
     );
     
     let result_s = InterpolatorHelpers.lerp(
-      valueStart: start_s,
-      valueEnd: end_s,
+      valueStart: colorStartHSBA.s,
+      valueEnd: colorEndHSBA.s,
       percent: percent,
       easing: easing
     );
     
     let result_b = InterpolatorHelpers.lerp(
-      valueStart: start_b,
-      valueEnd: end_b,
+      valueStart: colorStartHSBA.b,
+      valueEnd: colorEndHSBA.b,
       percent: percent,
       easing: easing
     );
     
     let result_a = InterpolatorHelpers.lerp(
-      valueStart: start_a,
-      valueEnd: end_a,
+      valueStart: colorStartHSBA.a,
+      valueEnd: colorEndHSBA.a,
       percent: percent,
       easing: easing
     );
