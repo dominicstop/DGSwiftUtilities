@@ -8,7 +8,7 @@
 import UIKit
 
 
-public protocol KeyframeConfigAnimating<KeyframeTarget>: KeyframeAppliable {
+public protocol KeyframeAnimating<KeyframeTarget>: KeyframeAppliable {
   
   associatedtype KeyframeTarget;
   
@@ -19,7 +19,7 @@ public protocol KeyframeConfigAnimating<KeyframeTarget>: KeyframeAppliable {
   ) throws -> Keyframeable.PropertyAnimatorAnimationBlocks;
 };
 
-public extension KeyframeConfigAnimating {
+public extension KeyframeAnimating {
   
   func createAnimations(
     forTarget keyframeTarget: KeyframeTarget,

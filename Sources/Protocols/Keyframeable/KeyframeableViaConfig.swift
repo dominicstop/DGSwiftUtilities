@@ -9,7 +9,7 @@ import UIKit
 
 
 public protocol KeyframeableViaConfig: Keyframeable
-  where KeyframeConfig: KeyframeConfigAnimating<KeyframeTarget>
+  where KeyframeConfig: KeyframeAnimating<KeyframeTarget>
 {
   
   associatedtype KeyframeTarget = Self;

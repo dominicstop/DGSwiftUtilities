@@ -10,7 +10,7 @@ import UIKit
 
 public struct BasicViewKeyframe<T: UIView>:
   BaseViewKeyframeConfig,
-  KeyframeConfigAnimating
+  KeyframeAnimating
 {
   public typealias KeyframeTarget = T;
 

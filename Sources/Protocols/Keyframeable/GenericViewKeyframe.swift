@@ -11,7 +11,7 @@ import UIKit
 public struct GenericViewKeyframe<T: UIView>:
   BaseViewKeyframeConfig,
   BaseLayerKeyframeConfig,
-  KeyframeConfigAnimating
+  KeyframeAnimating
 {
   public typealias KeyframeTarget = T;
 
