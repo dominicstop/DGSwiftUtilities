@@ -42,3 +42,9 @@ extension UIMenuElement.State: RawValueToStringConvertible {
     };
   };
 };
+
+@available(iOS 13.0, *)
+extension UIMenuElement.State: Swift.CustomStringConvertible {}
+
+@available(iOS 13.0, *)
+extension UIMenuElement.State: Swift.CaseIterable {}

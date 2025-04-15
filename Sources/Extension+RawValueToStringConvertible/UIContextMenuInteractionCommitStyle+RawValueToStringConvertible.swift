@@ -38,3 +38,9 @@ extension UIContextMenuInteractionCommitStyle: RawValueToStringConvertible {
     };
   };
 };
+
+@available(iOS 13.0, *)
+extension UIContextMenuInteractionCommitStyle: Swift.CustomStringConvertible {}
+
+@available(iOS 13.0, *)
+extension UIContextMenuInteractionCommitStyle: Swift.CaseIterable {}

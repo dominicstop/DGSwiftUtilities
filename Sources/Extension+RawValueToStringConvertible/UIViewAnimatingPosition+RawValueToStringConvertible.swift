@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 extension UIViewAnimatingPosition: RawValueToStringConvertible {
   
   // MARK: - CaseIterable
@@ -38,3 +39,7 @@ extension UIViewAnimatingPosition: RawValueToStringConvertible {
   };
 };
 
+
+extension UIViewAnimatingPosition: Swift.CustomStringConvertible {}
+
+extension UIViewAnimatingPosition: Swift.CaseIterable {}

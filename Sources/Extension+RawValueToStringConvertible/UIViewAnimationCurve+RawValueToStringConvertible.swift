@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 extension UIView.AnimationCurve: RawValueToStringConvertible {
 
   // MARK: - CaseIterable
@@ -41,3 +42,7 @@ extension UIView.AnimationCurve: RawValueToStringConvertible {
     };
   };
 };
+
+extension UIView.AnimationCurve: Swift.CustomStringConvertible {}
+
+extension UIView.AnimationCurve: Swift.CaseIterable {}

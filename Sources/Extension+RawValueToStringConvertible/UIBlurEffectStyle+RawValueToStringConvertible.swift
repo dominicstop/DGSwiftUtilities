@@ -122,3 +122,7 @@ extension UIBlurEffect.Style: RawValueToStringConvertible {
     };
   };
 };
+
+extension UIBlurEffect.Style: Swift.CustomStringConvertible {}
+
+extension UIBlurEffect.Style: Swift.CaseIterable {}

@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension String: RawRepresentable {
+extension String: Swift.RawRepresentable {
   public var rawValue: String {
     self;
   }

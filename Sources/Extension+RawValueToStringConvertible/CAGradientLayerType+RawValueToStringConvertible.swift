@@ -8,6 +8,7 @@
 import Foundation
 import QuartzCore
 
+
 extension CAGradientLayerType: RawValueToStringConvertible {
   
   // MARK: - CaseIterable
@@ -46,3 +47,7 @@ extension CAGradientLayerType: RawValueToStringConvertible {
     };
   };
 };
+
+extension CAGradientLayerType: Swift.CustomStringConvertible {}
+
+extension CAGradientLayerType: Swift.CaseIterable {}

@@ -42,3 +42,9 @@ extension UIUserInterfaceLevel: RawValueToStringConvertible {
     };
   };
 };
+
+@available(iOS 13.0, *)
+extension UIUserInterfaceLevel: Swift.CustomStringConvertible {}
+
+@available(iOS 13.0, *)
+extension UIUserInterfaceLevel: Swift.CaseIterable {}

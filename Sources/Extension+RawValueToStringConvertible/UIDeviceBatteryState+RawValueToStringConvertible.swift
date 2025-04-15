@@ -46,3 +46,8 @@ extension UIDevice.BatteryState: RawValueToStringConvertible {
     };
   };
 };
+
+
+extension UIDevice.BatteryState: Swift.CustomStringConvertible {}
+
+extension UIDevice.BatteryState: Swift.CaseIterable {}

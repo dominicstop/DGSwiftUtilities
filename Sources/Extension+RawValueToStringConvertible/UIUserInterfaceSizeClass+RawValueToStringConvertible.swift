@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 extension UIUserInterfaceSizeClass: RawValueToStringConvertible {
 
   // MARK: - CaseIterable
@@ -41,3 +42,7 @@ extension UIUserInterfaceSizeClass: RawValueToStringConvertible {
     };
   };
 };
+
+extension UIUserInterfaceSizeClass: Swift.CustomStringConvertible {}
+
+extension UIUserInterfaceSizeClass: Swift.CaseIterable {}

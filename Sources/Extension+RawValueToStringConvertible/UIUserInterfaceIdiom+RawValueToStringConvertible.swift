@@ -75,3 +75,8 @@ extension UIUserInterfaceIdiom: RawValueToStringConvertible {
     };
   };
 };
+
+
+extension UIUserInterfaceIdiom: Swift.CustomStringConvertible {}
+
+extension UIUserInterfaceIdiom: Swift.CaseIterable {}

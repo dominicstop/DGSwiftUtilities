@@ -67,3 +67,10 @@ extension UIImage.SymbolWeight: RawValueToStringConvertible {
     };
   };
 };
+
+@available(iOS 13.0, *)
+extension UIImage.SymbolWeight: Swift.CustomStringConvertible {}
+
+@available(iOS 13.0, *)
+extension UIImage.SymbolWeight: Swift.CaseIterable {}
+

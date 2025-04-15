@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 extension UIImage.RenderingMode: RawValueToStringConvertible {
 
   // MARK: - CaseIterable
@@ -37,3 +38,8 @@ extension UIImage.RenderingMode: RawValueToStringConvertible {
     };
   };
 };
+
+
+extension UIImage.RenderingMode: Swift.CustomStringConvertible {}
+
+extension UIImage.RenderingMode: Swift.CaseIterable {}

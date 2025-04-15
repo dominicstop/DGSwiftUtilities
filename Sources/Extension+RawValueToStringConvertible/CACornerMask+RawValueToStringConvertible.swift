@@ -63,3 +63,6 @@ extension CACornerMask: RawValueToStringConvertible {
   };
 };
 
+extension CACornerMask: Swift.CustomStringConvertible {}
+
+extension CACornerMask: Swift.CaseIterable {}

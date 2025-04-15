@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 extension UIInterfaceOrientation: RawValueToStringConvertible {
 
   // MARK: - CaseIterable
@@ -49,3 +50,7 @@ extension UIInterfaceOrientation: RawValueToStringConvertible {
     };
   };
 };
+
+extension UIInterfaceOrientation: Swift.CustomStringConvertible {}
+
+extension UIInterfaceOrientation: Swift.CaseIterable {}

@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 @available(iOS 13.0, *)
 extension UIMenuElement.Attributes: RawValueToStringConvertible {
 
@@ -65,3 +66,10 @@ extension UIMenuElement.Attributes: RawValueToStringConvertible {
     };
   };
 }
+
+
+@available(iOS 13.0, *)
+extension UIMenuElement.Attributes: Swift.CustomStringConvertible {}
+
+@available(iOS 13.0, *)
+extension UIMenuElement.Attributes: Swift.CaseIterable {}

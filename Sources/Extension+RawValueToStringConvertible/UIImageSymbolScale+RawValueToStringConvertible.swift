@@ -46,3 +46,9 @@ extension UIImage.SymbolScale: RawValueToStringConvertible {
     };
   }
 };
+
+@available(iOS 13.0, *)
+extension UIImage.SymbolScale: Swift.CustomStringConvertible {}
+
+@available(iOS 13.0, *)
+extension UIImage.SymbolScale: Swift.CaseIterable {}

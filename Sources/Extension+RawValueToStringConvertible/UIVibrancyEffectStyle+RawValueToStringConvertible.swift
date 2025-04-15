@@ -57,3 +57,9 @@ extension UIVibrancyEffectStyle: RawValueToStringConvertible {
     };
   }
 };
+
+@available(iOS 13.0, *)
+extension UIVibrancyEffectStyle: Swift.CustomStringConvertible {}
+
+@available(iOS 13.0, *)
+extension UIVibrancyEffectStyle: Swift.CaseIterable {}

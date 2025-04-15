@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 extension UITraitEnvironmentLayoutDirection: RawValueToStringConvertible {
 
   // MARK: - CaseIterable
@@ -41,3 +42,8 @@ extension UITraitEnvironmentLayoutDirection: RawValueToStringConvertible {
     };
   };
 };
+
+
+extension UITraitEnvironmentLayoutDirection: Swift.CustomStringConvertible {}
+
+extension UITraitEnvironmentLayoutDirection: Swift.CaseIterable {}

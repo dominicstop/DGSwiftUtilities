@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIGestureRecognizer.State: CustomStringConvertible {
+extension UIGestureRecognizer.State: Swift.CustomStringConvertible {
 
   public var description: String {
     switch self {

@@ -73,3 +73,7 @@ extension UIModalPresentationStyle: RawValueToStringConvertible {
     };
   };
 };
+
+extension UIModalPresentationStyle: Swift.CustomStringConvertible {}
+
+extension UIModalPresentationStyle: Swift.CaseIterable {}

@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 extension UIFont.TextStyle: RawValueToStringConvertible {
 
   // MARK: - CaseIterable
@@ -91,3 +92,8 @@ extension UIFont.TextStyle: RawValueToStringConvertible {
     }
   }
 }
+
+extension UIFont.TextStyle: Swift.CustomStringConvertible {}
+
+extension UIFont.TextStyle: Swift.CaseIterable {}
+

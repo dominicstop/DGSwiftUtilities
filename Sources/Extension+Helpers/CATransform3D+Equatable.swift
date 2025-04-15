@@ -7,7 +7,8 @@
 
 import QuartzCore
 
-extension CATransform3D: Equatable {
+
+extension CATransform3D: Swift.Equatable {
 
   fileprivate static let keys: [KeyPath<Self, CGFloat>] = [
       \.m11, \.m12, \.m13, \.m14,
