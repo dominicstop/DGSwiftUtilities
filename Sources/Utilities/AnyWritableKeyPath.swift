@@ -28,13 +28,13 @@ public struct AnyWritableKeyPath<Root> {
     _ newValue: Any
   ) throws -> Void;
   
-  private var metadataKeyPathValueType: String;
-  
+  private var metadataKeyPathDesc: String;
+
   public var partialKeyPath: PartialKeyPath;
   
   public init<U>(keyPath: WritableKeyPath<Root, U>){
     self.partialKeyPath = keyPath;
-    self.metadataKeyPathValueType = String(describing: U.self);
+    self.metadataKeyPathDesc = String(describing: keyPath);
     
     self.setValueBlock = {
       guard let newValue = $1 as? U else {
@@ -118,7 +118,7 @@ extension AnyWritableKeyPath: Equatable {
   
   public static func == (lhs: Self, rhs: Self) -> Bool {
        lhs.partialKeyPath == rhs.partialKeyPath
-    && lhs.metadataKeyPathValueType == rhs.metadataKeyPathValueType;
+    && lhs.metadataKeyPathDesc == rhs.metadataKeyPathDesc;
   };
 };
 
@@ -129,6 +129,6 @@ extension AnyWritableKeyPath: Hashable {
   
   public func hash(into hasher: inout Hasher) {
     hasher.combine(self.partialKeyPath);
-    hasher.combine(self.metadataKeyPathValueType);
+    hasher.combine(self.metadataKeyPathDesc);
   };
 }
