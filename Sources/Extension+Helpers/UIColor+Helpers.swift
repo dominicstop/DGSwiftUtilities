@@ -347,7 +347,7 @@ public extension UIColor {
       alpha: &color_a
     );
     
-    return (color_a, color_s, color_b, color_a);
+    return (color_h, color_s, color_b, color_a);
   };
   
   var asColorHSBA: ColorHSBA {
