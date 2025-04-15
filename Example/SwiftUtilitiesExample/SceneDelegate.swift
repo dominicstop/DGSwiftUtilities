@@ -130,7 +130,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       let test01: CGRect.InterpolatableElements = [.height, .width, .x, .y];
       let anyKeyPaths = test01.getAssociatedAnyKeyPaths(forType: CGRect.self);
       
-      let map1 = CGRect.interpolatablePropertiesMap as Dictionary<AnyKeyPath, Any>;
+      let map1: Dictionary<AnyKeyPath, Any> = CGRect.interpolatablePropertiesMap.reduce(into: [:]){
+        $0[$1.key.partialKeyPath] = $1.value;
+      };
       print("CGRect.interpolatablePropertiesMap", map1);
       
       let map2 = map1 as! Dictionary<PartialKeyPath<CGRect>, Any>;
@@ -159,7 +161,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       
       test1(
         rootType: CGRect.self,
-        item: CGRect.interpolatablePropertiesMap.keys.first! as AnyKeyPath
+        item: map1.keys.first! as AnyKeyPath
       );
       
       
