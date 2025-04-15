@@ -23,6 +23,10 @@ public struct ColorHSBA: Equatable {
     return self.uiColor.cgColor;
   };
   
+  public var asColorRGBA: ColorRGBA {
+    self.uiColor.asColorRGBA;
+  };
+  
   public init(h: CGFloat, s: CGFloat, b: CGFloat, a: CGFloat = 1) {
     self.h = h;
     self.s = s;
