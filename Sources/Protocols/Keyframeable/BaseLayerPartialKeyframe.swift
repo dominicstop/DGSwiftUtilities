@@ -6,7 +6,7 @@
 //
 
 
-typealias BaseLayerPartialKeyframe =
+public typealias BaseLayerPartialKeyframe =
      BaseLayerBorderPartialKeyframe
    & BaseLayerShadowPartialKeyframe
    & BaseLayerSystemCornerRadiusPartialKeyframe;
