@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 
-public extension Dictionary where Key == String {
-
+public extension Dictionary {
+  
   var nilIfEmpty: Self? {
     self.count > 0 ? self : nil;
   };
@@ -30,7 +30,7 @@ public extension Dictionary where Key == String {
       shouldOverwrite ? new : current;
     };
   };
-
+  
   mutating func unwrapAndSet(forKey key: Key, with value: Value?){
     guard let value = value else {
       return;
@@ -49,6 +49,12 @@ public extension Dictionary where Key == String {
     
     self.merge(with: otherDict, shouldOverwrite: shouldOverwrite);
   };
+};
+
+// MARK: - "Get Value"-Related
+// ---------------------------
+
+public extension Dictionary where Key == String {
 
   // MARK: - Get Value (Via Explicit Casting)
   // ----------------------------------------
