@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 extension UIColor: UniformInterpolatable {
 
   public typealias InterpolatableValue = UIColor;
@@ -18,8 +19,8 @@ extension UIColor: UniformInterpolatable {
     easing: InterpolationEasing?
   ) -> InterpolatableValue {
     
-    var colorStartHSBA = colorStart.hsba;
-    var colorEndHSBA = colorEnd.hsba;
+    let colorStartHSBA = colorStart.hsba;
+    let colorEndHSBA = colorEnd.hsba;
     
     let result_h = InterpolatorHelpers.lerp(
       valueStart: colorStartHSBA.h,
@@ -55,6 +56,14 @@ extension UIColor: UniformInterpolatable {
       brightness: result_b,
       alpha: result_a
     );
+  };
+};
+
+extension UIColor: @retroactive Comparable {
+  
+  public static func < (lhs: UIColor, rhs: UIColor) -> Bool {
+       lhs.rgba < rhs.rgba
+    && lhs.hsba < rhs.rgba;
   };
 };
 
