@@ -318,9 +318,47 @@ public extension UIColor {
     return (red, green, blue, alpha);
   };
   
+  var asColorRGBA: ColorRGBA {
+    let components = self.rgba;
+    
+    return .init(
+      r: components.r,
+      g: components.g,
+      b: components.b,
+      a: components.a
+    );
+  };
+  
   var components: [CGFloat] {
     let rgba = self.rgba;
     return [rgba.r, rgba.g, rgba.b, rgba.a];
+  };
+  
+  var hsba: (h: CGFloat, s: CGFloat, b: CGFloat, a: CGFloat) {
+    var color_h: CGFloat = 0;
+    var color_s: CGFloat = 0;
+    var color_b: CGFloat = 0;
+    var color_a: CGFloat = 0;
+    
+    self.getHue(
+      &color_h,
+      saturation: &color_s,
+      brightness: &color_b,
+      alpha: &color_a
+    );
+    
+    return (color_a, color_s, color_b, color_a);
+  };
+  
+  var asColorHSBA: ColorHSBA {
+    let components = self.hsba;
+    
+    return .init(
+      h: components.h,
+      s: components.s,
+      b: components.b,
+      a: components.a
+    );
   };
   
   // MARK: - Init
@@ -461,5 +499,14 @@ public extension UIColor {
     } else {
       self.init(cssColor: stringLight);
     };
+  };
+  
+  // MARK: - Equatable
+  // -----------------
+  
+  static func ==(_ lhs: UIColor, _ rhs: UIColor) -> Bool {
+       lhs.rgba == rhs.rgba
+    || lhs.hsba == rhs.hsba
+    || lhs.cgColor == rhs.cgColor;
   };
 };
