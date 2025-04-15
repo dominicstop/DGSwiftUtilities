@@ -131,7 +131,6 @@ public extension CompositeInterpolatable {
                 "unable to lerp,"
               + " case not implemented for: \(String(describing: partialKeyPath))"
               + " with type: \(partialKeyPath.valueTypeAsString)."
-              + " conforms to UniformInterpolatable: \(newValue is (any UniformInterpolatable))"
           );
           fatalError(error.errorDescription!);
           #endif
@@ -243,7 +242,7 @@ public extension CompositeInterpolatable {
   ) -> T {
     
     let percentages: [T] = Self.interpolatablePropertiesMap.reduce(into: []) {
-      switch $1.key {
+      switch $1.key.partialKeyPath {
         case let keyPath as WritableKeyPath<InterpolatableValue, T>:
           let concreteValueStart = valueStart[keyPath: keyPath];
           let concreteValueEnd = valueEnd[keyPath: keyPath];
