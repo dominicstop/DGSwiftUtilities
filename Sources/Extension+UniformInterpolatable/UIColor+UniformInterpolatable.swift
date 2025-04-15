@@ -71,8 +71,8 @@ extension UIColor: UniformInterpolatable {
     );
     
     return .init(
-      hue: result_s,
-      saturation: result_h,
+      hue: result_h,
+      saturation: result_s,
       brightness: result_b,
       alpha: result_a
     );
