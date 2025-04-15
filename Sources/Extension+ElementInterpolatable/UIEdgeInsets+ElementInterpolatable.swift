@@ -53,10 +53,10 @@ extension UIEdgeInsets: ElementInterpolatable {
   };
 
   public static var interpolatablePropertiesMap: InterpolatableValuesMap = [
-    \.top: CGFloat.self,
-    \.bottom: CGFloat.self,
-    \.left: CGFloat.self,
-    \.right: CGFloat.self,
+    .init(keyPath: \.top): CGFloat.self,
+    .init(keyPath: \.bottom): CGFloat.self,
+    .init(keyPath: \.left): CGFloat.self,
+    .init(keyPath: \.right): CGFloat.self,
   ];
 };
 

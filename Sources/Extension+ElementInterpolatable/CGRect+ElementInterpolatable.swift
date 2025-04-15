@@ -55,8 +55,8 @@ extension CGRect: ElementInterpolatable {
   };
 
   public static var interpolatablePropertiesMap: InterpolatableValuesMap = [
-    \.size: CGSize.self,
-    \.origin: CGPoint.self,
+    .init(keyPath: \.size): CGSize.self,
+    .init(keyPath: \.origin): CGPoint.self,
   ];
 };
 

@@ -12,7 +12,7 @@ import QuartzCore
 public protocol CompositeInterpolatable: UniformInterpolatable {
   
   typealias InterpolatableValuesMap =
-    [PartialKeyPath<InterpolatableValue>: any UniformInterpolatable.Type];
+    [AnyWritableKeyPath<InterpolatableValue>: any UniformInterpolatable.Type];
     
   typealias EasingKeyPathMap = [AnyKeyPath: InterpolationEasing];
   typealias ClampingKeyPathMap = [AnyKeyPath: ClampingOptions];
@@ -43,7 +43,9 @@ public extension CompositeInterpolatable {
     
     var newValue = valueStart;
     
-    for (partialKeyPath, type) in Self.interpolatablePropertiesMap {
+    for (typeErasedPath, type) in Self.interpolatablePropertiesMap {
+      let partialKeyPath = typeErasedPath.partialKeyPath;
+      
       let easing = easingMap[partialKeyPath];
       let clampingOptions = clampingMap[partialKeyPath];
       
@@ -157,7 +159,7 @@ public extension CompositeInterpolatable {
     
     if let easing = easing {
       easingMap = Self.interpolatablePropertiesMap.reduce(into: [:]){
-        $0[$1.key] = easing;
+        $0[$1.key.partialKeyPath] = easing;
       };
     };
     

@@ -49,10 +49,10 @@ extension ColorHSBA: ElementInterpolatable {
   };
   
   public static var interpolatablePropertiesMap: InterpolatableValuesMap = [
-    \.h: CGFloat.self,
-    \.s: CGFloat.self,
-    \.b: CGFloat.self,
-    \.a: CGFloat.self,
+    .init(keyPath: \.h): CGFloat.self,
+    .init(keyPath: \.s): CGFloat.self,
+    .init(keyPath: \.b): CGFloat.self,
+    .init(keyPath: \.a): CGFloat.self,
   ];
   
   public init() {

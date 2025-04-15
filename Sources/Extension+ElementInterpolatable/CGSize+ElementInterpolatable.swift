@@ -41,7 +41,7 @@ extension CGSize: ElementInterpolatable {
   };
   
   public static var interpolatablePropertiesMap: InterpolatableValuesMap = [
-    \.width: CGFloat.self,
-    \.height: CGFloat.self,
+    .init(keyPath: \.width): CGFloat.self,
+    .init(keyPath: \.height): CGFloat.self,
   ];
 };

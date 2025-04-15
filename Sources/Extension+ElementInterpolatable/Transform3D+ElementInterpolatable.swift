@@ -95,16 +95,16 @@ extension Transform3D: ElementInterpolatable {
   };
   
   public static var interpolatablePropertiesMap: InterpolatableValuesMap = [
-    \.translateX: CGFloat.self,
-    \.translateY: CGFloat.self,
-    \.translateZ: CGFloat.self,
-    \.scaleX: CGFloat.self,
-    \.scaleY: CGFloat.self,
-    \.rotateX: Angle<CGFloat>.self,
-    \.rotateY: Angle<CGFloat>.self,
-    \.rotateZ: Angle<CGFloat>.self,
-    \.perspective: CGFloat.self,
-    \.skewX: CGFloat.self,
-    \.skewY: CGFloat.self,
+    .init(keyPath: \.translateX): CGFloat.self,
+    .init(keyPath: \.translateY): CGFloat.self,
+    .init(keyPath: \.translateZ): CGFloat.self,
+    .init(keyPath: \.scaleX): CGFloat.self,
+    .init(keyPath: \.scaleY): CGFloat.self,
+    .init(keyPath: \.rotateX): Angle<CGFloat>.self,
+    .init(keyPath: \.rotateY): Angle<CGFloat>.self,
+    .init(keyPath: \.rotateZ): Angle<CGFloat>.self,
+    .init(keyPath: \.perspective): CGFloat.self,
+    .init(keyPath: \.skewX): CGFloat.self,
+    .init(keyPath: \.skewY): CGFloat.self,
   ];
 };

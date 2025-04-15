@@ -41,7 +41,7 @@ extension CGPoint: ElementInterpolatable {
   };
 
   public static var interpolatablePropertiesMap: InterpolatableValuesMap = [
-    \.x: CGFloat.self,
-    \.y: CGFloat.self,
+    .init(keyPath: \.x): CGFloat.self,
+    .init(keyPath: \.y): CGFloat.self,
   ];
 };
