@@ -60,4 +60,13 @@ extension CGRect: ElementInterpolatable {
   ];
 };
 
+// MARK: - CGRect+Comparable
+// -------------------------
 
+extension CGRect: Swift.Comparable {
+  
+  public static func < (lhs: Self, rhs: Self) -> Bool {
+       lhs.size   < rhs.size
+    && lhs.origin < rhs.origin;
+  };
+};

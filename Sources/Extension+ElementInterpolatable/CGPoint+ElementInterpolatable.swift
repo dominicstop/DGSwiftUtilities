@@ -45,3 +45,14 @@ extension CGPoint: ElementInterpolatable {
     .init(keyPath: \.y): CGFloat.self,
   ];
 };
+
+// MARK: - CGPoint+Comparable
+// --------------------------
+
+extension CGPoint: Swift.Comparable {
+  
+  public static func < (lhs: CGPoint, rhs: CGPoint) -> Bool {
+       lhs.x < rhs.x
+    && lhs.y < rhs.y;
+  }
+};

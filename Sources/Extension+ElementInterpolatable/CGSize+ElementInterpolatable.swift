@@ -45,3 +45,14 @@ extension CGSize: ElementInterpolatable {
     .init(keyPath: \.height): CGFloat.self,
   ];
 };
+
+// MARK: - CGSize+Comparable
+// --------------------------
+
+extension CGSize: Swift.Comparable {
+  
+  public static func < (lhs: Self, rhs: Self) -> Bool {
+       lhs.width < rhs.width
+    && lhs.height < rhs.height;
+  };
+};
