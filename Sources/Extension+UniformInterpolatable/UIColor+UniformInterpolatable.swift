@@ -18,22 +18,19 @@ extension UIColor: UniformInterpolatable {
     easing: InterpolationEasing?
   ) -> InterpolatableValue {
     
-    var start_h: CGFloat = 0;
-    var start_s: CGFloat = 0;
-    var start_b: CGFloat = 0;
-    var start_a: CGFloat = 0;
+    var (
+      start_h,
+      start_s,
+      start_b,
+      start_a
+    ) = colorStart.hsba;
     
-    colorStart.getHue(
-      &start_h,
-      saturation: &start_s,
-      brightness: &start_b,
-      alpha: &start_a
-    );
-    
-    var end_h: CGFloat = 0;
-    var end_s: CGFloat = 0;
-    var end_b: CGFloat = 0;
-    var end_a: CGFloat = 0;
+    var (
+      end_h,
+      end_s,
+      end_b,
+      end_a
+    ) = colorEnd.hsba;
     
     colorEnd.getHue(
       &end_h,
