@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import QuartzCore
 
 
 public protocol CompositeInterpolatable: UniformInterpolatable {
@@ -65,6 +66,7 @@ public extension CompositeInterpolatable {
         continue;
       };
       
+      
       // not primitive value...
       // current property provides it's own interpolation function
       //
@@ -110,12 +112,24 @@ public extension CompositeInterpolatable {
           
           newValue[keyPath: keyPath] = result;
           continue;
+          
+        case let keyPath as WritableKeyPath<InterpolatableValue, CACornerMask>:
+          let concreteValueStart = valueStart[keyPath: keyPath];
+          let concreteValueEnd   = valueEnd  [keyPath: keyPath];
+          
+          let result = percent > 0.5 ? concreteValueStart : concreteValueEnd;
+          newValue[keyPath: keyPath] = result;
+          continue;
             
         default:
           #if DEBUG
           let error = GenericError(
             errorCode: .runtimeError,
-            description: "Case not implemented for: \(partialKeyPath.valueTypeAsString), unable to lerp"
+            description:
+                "unable to lerp,"
+              + " case not implemented for: \(String(describing: partialKeyPath))"
+              + " with type: \(partialKeyPath.valueTypeAsString)."
+              + " conforms to UniformInterpolatable: \(newValue is (any UniformInterpolatable))"
           );
           fatalError(error.errorDescription!);
           #endif
