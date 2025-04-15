@@ -8,7 +8,7 @@
 import UIKit
 
 
-public protocol BaseViewKeyframeConfig<KeyframeTarget>: BaseKeyframeConfig where KeyframeTarget: UIView {
+public protocol BaseViewKeyframeConfig<KeyframeTarget>: KeyframeAppliable where KeyframeTarget: UIView {
   
   associatedtype KeyframeTarget;
 

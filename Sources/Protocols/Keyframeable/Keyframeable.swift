@@ -11,7 +11,7 @@ import UIKit
 public protocol Keyframeable {
   
   associatedtype KeyframeTarget = Self;
-  associatedtype KeyframeConfig: BaseKeyframeConfig<KeyframeTarget>;
+  associatedtype KeyframeConfig: KeyframeAppliable<KeyframeTarget>;
   
   typealias PropertyAnimatorAnimationBlocks = (
     setup: () throws -> Void,

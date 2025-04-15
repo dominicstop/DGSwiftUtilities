@@ -8,7 +8,7 @@
 import UIKit
 
 
-public protocol KeyframeConfigAnimating<KeyframeTarget>: BaseKeyframeConfig {
+public protocol KeyframeConfigAnimating<KeyframeTarget>: KeyframeAppliable {
   
   associatedtype KeyframeTarget;
   

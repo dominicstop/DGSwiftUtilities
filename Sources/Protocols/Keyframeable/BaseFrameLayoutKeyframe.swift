@@ -11,7 +11,7 @@ import UIKit
 // TODO: WIP for `AdaptiveModal`
 // to be impl. (stub/placeholder for now)
 
-public protocol BaseFrameLayoutKeyframe: BaseKeyframeConfig where KeyframeTarget == UIView {
+public protocol BaseFrameLayoutKeyframe: KeyframeAppliable where KeyframeTarget == UIView {
   
   var frame: CGRect { get };
   var contentPadding: UIEdgeInsets { get };

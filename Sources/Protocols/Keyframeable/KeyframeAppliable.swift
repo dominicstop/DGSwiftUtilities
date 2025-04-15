@@ -1,6 +1,6 @@
 //
-//  BaseKeyframeConfig.swift
-//  
+//  KeyframeAppliable.swift
+//
 //
 //  Created by Dominic Go on 12/26/24.
 //
@@ -8,7 +8,7 @@
 import UIKit
 
 
-public protocol BaseKeyframeConfig<KeyframeTarget> {
+public protocol KeyframeAppliable<KeyframeTarget> {
 
   associatedtype KeyframeTarget;
 
@@ -18,7 +18,7 @@ public protocol BaseKeyframeConfig<KeyframeTarget> {
 // MARK: - BaseKeyframeConfig+Default
 // ----------------------------------
 
-public extension BaseKeyframeConfig {
+public extension KeyframeAppliable {
   
   func apply(
     toTarget target: KeyframeTarget
@@ -31,7 +31,7 @@ public extension BaseKeyframeConfig {
 // MARK: - BaseKeyframeConfig+Helpers
 // ------------------------------
 
-public extension BaseKeyframeConfig {
+public extension KeyframeAppliable {
   
   func applyBaseKeyframe(
     toView targetView: KeyframeTarget
