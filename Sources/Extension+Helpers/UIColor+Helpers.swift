@@ -10,6 +10,18 @@ import UIKit;
 
 public extension UIColor {
   
+  // MARK: - Presets
+  // ---------------
+  
+  static var systemBackgroundWithFallback: UIColor {
+    if #available(iOS 13.0, *) {
+      return .systemBackground;
+      
+    } else {
+      return .white;
+    };
+  };
+  
   // MARK: - Static Variables
   // ------------------------
   
