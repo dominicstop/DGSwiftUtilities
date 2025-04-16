@@ -59,11 +59,10 @@ extension UIColor: UniformInterpolatable {
   };
 };
 
-extension UIColor: @retroactive Comparable {
+extension UIColor: Swift.Comparable {
   
   public static func < (lhs: UIColor, rhs: UIColor) -> Bool {
-       lhs.rgba < rhs.rgba
-    && lhs.hsba < rhs.rgba;
+    lhs.hsba < rhs.hsba;
   };
 };
 
