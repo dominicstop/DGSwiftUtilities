@@ -30,7 +30,7 @@ public extension BaseLayerBorderConcreteKeyframe {
     ];
   };
   
-  static func extractBaseLayerPartialToConcreteKeyframePropertyMap<T: BaseConcreteKeyframe>(
+  static func extractBaseLayerShadowPartialToConcreteKeyframePropertyMap<T: BaseConcreteKeyframe>(
     forType concreteKeyframeType: T.Type = T.self
   ) -> T.KeyframePropertyMap {
     

@@ -45,7 +45,7 @@ public extension BaseConcreteKeyframe {
         Self.self as? any BaseLayerBorderConcreteKeyframe.Type
     {
       let extractedMap = concreteKeyframeType
-        .extractBaseLayerPartialToConcreteKeyframePropertyMap(forType: Self.self);
+        .extractBaseLayerShadowPartialToConcreteKeyframePropertyMap(forType: Self.self);
       
       combinedMap.merge(with: extractedMap);
       totalMapCount += extractedMap.count;
