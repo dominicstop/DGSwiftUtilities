@@ -10,7 +10,7 @@ import UIKit
 
 public struct BasicViewConcreteKeyframe<KeyframeTarget: UIView>: BaseViewConcreteKeyframe {
   
-  public typealias PartialKeyframe = BasicViewPartialKeyframe;
+  public typealias PartialKeyframe = BasicViewPartialKeyframe<KeyframeTarget>;
   public typealias KeyframeTarget = KeyframeTarget;
   
   public static var `default`: Self {

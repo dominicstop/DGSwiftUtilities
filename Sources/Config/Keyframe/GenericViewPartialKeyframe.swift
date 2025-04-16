@@ -8,13 +8,15 @@
 import UIKit
 
 
-public struct GenericViewPartialKeyframe:
+public struct GenericViewPartialKeyframe<KeyframeTarget: UIView>:
   BaseViewPartialKeyframe,
   BaseLayerPartialKeyframe
 {
-  public typealias ConcreteKeyframe = GenericViewConcreteKeyframe;
+  public typealias ConcreteKeyframe = GenericViewConcreteKeyframe<KeyframeTarget>;
   
-  public static var empty: Self = .init();
+  public static var empty: Self {
+    .init();
+  };
   
   public var opacity: CGFloat?;
   public var transform: Transform3D?;
@@ -30,4 +32,30 @@ public struct GenericViewPartialKeyframe:
   
   public var cornerRadius: CGFloat?;
   public var cornerMask: CACornerMask?;
+  
+  public init(
+    opacity: CGFloat? = nil,
+    transform: Transform3D? = nil,
+    backgroundColor: UIColor? = nil,
+    borderWidth: CGFloat? = nil,
+    borderColor: UIColor? = nil,
+    shadowColor: UIColor? = nil,
+    shadowOffset: CGSize? = nil,
+    shadowOpacity: CGFloat? = nil,
+    shadowRadius: CGFloat? = nil,
+    cornerRadius: CGFloat? = nil,
+    cornerMask: CACornerMask? = nil
+  ) {
+    self.opacity = opacity
+    self.transform = transform
+    self.backgroundColor = backgroundColor
+    self.borderWidth = borderWidth
+    self.borderColor = borderColor
+    self.shadowColor = shadowColor
+    self.shadowOffset = shadowOffset
+    self.shadowOpacity = shadowOpacity
+    self.shadowRadius = shadowRadius
+    self.cornerRadius = cornerRadius
+    self.cornerMask = cornerMask
+  };
 };
