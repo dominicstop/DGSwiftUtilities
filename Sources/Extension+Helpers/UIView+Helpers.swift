@@ -94,6 +94,32 @@ public extension UIView {
     };
   };
   
+  var leadingConstraint: NSLayoutConstraint? {
+    self.constraints.first {
+         $0.firstAttribute == .leading
+      || $0.firstAttribute == .left
+    };
+  };
+  
+  var trailingConstraint: NSLayoutConstraint? {
+    self.constraints.first {
+         $0.firstAttribute == .trailing
+      || $0.firstAttribute == .right
+    };
+  };
+  
+  var topConstraint: NSLayoutConstraint? {
+    self.constraints.first {
+      $0.firstAttribute == .top;
+    };
+  };
+  
+  var bottomConstraint: NSLayoutConstraint? {
+    self.constraints.first {
+      $0.firstAttribute == .bottom;
+    };
+  };
+  
   // MARK: - Functions
   // -----------------
   
