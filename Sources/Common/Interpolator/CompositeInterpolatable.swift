@@ -11,8 +11,13 @@ import QuartzCore
 
 public protocol CompositeInterpolatable: UniformInterpolatable {
   
+  typealias InterpolatableKeyPath = AnyWritableKeyPath<InterpolatableValue>;
+  
   typealias InterpolatableValuesMap =
-    [AnyWritableKeyPath<InterpolatableValue>: any UniformInterpolatable.Type];
+    [InterpolatableKeyPath: any UniformInterpolatable.Type];
+  
+  typealias InterpolatableValuesFallbackBehaviorMap =
+    [InterpolatableKeyPath: InterpolationFallbackBehavior];
     
   typealias EasingKeyPathMap = [AnyKeyPath: InterpolationEasing];
   typealias ClampingKeyPathMap = [AnyKeyPath: ClampingOptions];
@@ -32,6 +37,10 @@ public protocol CompositeInterpolatable: UniformInterpolatable {
 // ----------------------------------------------------
 
 public extension CompositeInterpolatable {
+  
+  static var interpolatablePropertiesFallbackBehaviorMap: InterpolatableValuesFallbackBehaviorMap? {
+    return nil;
+  };
   
   static func lerp(
     valueStart: InterpolatableValue,
@@ -114,27 +123,33 @@ public extension CompositeInterpolatable {
           
           newValue[keyPath: keyPath] = result;
           continue;
-          
-        case let keyPath as WritableKeyPath<InterpolatableValue, CACornerMask>:
-          let concreteValueStart = valueStart[keyPath: keyPath];
-          let concreteValueEnd   = valueEnd  [keyPath: keyPath];
-          
-          let result = percent > 0.5 ? concreteValueStart : concreteValueEnd;
-          newValue[keyPath: keyPath] = result;
-          continue;
             
         default:
-          #if DEBUG
-          let error = GenericError(
-            errorCode: .runtimeError,
-            description:
-                "unable to lerp,"
-              + " case not implemented for: \(String(describing: partialKeyPath))"
-              + " with type: \(partialKeyPath.valueTypeAsString)."
+          let fallbackMode =
+            Self.getFallbackBehavior(forKeyPath: typeErasedPath);
+          
+          let nextValue = fallbackMode.getValue(
+            startValue: valueStart,
+            endValue: valueEnd,
+            percent: percent
           );
-          fatalError(error.errorDescription!);
+          
+          #if DEBUG
+          print(
+            #function,
+            "unable to lerp.",
+            "case not implemented for path: \(String(describing: partialKeyPath))",
+            "with type: \(partialKeyPath.valueTypeAsString),",
+            "using fallback mode: \(fallbackMode.rawValue),",
+            "with fallback value: \(nextValue).",
+            "\n"
+          );
           #endif
-          break;
+          
+          try? typeErasedPath.setValue(
+            target: &newValue,
+            withValue: nextValue
+          );
       };
     };
     
@@ -176,6 +191,17 @@ public extension CompositeInterpolatable {
 // ---------------------------
 
 public extension CompositeInterpolatable {
+  
+  static func getFallbackBehavior(
+    forKeyPath keyPath: InterpolatableKeyPath
+  ) -> InterpolationFallbackBehavior {
+    
+    guard let match = Self.interpolatablePropertiesFallbackBehaviorMap?[keyPath] else {
+      return .copyBothSplitInHalf;
+    };
+    
+    return match;
+  };
   
   static func rangedLerp(
     inputValue: CGFloat,
