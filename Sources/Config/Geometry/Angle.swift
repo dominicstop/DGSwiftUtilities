@@ -179,12 +179,12 @@ public enum Angle<T: BinaryFloatingPoint>: Equatable, Comparable {
   };
 };
 
-// MARK: - Angle+StaticAlias
-// -------------------------
+// MARK: - Angle+ZeroRepresentable
+// -------------------------------
 
-public extension Angle {
+extension Angle: ZeroRepresentable {
 
-  static var zero: Self {
+  public static var zero: Self {
     .degrees(0);
   };
 };

@@ -513,6 +513,26 @@ public extension Transform3D {
   };
 };
 
+// MARK: Transform3D+ZeroRepresentable
+// -----------------------------------
+
+extension Transform3D: ZeroRepresentable {
+  
+  public static let zero: Self = .init(
+    translateX: 0,
+    translateY: 0,
+    translateZ: 0,
+    scaleX: 0,
+    scaleY: 0,
+    rotateX: .zero,
+    rotateY: .zero,
+    rotateZ: .zero,
+    perspective: 0,
+    skewX: 0,
+    skewY: 0
+  );
+};
+
 // MARK: - UnsafeMutablePointer+Transform3D
 // ----------------------------------------
 

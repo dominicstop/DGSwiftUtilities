@@ -51,3 +51,14 @@ public struct ColorRGBA: Equatable {
     self.init(r: UInt8(r), g: UInt8(g), b: UInt8(b), a: a);
   };
 };
+
+// MARK: - ColorHSBA+ZeroRepresentable
+// -----------------------------------
+
+extension ColorRGBA: ZeroRepresentable {
+  
+  public static var zero: Self {
+    .init(r: 0, g: 0, b: 0, a: 0);
+  };
+};
+

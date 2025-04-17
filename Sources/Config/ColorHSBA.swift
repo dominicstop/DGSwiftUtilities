@@ -46,3 +46,14 @@ public struct ColorHSBA: Equatable {
     self.init(h: UInt8(h), s: UInt8(s), b: UInt8(b), a: a);
   };
 };
+
+// MARK: - ColorHSBA+ZeroRepresentable
+// -----------------------------------
+
+extension ColorHSBA: ZeroRepresentable {
+  
+  public static var zero: ColorHSBA {
+    .init(h: 0, s: 0, b: 0, a: 0);
+  };
+};
+
