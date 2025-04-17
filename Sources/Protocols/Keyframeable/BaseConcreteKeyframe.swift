@@ -83,10 +83,62 @@ public extension BaseConcreteKeyframe {
     }
     #endif
     
-    
     return combinedMap;
   };
 }
+
+// MARK: - BaseConcreteKeyframe+ZeroRepresentable
+// ------------------------------------
+
+extension BaseConcreteKeyframe {
+  
+  public static var zero: Self {
+    var value: Self = .default;
+    
+    Self.partialToConcreteKeyframePropertyMap.forEach {
+      switch $1.partialKeyPath.valueTypeAsType {
+        case let type as ZeroRepresentable.Type:
+          do {
+            try $1.setValue(
+              target: &value,
+              withValue: type.zero
+            );
+            
+          } catch {
+            fallthrough;
+          };
+          
+        default:
+          #if DEBUG
+          print(
+            #function,
+            "\n - Unable to set zero value for path: \($1.partialKeyPath)",
+            "\n - with type: \($1.partialKeyPath.valueTypeAsString)",
+            "\n - using default value of: \(value[keyPath: $1.partialKeyPath])",
+            "\n"
+          );
+          #endif
+          break;
+      };
+    };
+    
+    return value;
+  };
+  
+  public var isZero: Bool {
+    Self.partialToConcreteKeyframePropertyMap.allSatisfy {
+      let currentValue = self[keyPath: $1.partialKeyPath];
+      
+      switch currentValue {
+        case let currentValueRefined as ZeroRepresentable:
+          return currentValueRefined.isZero;
+          
+        default:
+          return true;
+      };
+    };
+  };
+};
 
 // MARK: - BaseConcreteKeyframe+InterpolatableValue
 // ------------------------------------

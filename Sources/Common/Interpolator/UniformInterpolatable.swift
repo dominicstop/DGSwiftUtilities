@@ -8,7 +8,7 @@
 import Foundation
 
 
-public protocol UniformInterpolatable {
+public protocol UniformInterpolatable: ZeroRepresentable {
 
   associatedtype InterpolatableValue: UniformInterpolatable = Self;
 
