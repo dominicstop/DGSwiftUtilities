@@ -148,6 +148,13 @@ struct BaseConcreteKeyframeTest {
     }
   };
   
+  @Test func test_isZero() async throws {
+    let zeroKeyframe: TestConcreteKeyframe = .init(someFloat: 0, someDouble: 0);
+    #expect(zeroKeyframe.isZero);
+    #expect(zeroKeyframe.someFloat.isZero);
+    #expect(zeroKeyframe.someDouble.isZero);
+  };
+  
   @Test func verifyLerping() async throws {
     let keyframeStart: TestConcreteKeyframe = .init(someFloat: 0, someDouble: 0);
     let keyframeEnd: TestConcreteKeyframe = .init(someFloat: 100, someDouble: 100);
@@ -256,4 +263,6 @@ struct BaseConcreteKeyframeTest {
       "\n"
     );
   };
+  
+  
 }
