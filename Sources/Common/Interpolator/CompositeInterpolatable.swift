@@ -284,11 +284,16 @@ public extension CompositeInterpolatable {
           
         default:
           #if DEBUG
-          let error = GenericError(
-            errorCode: .runtimeError,
-            description: "Case not implemented, unable to lerp"
+          let keyPath = $1.key.partialKeyPath;
+          
+          print(
+            #function,
+            "unable to lerp.",
+            "case not implemented for path: \(String(describing: keyPath))",
+            "with type: \(keyPath.valueTypeAsString),",
+            "skipping...",
+            "\n"
           );
-          fatalError(error.errorDescription!);
           #endif
           break;
       };
