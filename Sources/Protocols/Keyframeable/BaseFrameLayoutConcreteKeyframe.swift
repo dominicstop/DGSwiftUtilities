@@ -13,8 +13,18 @@ public protocol BaseFrameLayoutConcreteKeyframe:
     KeyframeTarget: UIView,
     PartialKeyframe: BaseFrameLayoutPartialKeyframe
 {
+  
+  typealias EdgeConstraints = (
+    left: NSLayoutConstraint?,
+    right: NSLayoutConstraint?,
+    top: NSLayoutConstraint?,
+    bottom: NSLayoutConstraint?
+  );
+  
   var frame: CGRect { get set };
   var contentPadding: UIEdgeInsets { get set };
+  
+  var edgeContraints: EdgeConstraints? { get set };
 };
 
 // MARK: - BaseFrameLayoutConcreteKeyframe+Helpers
@@ -53,37 +63,11 @@ public extension BaseFrameLayoutConcreteKeyframe {
       right : -self.contentPadding.right
     );
   };
-  
+
   @discardableResult
   func applyBaseFrameLayoutKeyframe(
-    toTargetView targetView: KeyframeTarget,
-    constraintTarget: UIView? = nil,
-    constraintLeft: NSLayoutConstraint?,
-    constraintRight: NSLayoutConstraint?,
-    constraintTop: NSLayoutConstraint?,
-    constraintBottom: NSLayoutConstraint?
-  ) -> (
-    didChangeFrame: Bool,
-    didChangeConstraints: Bool
-  ) {
-  
-    self.applyBaseLayoutKeyframe(
-      toView: targetView,
-      constraintLeft: constraintLeft,
-      constraintRight: constraintRight,
-      constraintTop: constraintTop,
-      constraintBottom: constraintBottom
-    );
-  };
-
-
-  @discardableResult
-  func applyBaseLayoutKeyframe(
     toView view: UIView,
-    constraintLeft: NSLayoutConstraint?,
-    constraintRight: NSLayoutConstraint?,
-    constraintTop: NSLayoutConstraint?,
-    constraintBottom: NSLayoutConstraint?
+    edgeConstraintsOverride: EdgeConstraints? = nil
   ) -> (
     didChangeFrame: Bool,
     didChangeConstraints: Bool
@@ -95,28 +79,28 @@ public extension BaseFrameLayoutConcreteKeyframe {
     let padding = self.contentPaddingAdjusted;
     var didChangeConstraints = false;
     
-    if let constraintLeft = constraintLeft,
+    if let constraintLeft = edgeConstraintsOverride?.left ?? self.edgeContraints?.left,
        constraintLeft.constant != padding.left
     {
       constraintLeft.constant = padding.left;
       didChangeConstraints = true;
     };
     
-    if let constraintRight = constraintRight,
+    if let constraintRight = edgeConstraintsOverride?.right ?? self.edgeContraints?.right,
        constraintRight.constant != padding.right
     {
       constraintRight.constant = padding.right;
       didChangeConstraints = true;
     };
     
-    if let constraintTop = constraintTop,
+    if let constraintTop = edgeConstraintsOverride?.top ?? self.edgeContraints?.top,
        constraintTop.constant != padding.top
     {
       constraintTop.constant = padding.top;
       didChangeConstraints = true;
     };
     
-    if let constraintBottom = constraintBottom,
+    if let constraintBottom = edgeConstraintsOverride?.bottom ?? self.edgeContraints?.bottom,
        constraintBottom.constant != padding.bottom
     {
       constraintBottom.constant = padding.bottom;
@@ -124,5 +108,28 @@ public extension BaseFrameLayoutConcreteKeyframe {
     };
     
     return (didChangeFrame, didChangeConstraints);
+  };
+  
+  func createBaseFrameLayoutAnimations(
+    forView targetView: UIView,
+    withPrevKeyframe keyframeConfigPrev: (any BaseFrameLayoutConcreteKeyframe)?,
+    forPropertyAnimator propertyAnimator: UIViewPropertyAnimator?,
+    edgeConstraintsOverride: EdgeConstraints? = nil
+  ) throws -> Keyframeable.PropertyAnimatorAnimationBlocks {
+    
+    return (
+      setup: {
+        // no-op
+      },
+      applyKeyframe: {
+        self.applyBaseFrameLayoutKeyframe(
+          toView: targetView,
+          edgeConstraintsOverride: edgeConstraintsOverride
+        );
+      },
+      completion: { _ in
+        // no-op
+      }
+    );
   };
 };
