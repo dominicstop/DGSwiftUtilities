@@ -45,7 +45,7 @@ public extension BaseCustomViewConcreteKeyframe {
       throw GenericError(errorCode: .typeCastFailed);
     };
     
-    return try self.createAnimations(
+    return try self.createBaseViewCustomAnimations(
       forTarget: keyframeTarget,
       withPrevKeyframe: keyframeConfigPrev as? Self,
       forPropertyAnimator: propertyAnimator
