@@ -35,16 +35,14 @@ fileprivate var KeyframePropertyMapCache: Dictionary<String, Any> = [:];
 public extension BaseConcreteKeyframe {
   
   static var partialToConcreteKeyframePropertyMap: KeyframePropertyMap {
-    let key = String(describing: Self.self);
-    
-    if let cachedEntry = KeyframePropertyMapCache[key],
+    if let cachedEntry = KeyframePropertyMapCache[Self.cacheKey],
        let map = cachedEntry as? KeyframePropertyMap
     {
       return map;
     };
     
     let map = Self.createDefaultPartialToConcreteKeyframePropertyMap();
-    KeyframePropertyMapCache[key] = map;
+    KeyframePropertyMapCache[Self.cacheKey] = map;
     
     return map;
   };
@@ -172,30 +170,21 @@ extension BaseConcreteKeyframe {
 // MARK: - BaseConcreteKeyframe+InterpolatableValue
 // ------------------------------------------------
 
+fileprivate var InterpolatablePropertiesMapCache: Dictionary<String, Any> = [:];
+
 public extension BaseConcreteKeyframe where InterpolatableValue == Self {
   
-  // TODO: Extract to standalone helper function
   static var interpolatablePropertiesMap: InterpolatableValuesMap {
-    Self.partialToConcreteKeyframePropertyMap.reduce(into: [:]) {
-      let concreteKeyframeAnyKeyPath = $1.value;
-      
-      guard let uniformInterpolatableType =
-              concreteKeyframeAnyKeyPath.partialKeyPath.valueTypeAsType as? any UniformInterpolatable.Type
-      else {
-        #if DEBUG
-        print(
-          "BaseConcreteKeyframe.interpolatablePropertiesMap",
-          "\n - Error: Could not find uniform interpolatable type for keypath: \(concreteKeyframeAnyKeyPath.partialKeyPath)",
-          "\n - Total keyframes to map: \(Self.partialToConcreteKeyframePropertyMap.count)",
-          "\n - Current map element count: \($0.count)",
-          "\n - Note: Make sure that the concrete keyframe conforms to `UniformInterpolatable"
-        );
-        #endif
-        return;
-      };
-      
-      $0[concreteKeyframeAnyKeyPath] = uniformInterpolatableType;
-    }
+    if let cachedEntry = InterpolatablePropertiesMapCache[Self.cacheKey],
+       let map = cachedEntry as? InterpolatableValuesMap
+    {
+      return map;
+    };
+    
+    let map = Self.createDefaultInterpolatablePropertiesMap();
+    InterpolatablePropertiesMapCache[Self.cacheKey] = map;
+    
+    return map;
   };
   
   init() {
@@ -266,6 +255,36 @@ public extension BaseConcreteKeyframe {
     
     return combinedMap;
   };
+  
+  static func createDefaultInterpolatablePropertiesMap()
+    -> InterpolatableValuesMap where InterpolatableValue == Self
+  {
+    Self.partialToConcreteKeyframePropertyMap.reduce(into: [:]) {
+      let concreteKeyframeAnyKeyPath = $1.value;
+      
+      guard let uniformInterpolatableType =
+              concreteKeyframeAnyKeyPath.partialKeyPath.valueTypeAsType as? any UniformInterpolatable.Type
+      else {
+        #if DEBUG
+        print(
+          #function,
+          "\n - Error: Could not find uniform interpolatable type for keypath: \(concreteKeyframeAnyKeyPath.partialKeyPath)",
+          "\n - Total keyframes to map: \(Self.partialToConcreteKeyframePropertyMap.count)",
+          "\n - Current map element count: \($0.count)",
+          "\n - Note: Make sure that the concrete keyframe conforms to `UniformInterpolatable"
+        );
+        #endif
+        return;
+      };
+      
+      $0[concreteKeyframeAnyKeyPath] = uniformInterpolatableType;
+    }
+  };
+  
+  fileprivate static var cacheKey: String {
+      String(describing: Self.self)
+    + String(describing: KeyframeTarget.self);
+  }
   
   // MARK: Computed Properties
   // -------------------------
