@@ -58,7 +58,7 @@ public extension KeyframeAppliable {
   
   func applyBaseKeyframe<T: UIView>(
     toView targetView: T,
-    edgeConstraintsOverride: BaseFrameLayoutConcreteKeyframe.EdgeConstraints? = nil
+    edgeConstraintsOverride: EdgeConstraints? = nil
   ) {
     
     if let baseViewKeyframe = self as? (any BaseViewConcreteKeyframe) {

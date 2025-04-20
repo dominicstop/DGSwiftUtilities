@@ -14,12 +14,7 @@ public protocol BaseFrameLayoutConcreteKeyframe:
     PartialKeyframe: BaseFrameLayoutPartialKeyframe
 {
   
-  typealias EdgeConstraints = (
-    left: NSLayoutConstraint?,
-    right: NSLayoutConstraint?,
-    top: NSLayoutConstraint?,
-    bottom: NSLayoutConstraint?
-  );
+
   
   var frame: CGRect { get set };
   var contentPadding: UIEdgeInsets { get set };
