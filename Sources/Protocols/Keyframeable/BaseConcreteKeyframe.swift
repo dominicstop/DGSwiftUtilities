@@ -82,7 +82,7 @@ extension BaseConcreteKeyframe {
     forTarget keyframeTarget: KeyframeTarget,
     withPrevKeyframe keyframeConfigPrev: Self?,
     forPropertyAnimator propertyAnimator: UIViewPropertyAnimator?
-  ) throws -> Keyframeable.PropertyAnimatorAnimationBlocks where KeyframeTarget == UIView {
+  ) throws -> Keyframeable.PropertyAnimatorAnimationBlocks where KeyframeTarget: UIView {
     
     var animationBlocks: [Keyframeable.PropertyAnimatorAnimationBlocks] = [];
     
