@@ -6,7 +6,7 @@
 //
 
 import Testing
-import Foundation
+import UIKit
 @testable import DGSwiftUtilities
 
 
@@ -26,6 +26,7 @@ struct BaseConcreteKeyframeTest {
   };
 
   struct TestConcreteKeyframe: BaseConcreteKeyframe {
+    typealias KeyframeTarget = UIView;
     
     typealias PartialKeyframe = TestPartialKeyframe;
 
