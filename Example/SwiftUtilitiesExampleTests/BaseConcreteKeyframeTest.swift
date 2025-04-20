@@ -50,6 +50,36 @@ struct BaseConcreteKeyframeTest {
     
   };
   
+  struct TestNestedPartialKeyframe: BaseFrameLayoutPartialKeyframe {
+    typealias ConcreteKeyframe = TestNestedConcreteKeyframe;
+    
+    static var empty: Self = .init();
+    
+    var frame: CGRect?
+    var contentPadding: UIEdgeInsets?
+
+    var nestedKeyframe: GenericViewConcreteKeyframe?;
+  };
+  
+  struct TestNestedConcreteKeyframe: BaseFrameLayoutConcreteKeyframe {
+    typealias KeyframeTarget = UIView;
+    typealias PartialKeyframe = TestNestedPartialKeyframe;
+    
+    static var partialToConcreteKeyframePropertyMap: KeyframePropertyMap = [
+      .init(keyPath: \.frame): .init(keyPath: \.frame),
+      .init(keyPath: \.contentPadding): .init(keyPath: \.contentPadding),
+      .init(keyPath: \.nestedKeyframe): .init(keyPath: \.nestedKeyframe),
+    ];
+
+    static var `default`: Self = .init();
+    
+    var frame: CGRect
+    var contentPadding: UIEdgeInsets;
+    var edgeContraints: EdgeConstraints?;
+    
+    var nestedKeyframe: GenericViewConcreteKeyframe;
+  };
+  
   // MARK: - Test Cases
   // ------------------
 
@@ -265,5 +295,51 @@ struct BaseConcreteKeyframeTest {
     );
   };
   
-  
+  @Test func test_nestedApply() throws {
+    let keyframe1: TestNestedConcreteKeyframe = .init(
+      frame: .init(x: 100, y: 100, width: 100, height: 100),
+      contentPadding: .zero,
+      nestedKeyframe: .init(
+        opacity: 1,
+        backgroundColor: .red,
+        transform: .init(
+          translateX: 100,
+          translateY: 100,
+          translateZ: 100,
+          scaleX: 100,
+          scaleY: 100,
+          rotateX: .degrees(100),
+          rotateY: .degrees(100),
+          rotateZ: .degrees(100),
+          perspective: 0,
+          skewX: 100,
+          skewY: 100
+        ),
+        borderWidth: 100,
+        borderColor: .red,
+        shadowColor: .red,
+        shadowOffset: .init(width: 100, height: 100),
+        shadowOpacity: 1,
+        shadowRadius: 100,
+        cornerRadius: 100,
+        cornerMask: .allCorners
+      )
+    );
+    
+    let view = UIView();
+    
+    #expect(view.frame.isEmpty);
+    try keyframe1.apply(toTarget: view);
+    #expect(!view.frame.isEmpty);
+    
+    #expect(view.alpha == keyframe1.nestedKeyframe.opacity);
+    #expect(view.backgroundColor == keyframe1.nestedKeyframe.backgroundColor);
+    
+    #expect(view.layer.borderWidth == keyframe1.nestedKeyframe.borderWidth);
+    #expect(view.layer.borderColor == keyframe1.nestedKeyframe.borderColor.cgColor);
+    #expect(view.layer.shadowColor == keyframe1.nestedKeyframe.shadowColor.cgColor);
+    #expect(view.layer.shadowOffset == keyframe1.nestedKeyframe.shadowOffset);
+    #expect(view.layer.shadowOpacity == Float(keyframe1.nestedKeyframe.shadowOpacity));
+    #expect(view.layer.shadowRadius == keyframe1.nestedKeyframe.shadowRadius);
+  };
 }
