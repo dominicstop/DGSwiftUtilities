@@ -6,7 +6,7 @@
 //
 
 import Testing
-import Foundation
+import UIKit
 @testable import DGSwiftUtilities
 
 
@@ -338,5 +338,40 @@ struct BasicViewConcreteKeyframeTests {
     #expect(resultLerpToFull.opacity == keyframeEnd.opacity);
     #expect(resultLerpToFull.backgroundColor == keyframeEnd.backgroundColor);
     #expect(resultLerpToFull.transform == keyframeEnd.transform);
+  };
+  
+  @Test func test_apply() throws {
+    let keyframeZero: ConcreteKeyframe = .zero;
+    
+    let keyframeHalf: ConcreteKeyframe = .init(
+      opacity: 0.5,
+      backgroundColor: .init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5),
+      transform: .init(
+        translateX: 100,
+        translateY: 100,
+        translateZ: 100,
+        scaleX: 100,
+        scaleY: 100,
+        rotateX: .degrees(100),
+        rotateY: .degrees(100),
+        rotateZ: .degrees(100),
+        perspective: 0,
+        skewX: 100,
+        skewY: 100
+      )
+    );
+    
+    let view: UIView = .init();
+    try keyframeHalf.apply(toTarget: view);
+    
+    #expect(view.backgroundColor == keyframeHalf.backgroundColor);
+    #expect(view.alpha == keyframeHalf.opacity);
+    #expect(view.layer.transform == keyframeHalf.transform.transform3D);
+    
+    try keyframeZero.apply(toTarget: view);
+    
+    #expect(view.backgroundColor == keyframeZero.backgroundColor);
+    #expect(view.alpha == keyframeZero.opacity);
+    #expect(view.layer.transform == keyframeZero.transform.transform3D);
   };
 };
