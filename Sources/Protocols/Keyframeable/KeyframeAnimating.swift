@@ -76,11 +76,11 @@ public extension KeyframeAnimating where Self: KeyframeAppliable {
     return animationBlocks;
   };
   
-  func createBaseAnimations(
-    forView targetView: KeyframeTarget,
+  func createBaseAnimations<T: UIView>(
+    forView targetView: T,
     withPrevKeyframe keyframeConfigPrev: Self?,
     forPropertyAnimator propertyAnimator: UIViewPropertyAnimator?
-  ) throws -> [Keyframeable.PropertyAnimatorAnimationBlocks] where KeyframeTarget: UIView {
+  ) throws -> [Keyframeable.PropertyAnimatorAnimationBlocks] {
     
     var animationBlocks: [Keyframeable.PropertyAnimatorAnimationBlocks] = [];
     
@@ -101,6 +101,17 @@ public extension KeyframeAnimating where Self: KeyframeAppliable {
         forPropertyAnimator: propertyAnimator
       );
 
+      animationBlocks.unwrapThenAppend(blocks);
+    };
+    
+    if let baseCustomViewKeyframe = self as? (any BaseCustomViewConcreteKeyframe) {
+      let blocks = try? baseCustomViewKeyframe.createBaseViewCustomAnimations(
+        forTarget: targetView,
+        withType: T.self,
+        withPrevKeyframe: keyframeConfigPrev as? (any BaseCustomViewConcreteKeyframe),
+        forPropertyAnimator: propertyAnimator
+      );
+      
       animationBlocks.unwrapThenAppend(blocks);
     };
 

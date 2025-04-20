@@ -44,10 +44,10 @@ public extension KeyframeAppliable {
     };
   };
   
-  func applyBaseKeyframe(
-    toView targetView: UIView,
+  func applyBaseKeyframe<T: UIView>(
+    toView targetView: T,
     edgeConstraintsOverride: BaseFrameLayoutConcreteKeyframe.EdgeConstraints? = nil
-  ) where KeyframeTarget: UIView {
+  ) {
     
     if let baseViewKeyframe = self as? (any BaseViewConcreteKeyframe) {
       baseViewKeyframe.applyBaseViewKeyframe(toView: targetView);
@@ -57,6 +57,13 @@ public extension KeyframeAppliable {
       baseFrameLayoutKeyframe.applyBaseFrameLayoutKeyframe(
         toView: targetView,
         edgeConstraintsOverride: edgeConstraintsOverride
+      );
+    };
+    
+    if let baseViewCustomKeyframe = self as? (any BaseCustomViewConcreteKeyframe) {
+      baseViewCustomKeyframe.applyBaseViewCustomKeyframe(
+        toTarget: targetView,
+        withType: T.self
       );
     };
   };
