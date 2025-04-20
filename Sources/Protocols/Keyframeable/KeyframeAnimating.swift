@@ -19,24 +19,80 @@ public protocol KeyframeAnimating<KeyframeTarget> {
   ) throws -> Keyframeable.PropertyAnimatorAnimationBlocks;
 };
 
-public extension KeyframeAnimating {
+// MARK: - KeyframeAnimating+Helpers
+// ---------------------------------
+
+public extension KeyframeAnimating where Self: KeyframeAppliable {
   
-  func createAnimations(
-    forTarget keyframeTarget: KeyframeTarget,
+  func createBaseAnimations(
+    forLayer targetLayer: CALayer,
     withPrevKeyframe keyframeConfigPrev: Self?,
     forPropertyAnimator propertyAnimator: UIViewPropertyAnimator?
-  ) throws -> Keyframeable.PropertyAnimatorAnimationBlocks {
+  ) throws -> [Keyframeable.PropertyAnimatorAnimationBlocks] {
     
-    return (
-      setup: {
-        // no-op
-      },
-      applyKeyframe: {
-        try? self.apply(toTarget: keyframeTarget);
-      },
-      completion: { _ in
-        // no-op
-      }
-    );
+    var animationBlocks: [Keyframeable.PropertyAnimatorAnimationBlocks] = [];
+    
+    if let baseBorderKeyframe = self as? (any BaseLayerBorderConcreteKeyframe) {
+      let blocks = try? baseBorderKeyframe.createBaseLayerBorderAnimations(
+        forTarget: targetLayer,
+        withPrevKeyframe: keyframeConfigPrev as? (any BaseLayerBorderConcreteKeyframe),
+        forPropertyAnimator: propertyAnimator
+      );
+
+      animationBlocks.unwrapThenAppend(blocks);
+    };
+    
+    if let baseShadowKeyframe = self as? (any BaseLayerShadowConcreteKeyframe) {
+      let blocks = try? baseShadowKeyframe.createBaseLayerShadowAnimations(
+        forTarget: targetLayer,
+        withPrevKeyframe: keyframeConfigPrev as? (any BaseLayerShadowConcreteKeyframe),
+        forPropertyAnimator: propertyAnimator
+      );
+      
+      animationBlocks.unwrapThenAppend(blocks);
+    };
+    
+    if let baseCornerRadiusKeyframe = self as? (any BaseLayerSystemCornerRadiusConcreteKeyframe) {
+      let blocks = try? baseCornerRadiusKeyframe.createBaseLayerSystemCornerRadiusAnimations(
+        forTarget: targetLayer,
+        withPrevKeyframe: keyframeConfigPrev as? (any BaseLayerSystemCornerRadiusConcreteKeyframe),
+        forPropertyAnimator: propertyAnimator
+      );
+      
+      animationBlocks.unwrapThenAppend(blocks);
+    };
+    
+    return animationBlocks;
+  };
+  
+  func createBaseAnimations(
+    forView targetView: KeyframeTarget,
+    withPrevKeyframe keyframeConfigPrev: Self?,
+    forPropertyAnimator propertyAnimator: UIViewPropertyAnimator?
+  ) throws -> [Keyframeable.PropertyAnimatorAnimationBlocks] where KeyframeTarget: UIView {
+    
+    var animationBlocks: [Keyframeable.PropertyAnimatorAnimationBlocks] = [];
+    
+    if let baseViewKeyframe = self as? (any BaseViewConcreteKeyframe) {
+      let blocks = try? baseViewKeyframe.createBaseViewAnimations(
+        forView: targetView,
+        withPrevKeyframe: keyframeConfigPrev as? (any BaseViewConcreteKeyframe),
+        forPropertyAnimator: propertyAnimator
+      );
+
+      animationBlocks.unwrapThenAppend(blocks);
+    };
+    
+    if let baseFrameLayoutKeyframe = self as? (any BaseFrameLayoutConcreteKeyframe) {
+      let blocks = try? baseFrameLayoutKeyframe.createBaseFrameLayoutAnimations(
+        forView: targetView,
+        withPrevKeyframe: keyframeConfigPrev as? (any BaseFrameLayoutConcreteKeyframe),
+        forPropertyAnimator: propertyAnimator
+      );
+
+      animationBlocks.unwrapThenAppend(blocks);
+    };
+
+    return animationBlocks;
   };
 };
