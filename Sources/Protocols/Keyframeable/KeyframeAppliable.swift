@@ -15,19 +15,6 @@ public protocol KeyframeAppliable<KeyframeTarget> {
   func apply(toTarget target: KeyframeTarget) throws;
 };
 
-// MARK: - BaseKeyframeConfig+Default
-// ----------------------------------
-
-public extension KeyframeAppliable {
-  
-  func apply(
-    toTarget target: KeyframeTarget
-  ) throws where KeyframeTarget: UIView {
-  
-    self.applyBaseKeyframe(toView: target);
-  };
-};
-
 // MARK: - KeyframeAppliable+Helpers
 // ------------------------------
 

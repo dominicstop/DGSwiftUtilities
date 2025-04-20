@@ -92,6 +92,26 @@ public extension BaseConcreteKeyframe {
   };
 }
 
+// MARK: - BaseConcreteKeyframe+KeyframeAppliable (Default Conformance)
+// --------------------------------------------------------------------
+
+public extension KeyframeAppliable {
+  
+  func apply(
+    toTarget target: KeyframeTarget
+  ) throws where KeyframeTarget: UIView {
+  
+    self.applyBaseKeyframe(toView: target);
+    self.applyBaseLayerKeyframe(toLayer: target.layer);
+  };
+  
+  func apply(
+    toTarget target: KeyframeTarget
+  ) throws where KeyframeTarget: CALayer {
+    
+    self.applyBaseLayerKeyframe(toLayer: target);
+  };
+};
 // MARK: - BaseConcreteKeyframe+ZeroRepresentable
 // ------------------------------------
 
