@@ -8,13 +8,12 @@
 import UIKit
 
 
-public struct BasicViewPartialKeyframe<KeyframeTarget: UIView>: BaseViewPartialKeyframe {
+public struct BasicViewPartialKeyframe: BaseViewPartialKeyframe {
   
-  public typealias ConcreteKeyframe = BasicViewConcreteKeyframe<KeyframeTarget>;
+  public typealias KeyframeTarget = UIView;
+  public typealias ConcreteKeyframe = BasicViewConcreteKeyframe;
   
-  public static var empty: Self {
-    .init();
-  };
+  public static let empty: Self = .init();
 
   public var opacity: CGFloat?;
   public var backgroundColor: UIColor?;

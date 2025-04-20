@@ -8,15 +8,14 @@
 import UIKit
 
 
-public struct GenericViewPartialKeyframe<KeyframeTarget: UIView>:
+public struct GenericViewPartialKeyframe:
   BaseViewPartialKeyframe,
   BaseLayerPartialKeyframe
 {
-  public typealias ConcreteKeyframe = GenericViewConcreteKeyframe<KeyframeTarget>;
+  public typealias KeyframeTarget = UIView;
+  public typealias ConcreteKeyframe = GenericViewConcreteKeyframe;
   
-  public static var empty: Self {
-    .init();
-  };
+  public static var empty: Self = .init();
   
   public var opacity: CGFloat?;
   public var transform: Transform3D?;

@@ -8,18 +8,16 @@
 import UIKit
 
 
-public struct BasicViewConcreteKeyframe<KeyframeTarget: UIView>: BaseViewConcreteKeyframe {
+public struct BasicViewConcreteKeyframe: BaseViewConcreteKeyframe {
   
-  public typealias PartialKeyframe = BasicViewPartialKeyframe<KeyframeTarget>;
-  public typealias KeyframeTarget = KeyframeTarget;
+  public typealias PartialKeyframe = BasicViewPartialKeyframe;
+  public typealias KeyframeTarget = PartialKeyframe.KeyframeTarget;
   
-  public static var `default`: Self {
-    .init(
-      opacity: 1,
-      backgroundColor: .systemBackgroundWithFallback,
-      transform: .identity
-    );
-  };
+  public static let `default`: Self = .init(
+    opacity: 1,
+    backgroundColor: .systemBackgroundWithFallback,
+    transform: .identity
+  );
   
   public var opacity: CGFloat;
   public var backgroundColor: UIColor;

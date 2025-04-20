@@ -9,28 +9,26 @@ import Foundation
 import UIKit
 
 
-public struct GenericViewConcreteKeyframe<KeyframeTarget: UIView>:
+public struct GenericViewConcreteKeyframe:
   BaseViewConcreteKeyframe,
   BaseLayerConcreteKeyframe
 {
-  public typealias PartialKeyframe = GenericViewPartialKeyframe<KeyframeTarget>;
-  public typealias KeyframeTarget = KeyframeTarget;
+  public typealias PartialKeyframe = GenericViewPartialKeyframe;
+  public typealias KeyframeTarget = PartialKeyframe.KeyframeTarget;
   
-  public static var `default`: Self {
-    .init(
-      opacity: 1,
-      backgroundColor: .systemBackgroundWithFallback,
-      transform: .identity,
-      borderWidth: 0,
-      borderColor: .clear,
-      shadowColor: .clear,
-      shadowOffset: .zero,
-      shadowOpacity: 0,
-      shadowRadius: 0,
-      cornerRadius: 0,
-      cornerMask: .allCorners
-    );
-  };
+  public static let `default`: Self = .init(
+    opacity: 1,
+    backgroundColor: .systemBackgroundWithFallback,
+    transform: .identity,
+    borderWidth: 0,
+    borderColor: .clear,
+    shadowColor: .clear,
+    shadowOffset: .zero,
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    cornerRadius: 0,
+    cornerMask: .allCorners
+  );
   
 
   public var opacity: CGFloat;
