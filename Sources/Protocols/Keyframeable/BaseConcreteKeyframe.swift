@@ -113,6 +113,52 @@ public extension KeyframeAppliable {
     self.applyBaseLayerKeyframe(toLayer: target);
   };
 };
+
+// MARK: - BaseConcreteKeyframe+KeyframeAnimating (Default Conformance)
+// --------------------------------------------------------------------
+
+extension BaseConcreteKeyframe {
+  
+  public func createAnimations(
+    forTarget keyframeTarget: KeyframeTarget,
+    withPrevKeyframe keyframeConfigPrev: Self?,
+    forPropertyAnimator propertyAnimator: UIViewPropertyAnimator?
+  ) throws -> Keyframeable.PropertyAnimatorAnimationBlocks where KeyframeTarget == UIView {
+    
+    var animationBlocks: [Keyframeable.PropertyAnimatorAnimationBlocks] = [];
+    
+    animationBlocks += try self.createBaseAnimations(
+      forView: keyframeTarget,
+      withPrevKeyframe: keyframeConfigPrev,
+      forPropertyAnimator: propertyAnimator
+    );
+    
+    animationBlocks += try self.createBaseAnimations(
+      forLayer: keyframeTarget.layer,
+      withPrevKeyframe: keyframeConfigPrev,
+      forPropertyAnimator: propertyAnimator
+    );
+    
+    return (
+      setup: {
+        animationBlocks.forEach {
+          try? $0.setup();
+        };
+      },
+      applyKeyframe: {
+        animationBlocks.forEach {
+          $0.applyKeyframe();
+        };
+      },
+      completion: { didCancel in
+        animationBlocks.forEach {
+          $0.completion(didCancel);
+        };
+      }
+    );
+  };
+};
+
 // MARK: - BaseConcreteKeyframe+ZeroRepresentable
 // ---------------------------------------------
 
