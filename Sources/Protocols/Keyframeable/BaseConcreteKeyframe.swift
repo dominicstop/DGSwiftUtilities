@@ -32,6 +32,7 @@ public protocol BaseConcreteKeyframe<PartialKeyframe>:
 
 public extension BaseConcreteKeyframe {
   
+  // TODO: Extract logic to helper function
   static var partialToConcreteKeyframePropertyMap: KeyframePropertyMap {
     var combinedMap: KeyframePropertyMap = [:];
     var totalMapCount = 0;
@@ -113,7 +114,7 @@ public extension KeyframeAppliable {
   };
 };
 // MARK: - BaseConcreteKeyframe+ZeroRepresentable
-// ------------------------------------
+// ---------------------------------------------
 
 extension BaseConcreteKeyframe {
   
@@ -166,7 +167,7 @@ extension BaseConcreteKeyframe {
 };
 
 // MARK: - BaseConcreteKeyframe+InterpolatableValue
-// ------------------------------------
+// ------------------------------------------------
 
 public extension BaseConcreteKeyframe where InterpolatableValue == Self {
   
@@ -203,8 +204,8 @@ public extension BaseConcreteKeyframe where InterpolatableValue == Self {
 
 public extension BaseConcreteKeyframe {
   
-  // MARK: - Computed Properties
-  // ---------------------------
+  // MARK: Computed Properties
+  // -------------------------
   
   var asPartialKeyframe: PartialKeyframe {
     var partialKeyframe: PartialKeyframe = .empty;
@@ -212,8 +213,8 @@ public extension BaseConcreteKeyframe {
     return partialKeyframe;
   };
   
-  // MARK: - Init
-  // ------------
+  // MARK: Init
+  // ----------
   
   init(
     from partialKeyframe: PartialKeyframe,
@@ -228,8 +229,8 @@ public extension BaseConcreteKeyframe {
     self = concreteKeyframe;
   };
   
-  // MARK: - Functions
-  // -----------------
+  // MARK: Functions
+  // ---------------
   
   func apply(toPartialKeyframe partialKeyframe: inout PartialKeyframe){
     Self.partialToConcreteKeyframePropertyMap.forEach {
