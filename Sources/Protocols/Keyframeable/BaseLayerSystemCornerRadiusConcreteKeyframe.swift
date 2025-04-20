@@ -9,8 +9,7 @@ import UIKit
 
 
 public protocol BaseLayerSystemCornerRadiusConcreteKeyframe<KeyframeTarget>:
-  BaseConcreteKeyframe,
-  KeyframeAppliable where
+  BaseConcreteKeyframe where
     PartialKeyframe: BaseLayerSystemCornerRadiusPartialKeyframe
 {
   associatedtype KeyframeTarget;

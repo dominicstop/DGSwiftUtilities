@@ -8,7 +8,12 @@
 import UIKit
 
 
-public protocol BaseConcreteKeyframe<PartialKeyframe>: CompositeInterpolatable, Equatable {
+public protocol BaseConcreteKeyframe<PartialKeyframe>:
+  CompositeInterpolatable,
+  KeyframeAppliable,
+  KeyframeAnimating,
+  Equatable
+{
   
   associatedtype PartialKeyframe: BasePartialKeyframe;
   

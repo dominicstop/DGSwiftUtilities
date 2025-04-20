@@ -9,8 +9,7 @@ import UIKit
 
 
 public protocol BaseLayerShadowConcreteKeyframe<KeyframeTarget>:
-  BaseConcreteKeyframe,
-  KeyframeAppliable where
+  BaseConcreteKeyframe where
     PartialKeyframe: BaseLayerShadowPartialKeyframe
 {
   associatedtype KeyframeTarget;

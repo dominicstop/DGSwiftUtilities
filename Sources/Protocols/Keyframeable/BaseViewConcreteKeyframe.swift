@@ -8,20 +8,15 @@
 import UIKit
 
 
-
 public protocol BaseViewConcreteKeyframe<KeyframeTarget>:
-  BaseConcreteKeyframe,
-  KeyframeAppliable where
+  BaseConcreteKeyframe where
     KeyframeTarget: UIView,
     PartialKeyframe: BaseViewPartialKeyframe
 {
-  associatedtype KeyframeTarget;
 
   var opacity: CGFloat { get set };
   var transform: Transform3D { get set };
   var backgroundColor: UIColor { get set };
-  
-  func applyBaseViewKeyframe(toTarget targetView: KeyframeTarget);
 };
 
 // MARK: - BaseViewConcreteKeyframe+Default
