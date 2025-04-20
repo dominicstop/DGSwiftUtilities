@@ -73,7 +73,7 @@ public extension KeyframeAppliable {
     };
     
     if let baseViewCustomKeyframe = self as? (any BaseCustomViewConcreteKeyframe) {
-      baseViewCustomKeyframe.applyBaseViewCustomKeyframe(
+      try? baseViewCustomKeyframe.applyBaseViewCustomKeyframe(
         toTarget: targetView,
         withType: T.self
       );

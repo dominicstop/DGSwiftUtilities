@@ -10,7 +10,9 @@ import UIKit
 
 public protocol BaseLayerCustomConcreteKeyframe: BaseConcreteKeyframe {
   
-  func applyBaseLayerCustomKeyframe(toTarget keyframeTarget: KeyframeTarget);
+  func applyBaseLayerCustomKeyframe(
+    toTarget keyframeTarget: KeyframeTarget
+  ) throws;
   
   func createBaseLayerCustomAnimations(
     forTarget keyframeTarget: KeyframeTarget,
@@ -25,12 +27,13 @@ public extension BaseLayerCustomConcreteKeyframe {
   func applyBaseLayerCustomKeyframe<T>(
     toTarget keyframeTarget: T,
     withType targetType: T.Type = T.self
-  ) {
+  ) throws {
+    
     guard let keyframeTarget = keyframeTarget as? KeyframeTarget else {
       return;
     };
     
-    self.applyBaseLayerCustomKeyframe(toTarget: keyframeTarget);
+    try self.applyBaseLayerCustomKeyframe(toTarget: keyframeTarget);
   };
   
   func createBaseLayerCustomAnimations<T>(
