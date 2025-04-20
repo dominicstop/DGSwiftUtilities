@@ -15,10 +15,7 @@ extension UIColor: ZeroRepresentable {
 };
 
 extension UIEdgeInsets: ZeroRepresentable {
-  
-  public static var zero: Self {
-    .init(top: 0, left: 0, bottom: 0, right: 0);
-  };
+  // no-op
 };
 
 extension UIOffset: ZeroRepresentable {
