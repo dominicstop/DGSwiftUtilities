@@ -62,6 +62,34 @@ public extension BaseLayerShadowConcreteKeyframe {
     self.applyBaseLayerShadowKeyframe(toLayer: view.layer);
   };
   
+  func createBaseLayerShadowAnimations<T>(
+    forTarget keyframeTarget: T,
+    withPrevKeyframe keyframeConfigPrev: (any BaseLayerShadowConcreteKeyframe)?,
+    forPropertyAnimator propertyAnimator: UIViewPropertyAnimator?
+  ) throws -> Keyframeable.PropertyAnimatorAnimationBlocks {
+    
+    return (
+      setup: {
+        // no-op
+      },
+      applyKeyframe: {
+        switch keyframeTarget {
+          case let targetView as UIView:
+            self.applyBaseLayerShadowKeyframe(toView: targetView);
+            
+          case let targetLayer as CALayer:
+            self.applyBaseLayerShadowKeyframe(toLayer: targetLayer);
+            
+          default:
+            break;
+        };
+      },
+      completion: { _ in
+        // no-op
+      }
+    );
+  };
+  
   // MARK: - Chain Setter Methods
   // ----------------------------
   

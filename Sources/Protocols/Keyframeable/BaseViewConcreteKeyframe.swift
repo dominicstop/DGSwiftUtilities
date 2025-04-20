@@ -28,7 +28,22 @@ public protocol BaseViewConcreteKeyframe<KeyframeTarget>:
 // --------------------------------------
 
 public extension BaseViewConcreteKeyframe {
-    
+
+};
+
+// MARK: - BaseViewConcreteKeyframe+Helpers
+// --------------------------------------
+
+public extension BaseViewConcreteKeyframe {
+  
+  static var baseViewPartialToConcreteKeyframePropertyMap: KeyframePropertyMap {
+    return [
+      .init(keyPath: \.opacity): .init(keyPath: \.opacity),
+      .init(keyPath: \.transform): .init(keyPath: \.transform),
+      .init(keyPath: \.backgroundColor): .init(keyPath: \.backgroundColor),
+    ];
+  };
+  
   static func extractBaseViewPartialToConcreteKeyframePropertyMap<T: BaseConcreteKeyframe>(
     forType concreteKeyframeType: T.Type = T.self
   ) -> T.KeyframePropertyMap {
@@ -45,28 +60,29 @@ public extension BaseViewConcreteKeyframe {
     return map;
   };
   
-  static var baseViewPartialToConcreteKeyframePropertyMap: KeyframePropertyMap {
-    return [
-      .init(keyPath: \.opacity): .init(keyPath: \.opacity),
-      .init(keyPath: \.transform): .init(keyPath: \.transform),
-      .init(keyPath: \.backgroundColor): .init(keyPath: \.backgroundColor),
-    ];
+  func applyBaseViewKeyframe(toView targetView: UIView) {
+    targetView.alpha = self.opacity
+    targetView.layer.transform = self.transform.transform3D;
+    targetView.backgroundColor = self.backgroundColor;
   };
   
-  func applyBaseViewKeyframe(toTarget targetView: KeyframeTarget) {
-    self.applyBaseViewKeyframe(toView: targetView);
-  };
-};
-
-// MARK: - BaseViewKeyframeConfig+Helpers
-// --------------------------------------
-
-public extension BaseViewConcreteKeyframe {
-  
-  func applyBaseViewKeyframe(toView view: UIView) {
-    view.alpha = self.opacity
-    view.layer.transform = self.transform.transform3D
-    view.backgroundColor = self.backgroundColor;
+  func createBaseViewAnimations(
+    forView targetView: UIView,
+    withPrevKeyframe keyframeConfigPrev: (any BaseViewConcreteKeyframe)?,
+    forPropertyAnimator propertyAnimator: UIViewPropertyAnimator?
+  ) throws -> Keyframeable.PropertyAnimatorAnimationBlocks {
+    
+    return (
+      setup: {
+        // no-op
+      },
+      applyKeyframe: {
+        self.applyBaseViewKeyframe(toView: targetView);
+      },
+      completion: { _ in
+        // no-op
+      }
+    );
   };
   
   // MARK: - Chain Setter Methods

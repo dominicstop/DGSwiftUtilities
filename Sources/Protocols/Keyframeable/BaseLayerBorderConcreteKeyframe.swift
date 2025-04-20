@@ -18,6 +18,7 @@ public protocol BaseLayerBorderConcreteKeyframe<KeyframeTarget>:
   var borderWidth: CGFloat { get set };
   var borderColor: UIColor { get set };
 };
+
 // MARK: - BaseLayerBorderConcreteKeyframe+Helpers
 // ---------------------------------------
 
@@ -53,6 +54,35 @@ public extension BaseLayerBorderConcreteKeyframe {
 
   func applyBaseLayerBorderKeyframe(toView view: UIView) {
     self.applyBaseLayerBorderKeyframe(toLayer: view.layer);
+  };
+  
+  func createBaseLayerBorderAnimations<T>(
+    forTarget keyframeTarget: T,
+    withPrevKeyframe keyframeConfigPrev: (any BaseLayerBorderConcreteKeyframe)?,
+    forPropertyAnimator propertyAnimator: UIViewPropertyAnimator?
+  ) throws -> Keyframeable.PropertyAnimatorAnimationBlocks {
+    
+    return (
+      setup: {
+        // no-op
+      },
+      applyKeyframe: {
+        switch keyframeTarget {
+          case let targetView as UIView:
+            self.applyBaseLayerBorderKeyframe(toView: targetView);
+            
+          case let targetLayer as CALayer:
+            self.applyBaseLayerBorderKeyframe(toLayer: targetLayer);
+            
+          default:
+            break;
+        };
+        
+      },
+      completion: { _ in
+        // no-op
+      }
+    );
   };
   
   // MARK: - Chain Setter Methods

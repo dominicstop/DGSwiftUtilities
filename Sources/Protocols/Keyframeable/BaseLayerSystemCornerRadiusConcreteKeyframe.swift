@@ -57,6 +57,34 @@ public extension BaseLayerSystemCornerRadiusConcreteKeyframe {
     self.applyBaseLayerSystemCornerRadiusKeyframe(toLayer: view.layer);
   };
   
+  func createBaseLayerSystemCornerRadiusAnimations<T>(
+    forTarget keyframeTarget: T,
+    withPrevKeyframe keyframeConfigPrev: (any BaseLayerSystemCornerRadiusConcreteKeyframe)?,
+    forPropertyAnimator propertyAnimator: UIViewPropertyAnimator?
+  ) throws -> Keyframeable.PropertyAnimatorAnimationBlocks {
+    
+    return (
+      setup: {
+        // no-op
+      },
+      applyKeyframe: {
+        switch keyframeTarget {
+          case let targetView as UIView:
+            self.applyBaseLayerSystemCornerRadiusKeyframe(toView: targetView);
+            
+          case let targetLayer as CALayer:
+            self.applyBaseLayerSystemCornerRadiusKeyframe(toLayer: targetLayer);
+            
+          default:
+            break;
+        };
+      },
+      completion: { _ in
+        // no-op
+      }
+    );
+  };
+  
   // MARK: - Chain Setter Methods
   // ----------------------------
   
