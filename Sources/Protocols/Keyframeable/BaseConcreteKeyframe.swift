@@ -30,66 +30,23 @@ public protocol BaseConcreteKeyframe<PartialKeyframe>:
 // MARK: - BaseConcreteKeyframe+Default
 // ------------------------------------
 
+fileprivate var KeyframePropertyMapCache: Dictionary<String, Any> = [:];
+
 public extension BaseConcreteKeyframe {
   
-  // TODO: Extract logic to helper function
   static var partialToConcreteKeyframePropertyMap: KeyframePropertyMap {
-    var combinedMap: KeyframePropertyMap = [:];
-    var totalMapCount = 0;
+    let key = String(describing: Self.self);
     
-    if let concreteKeyframeType =
-        Self.self as? any BaseViewConcreteKeyframe.Type
+    if let cachedEntry = KeyframePropertyMapCache[key],
+       let map = cachedEntry as? KeyframePropertyMap
     {
-      let extractedMap = concreteKeyframeType
-        .extractBaseViewPartialToConcreteKeyframePropertyMap(forType: Self.self);
-      
-      combinedMap.merge(with: extractedMap);
-      totalMapCount += extractedMap.count;
+      return map;
     };
     
-    if let concreteKeyframeType =
-        Self.self as? any BaseLayerBorderConcreteKeyframe.Type
-    {
-      let extractedMap = concreteKeyframeType
-        .extractBaseLayerShadowPartialToConcreteKeyframePropertyMap(forType: Self.self);
-      
-      combinedMap.merge(with: extractedMap);
-      totalMapCount += extractedMap.count;
-    };
+    let map = Self.createDefaultPartialToConcreteKeyframePropertyMap();
+    KeyframePropertyMapCache[key] = map;
     
-    if let concreteKeyframeType =
-        Self.self as? any BaseLayerShadowConcreteKeyframe.Type
-    {
-      let extractedMap = concreteKeyframeType
-        .extractBaseLayerShadowPartialToConcreteKeyframePropertyMap(forType: Self.self);
-      
-      combinedMap.merge(with: extractedMap);
-      totalMapCount += extractedMap.count;
-    };
-    
-    if let concreteKeyframeType =
-        Self.self as? any BaseLayerSystemCornerRadiusConcreteKeyframe.Type
-    {
-      let extractedMap = concreteKeyframeType
-        .extractBaseLayerSystemCornerRadiusPartialToConcreteKeyframePropertyMap(forType: Self.self);
-      
-      combinedMap.merge(with: extractedMap);
-      totalMapCount += extractedMap.count;
-    };
-    
-    #if DEBUG
-    if combinedMap.count != totalMapCount {
-      print(
-        #function,
-        "Warning:",
-        "\(totalMapCount) properties were extracted from \(String(describing: Self.self)),",
-        "but `combinedMap` only contains: \(combinedMap.count)`",
-        "some properties might have been overwritten due to key collision"
-      );
-    }
-    #endif
-    
-    return combinedMap;
+    return map;
   };
 }
 
@@ -217,6 +174,7 @@ extension BaseConcreteKeyframe {
 
 public extension BaseConcreteKeyframe where InterpolatableValue == Self {
   
+  // TODO: Extract to standalone helper function
   static var interpolatablePropertiesMap: InterpolatableValuesMap {
     Self.partialToConcreteKeyframePropertyMap.reduce(into: [:]) {
       let concreteKeyframeAnyKeyPath = $1.value;
@@ -249,6 +207,65 @@ public extension BaseConcreteKeyframe where InterpolatableValue == Self {
 // ------------------------------------
 
 public extension BaseConcreteKeyframe {
+  
+  static func createDefaultPartialToConcreteKeyframePropertyMap() -> KeyframePropertyMap {
+    var combinedMap: KeyframePropertyMap = [:];
+    var totalMapCount = 0;
+    
+    if let concreteKeyframeType =
+        Self.self as? any BaseViewConcreteKeyframe.Type
+    {
+      let extractedMap = concreteKeyframeType
+        .extractBaseViewPartialToConcreteKeyframePropertyMap(forType: Self.self);
+      
+      combinedMap.merge(with: extractedMap);
+      totalMapCount += extractedMap.count;
+    };
+    
+    if let concreteKeyframeType =
+        Self.self as? any BaseLayerBorderConcreteKeyframe.Type
+    {
+      let extractedMap = concreteKeyframeType
+        .extractBaseLayerShadowPartialToConcreteKeyframePropertyMap(forType: Self.self);
+      
+      combinedMap.merge(with: extractedMap);
+      totalMapCount += extractedMap.count;
+    };
+    
+    if let concreteKeyframeType =
+        Self.self as? any BaseLayerShadowConcreteKeyframe.Type
+    {
+      let extractedMap = concreteKeyframeType
+        .extractBaseLayerShadowPartialToConcreteKeyframePropertyMap(forType: Self.self);
+      
+      combinedMap.merge(with: extractedMap);
+      totalMapCount += extractedMap.count;
+    };
+    
+    if let concreteKeyframeType =
+        Self.self as? any BaseLayerSystemCornerRadiusConcreteKeyframe.Type
+    {
+      let extractedMap = concreteKeyframeType
+        .extractBaseLayerSystemCornerRadiusPartialToConcreteKeyframePropertyMap(forType: Self.self);
+      
+      combinedMap.merge(with: extractedMap);
+      totalMapCount += extractedMap.count;
+    };
+    
+    #if DEBUG
+    if combinedMap.count != totalMapCount {
+      print(
+        #function,
+        "Warning:",
+        "\(totalMapCount) properties were extracted from \(String(describing: Self.self)),",
+        "but `combinedMap` only contains: \(combinedMap.count)`",
+        "some properties might have been overwritten due to key collision"
+      );
+    }
+    #endif
+    
+    return combinedMap;
+  };
   
   // MARK: Computed Properties
   // -------------------------
