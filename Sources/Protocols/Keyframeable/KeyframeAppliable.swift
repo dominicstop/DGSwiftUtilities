@@ -20,9 +20,7 @@ public protocol KeyframeAppliable<KeyframeTarget> {
 
 public extension KeyframeAppliable {
   
-  func applyBaseLayerKeyframe(
-    toLayer targetLayer: CALayer
-  ){
+  func applyBaseLayerKeyframe<T: CALayer>(toLayer targetLayer: T){
     if let baseBorderKeyframe = self as? (any BaseLayerBorderConcreteKeyframe) {
       baseBorderKeyframe
         .applyBaseLayerBorderKeyframe(toLayer: targetLayer);
@@ -36,6 +34,13 @@ public extension KeyframeAppliable {
     if let baseCornerRadiusKeyframe = self as? (any BaseLayerSystemCornerRadiusConcreteKeyframe) {
       baseCornerRadiusKeyframe
         .applyBaseLayerSystemCornerRadiusKeyframe(toLayer: targetLayer);
+    };
+    
+    if let baseLayerCustomKeyframe = self as? (any BaseLayerCustomConcreteKeyframe) {
+      baseLayerCustomKeyframe.applyBaseLayerCustomKeyframe(
+        toTarget: targetLayer,
+        withType: T.self
+      );
     };
   };
   

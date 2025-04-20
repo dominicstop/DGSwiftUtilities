@@ -24,8 +24,8 @@ public protocol KeyframeAnimating<KeyframeTarget> {
 
 public extension KeyframeAnimating where Self: KeyframeAppliable {
   
-  func createBaseAnimations(
-    forLayer targetLayer: CALayer,
+  func createBaseAnimations<T: CALayer>(
+    forLayer targetLayer: T,
     withPrevKeyframe keyframeConfigPrev: Self?,
     forPropertyAnimator propertyAnimator: UIViewPropertyAnimator?
   ) throws -> [Keyframeable.PropertyAnimatorAnimationBlocks] {
@@ -56,6 +56,17 @@ public extension KeyframeAnimating where Self: KeyframeAppliable {
       let blocks = try? baseCornerRadiusKeyframe.createBaseLayerSystemCornerRadiusAnimations(
         forTarget: targetLayer,
         withPrevKeyframe: keyframeConfigPrev as? (any BaseLayerSystemCornerRadiusConcreteKeyframe),
+        forPropertyAnimator: propertyAnimator
+      );
+      
+      animationBlocks.unwrapThenAppend(blocks);
+    };
+    
+    if let baseCustomLayerKeyframe = self as? (any BaseLayerCustomConcreteKeyframe) {
+      let blocks = try? baseCustomLayerKeyframe.createBaseLayerCustomAnimations(
+        forTarget: targetLayer,
+        withType: T.self,
+        withPrevKeyframe: keyframeConfigPrev as? (any BaseLayerCustomConcreteKeyframe),
         forPropertyAnimator: propertyAnimator
       );
       
