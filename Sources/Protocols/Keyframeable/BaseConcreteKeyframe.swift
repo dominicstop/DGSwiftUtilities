@@ -53,7 +53,7 @@ public extension BaseConcreteKeyframe {
 // MARK: - BaseConcreteKeyframe+KeyframeAppliable (Default Conformance)
 // --------------------------------------------------------------------
 
-public extension KeyframeAppliable {
+public extension BaseConcreteKeyframe {
   
   func apply(
     toTarget target: KeyframeTarget
@@ -61,6 +61,7 @@ public extension KeyframeAppliable {
   
     self.applyBaseKeyframe(toView: target);
     self.applyBaseLayerKeyframe(toLayer: target.layer);
+    self.recursiveApply(toTarget: target)
   };
   
   func apply(
@@ -68,6 +69,7 @@ public extension KeyframeAppliable {
   ) throws where KeyframeTarget: CALayer {
     
     self.applyBaseLayerKeyframe(toLayer: target);
+    self.recursiveApply(toTarget: target)
   };
 };
 
@@ -342,6 +344,23 @@ public extension BaseConcreteKeyframe {
         target: &self,
         withValue: newValue
       );
+    };
+  };
+  
+  func recursiveApply(toTarget target: KeyframeTarget){
+    for (_,  wrappedConcreteKeyPath) in Self.partialToConcreteKeyframePropertyMap {
+      let currentValue = self[keyPath: wrappedConcreteKeyPath.partialKeyPath];
+      
+      switch currentValue {
+        case let nestedKeyframe as any BaseConcreteKeyframe:
+          try? nestedKeyframe.apply(
+            toTarget: target,
+            withType: KeyframeTarget.self
+          );
+          
+        default:
+          continue;
+      };
     };
   };
 };

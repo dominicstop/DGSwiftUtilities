@@ -20,6 +20,18 @@ public protocol KeyframeAppliable<KeyframeTarget> {
 
 public extension KeyframeAppliable {
   
+  func apply<T>(
+    toTarget target: T,
+    withType type: T.Type = T.self
+  ) throws {
+    
+    guard let target = target as? KeyframeTarget else {
+      return;
+    };
+    
+    try self.apply(toTarget: target);
+  };
+  
   func applyBaseLayerKeyframe<T: CALayer>(toLayer targetLayer: T){
     if let baseBorderKeyframe = self as? (any BaseLayerBorderConcreteKeyframe) {
       baseBorderKeyframe
