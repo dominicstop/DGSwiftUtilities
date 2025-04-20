@@ -36,6 +36,10 @@ extension StringAnyKeyPathMapping {
       __cacheKeyPathValueTypes[Self._typeName];
     }
     set {
+      guard Thread.isMainThread else {
+        return;
+      };
+      
       __cacheKeyPathValueTypes[Self._typeName] = newValue;
     }
   };
@@ -48,6 +52,10 @@ extension StringAnyKeyPathMapping {
       __cacheAllKeyPathValueTypes[Self._typeName];
     }
     set {
+      guard Thread.isMainThread else {
+        return;
+      };
+      
       __cacheAllKeyPathValueTypes[Self._typeName] = newValue;
     }
   };

@@ -36,7 +36,10 @@ public extension HashedStringDecodable {
       return nil;
     };
     
-    decodedStringCache[encodedString] = decodedString;
+    if Thread.isMainThread {
+      decodedStringCache[encodedString] = decodedString;
+    };
+    
     return decodedString;
   };
 };

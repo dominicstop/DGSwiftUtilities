@@ -42,7 +42,9 @@ public extension BaseConcreteKeyframe {
     };
     
     let map = Self.createDefaultPartialToConcreteKeyframePropertyMap();
-    KeyframePropertyMapCache[Self.cacheKey] = map;
+    if Thread.isMainThread {
+      KeyframePropertyMapCache[Self.cacheKey] = map;
+    };
     
     return map;
   };
@@ -182,7 +184,9 @@ public extension BaseConcreteKeyframe where InterpolatableValue == Self {
     };
     
     let map = Self.createDefaultInterpolatablePropertiesMap();
-    InterpolatablePropertiesMapCache[Self.cacheKey] = map;
+    if Thread.isMainThread {
+      InterpolatablePropertiesMapCache[Self.cacheKey] = map;
+    };
     
     return map;
   };
