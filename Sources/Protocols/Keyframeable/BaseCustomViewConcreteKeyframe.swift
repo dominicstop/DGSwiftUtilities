@@ -9,7 +9,9 @@ import UIKit
 
 public protocol BaseCustomViewConcreteKeyframe: BaseConcreteKeyframe {
   
-  func applyBaseViewCustomKeyframe(toTarget keyframeTarget: KeyframeTarget);
+  func applyBaseViewCustomKeyframe(
+    toTarget keyframeTarget: KeyframeTarget
+  ) throws;
   
   func createBaseViewCustomAnimations(
     forTarget keyframeTarget: KeyframeTarget,
@@ -24,12 +26,12 @@ public extension BaseCustomViewConcreteKeyframe {
   func applyBaseViewCustomKeyframe<T>(
     toTarget keyframeTarget: T,
     withType targetType: T.Type = T.self
-  ) {
+  ) throws {
     guard let keyframeTarget = keyframeTarget as? KeyframeTarget else {
       return;
     };
     
-    self.applyBaseViewCustomKeyframe(toTarget: keyframeTarget);
+    try self.applyBaseViewCustomKeyframe(toTarget: keyframeTarget);
   };
   
   func createBaseViewCustomAnimations<T>(

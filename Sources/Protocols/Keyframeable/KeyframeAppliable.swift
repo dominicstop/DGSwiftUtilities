@@ -49,7 +49,7 @@ public extension KeyframeAppliable {
     };
     
     if let baseLayerCustomKeyframe = self as? (any BaseLayerCustomConcreteKeyframe) {
-      baseLayerCustomKeyframe.applyBaseLayerCustomKeyframe(
+      try? baseLayerCustomKeyframe.applyBaseLayerCustomKeyframe(
         toTarget: targetLayer,
         withType: T.self
       );
