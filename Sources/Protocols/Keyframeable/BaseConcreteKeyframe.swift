@@ -25,6 +25,11 @@ public protocol BaseConcreteKeyframe<PartialKeyframe>:
   >;
   
   static var partialToConcreteKeyframePropertyMap: KeyframePropertyMap { get };
+  
+  // MARK: Optional Conformance
+  // --------------------------
+  
+  static var extraInterpolatablePropertiesMap: InterpolatableValuesMap? { get };
 };
 
 // MARK: - BaseConcreteKeyframe+Default
@@ -47,6 +52,10 @@ public extension BaseConcreteKeyframe {
     };
     
     return map;
+  };
+  
+  static var extraInterpolatablePropertiesMap: InterpolatableValuesMap? {
+    return nil;
   };
 }
 
@@ -185,7 +194,11 @@ public extension BaseConcreteKeyframe where InterpolatableValue == Self {
       return map;
     };
     
-    let map = Self.createDefaultInterpolatablePropertiesMap();
+    var map = Self.createDefaultInterpolatablePropertiesMap();
+    if let extraMap = Self.extraInterpolatablePropertiesMap {
+      map.merge(with: extraMap);
+    };
+    
     if Thread.isMainThread {
       InterpolatablePropertiesMapCache[Self.cacheKey] = map;
     };
