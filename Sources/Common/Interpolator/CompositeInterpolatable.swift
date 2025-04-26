@@ -31,12 +31,23 @@ public protocol CompositeInterpolatable: UniformInterpolatable {
     easingMap: EasingKeyPathMap,
     clampingMap: ClampingKeyPathMap
   ) -> InterpolatableValue;
+  
+  // MARK: Optional Conformance
+  // --------------------------
+  
+  static var defaultFallbackBehavior: InterpolationFallbackBehavior { get };
+  
+  static var interpolatablePropertiesFallbackBehaviorMap: InterpolatableValuesFallbackBehaviorMap? { get };
 };
 
 // MARK: Default Conformance - `CompositeInterpolatable`
 // ----------------------------------------------------
 
 public extension CompositeInterpolatable {
+  
+  static var defaultFallbackBehavior: InterpolationFallbackBehavior {
+    .copyBothSplitInHalf;
+  };
   
   static var interpolatablePropertiesFallbackBehaviorMap: InterpolatableValuesFallbackBehaviorMap? {
     return nil;
@@ -50,7 +61,11 @@ public extension CompositeInterpolatable {
     clampingMap: ClampingKeyPathMap
   ) -> InterpolatableValue {
     
-    var newValue = valueStart;
+    var newValue = Self.defaultFallbackBehavior.getValue(
+      startValue: valueStart,
+      endValue: valueEnd,
+      percent: percent
+    );
     
     for (typeErasedPath, type) in Self.interpolatablePropertiesMap {
       let partialKeyPath = typeErasedPath.partialKeyPath;
@@ -197,7 +212,7 @@ public extension CompositeInterpolatable {
   ) -> InterpolationFallbackBehavior {
     
     guard let match = Self.interpolatablePropertiesFallbackBehaviorMap?[keyPath] else {
-      return .copyBothSplitInHalf;
+      return Self.defaultFallbackBehavior;
     };
     
     return match;
