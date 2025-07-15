@@ -82,10 +82,12 @@ public struct Triangle: Equatable {
   /// Resize triangle to new height, preserving slope, and topmost point
   /// (i.e. the resizing is pinned to the top).
   ///
+  /// ```
   ///    /\          /\        /\
   ///   /  \   ->   /  \  ->  '--'
   ///  /    \      '----'
   /// '------'
+  /// ```
   ///
   public func resizedTriangleRelativeToTopPoint(
     toNewHeight newHeight: CGFloat
