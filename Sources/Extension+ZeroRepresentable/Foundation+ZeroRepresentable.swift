@@ -41,16 +41,6 @@ extension Float16: ZeroRepresentable {
   // no-op
 };
 
-@available(iOS 14.0, *)
-extension Float32: ZeroRepresentable {
-  // no-op
-};
-
-@available(iOS 14.0, *)
-extension Float64: ZeroRepresentable {
-  // no-op
-};
-
 @available(iOS 16.0, *)
 extension Duration: ZeroRepresentable {
   // no-op
