@@ -53,7 +53,7 @@ public class RepeatedExecution {
   public let debounceMode: ExecutionDebounce;
   
   public let executeBlock: ExecutionBlock;
-  public let executionEndConditionBlock: ExecutionEndConditionBlock;
+  public let executionEndConditionBlock: ExecutionEndConditionBlock?;
 
   private(set) public var state: ExecutionState = .idle;
   private(set) public var iterationCount = 0;
@@ -73,7 +73,7 @@ public class RepeatedExecution {
     debounce: ExecutionDebounce,
     shouldRetainByDisplayLink: Bool = true,
     executeBlock: @escaping ExecutionBlock,
-    executionEndConditionBlock: @escaping ExecutionEndConditionBlock
+    executionEndConditionBlock: ExecutionEndConditionBlock? = nil
   ) {
     self.limiterMode = limit;
     self.debounceMode = debounce;
@@ -121,7 +121,7 @@ public class RepeatedExecution {
         self.displayLink = displayLink;
         
       case .minTimeInterval(_):
-        // no-op
+        self.step();
         break;
     };
     
@@ -164,7 +164,7 @@ public class RepeatedExecution {
     self.iterationCount += 1;
     self.executeBlock(self);
     
-    let shouldEnd = executionEndConditionBlock(self);
+    let shouldEnd = executionEndConditionBlock?(self) ?? false;
     if shouldEnd {
       self.end(successfully: true);
       return;
